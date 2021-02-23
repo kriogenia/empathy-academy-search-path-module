@@ -5,6 +5,8 @@ public class SearchResult {
 	private String query;
 	private String cluster_name;
 
+	public SearchResult() {}
+
 	public SearchResult(String query, String cluster_name) {
 		this.query = query;
 		this.cluster_name = cluster_name;

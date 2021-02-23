@@ -10,7 +10,6 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Produces;
-import org.elasticsearch.client.ml.PostDataRequest;
 
 @Controller("/search")
 public class SearchController {
@@ -19,7 +18,7 @@ public class SearchController {
     @Produces(MediaType.APPLICATION_JSON)
     public String searchQuery(@PathVariable String query) {
         ObjectMapper mapper = new ObjectMapper();
-        String json = null;
+        String json;
         try {
             json = mapper.writeValueAsString(new SearchResult(query, "version"));
             return json;
