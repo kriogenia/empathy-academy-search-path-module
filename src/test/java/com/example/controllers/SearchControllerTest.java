@@ -25,7 +25,7 @@ public class SearchControllerTest {
 	public void testSearchWithParam() {
 		HttpRequest<String> request = HttpRequest.GET("/search/test");
 		String body = client.toBlocking().retrieve(request);
-		SearchResult expected = new SearchResult("test", "version");
+		SearchResult expected = new SearchResult("test", "7.11.1");
 
 		assertNotNull(body);
 		ObjectMapper mapper = new ObjectMapper();
