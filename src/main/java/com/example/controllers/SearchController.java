@@ -9,10 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
-import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RequestOptions;
@@ -26,9 +23,9 @@ import java.io.IOException;
 @Controller("/search")
 public class SearchController {
 
-	@Get(value = "/{query}")
+	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<String> searchQuery(@PathVariable String query) {
+	public HttpResponse<String> searchQuery(@QueryValue String query) {
 		try {
             Searcher searcher = new SearcherImpl();
             String json = searcher.search(query);

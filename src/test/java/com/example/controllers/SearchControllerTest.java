@@ -7,10 +7,13 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+
+import java.net.URI;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,14 +24,17 @@ public class SearchControllerTest {
 	@Client("/")
 	RxHttpClient client;
 
+	private final UriBuilder baseUri = UriBuilder.of("/search");
+
 	@Test
-	public void testSearchWithParam() {
-		HttpRequest<String> request = HttpRequest.GET("/search/test");
+	public void testSearchWithValidQuery() {
+		String uri = baseUri.queryParam("query", "test").toString();
+		HttpRequest<String> request = HttpRequest.GET(uri);
 		String body = client.toBlocking().retrieve(request);
+		ObjectMapper mapper = new ObjectMapper();
 		SearchResult expected = new SearchResult("test", "7.11.1");
 
 		assertNotNull(body);
-		ObjectMapper mapper = new ObjectMapper();
 		SearchResult retrieved = null;
 		try {
 			retrieved = mapper.readValue(body, SearchResult.class);
@@ -41,7 +47,7 @@ public class SearchControllerTest {
 	}
 
 	@Test
-	public void testSearchWithoutParams() {
+	public void testSearchWithoutQuery() {
 		HttpRequest<String> request = HttpRequest.GET("/search");
 		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
