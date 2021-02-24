@@ -1,6 +1,8 @@
 package com.example.controllers;
 
 import com.example.pojos.SearchResult;
+import com.example.search.Searcher;
+import com.example.search.SearcherImpl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,34 +26,20 @@ import java.io.IOException;
 @Controller("/search")
 public class SearchController {
 
-    @Get(value = "/{query}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public HttpResponse<String> searchQuery(@PathVariable String query) {
-        try {
-            // ElasticSearch client
-            RestHighLevelClient client = new RestHighLevelClient(
-                    RestClient.builder(
-                            new HttpHost("localhost", 9200, "http"),
-                            new HttpHost("localhost", 9201, "http")
-                    )
-            );
-            // ElasticSearch server info
-            MainResponse response = client.info(RequestOptions.DEFAULT);
-            String clusterVersion = response.getVersion().getNumber();
-            // Query result
-            try {
-                String json = new ObjectMapper().writeValueAsString(
-                        new SearchResult(query, clusterVersion)
-                );
-                return HttpResponse.ok().body(json);
-            } catch (JsonProcessingException e) {
-                // Error mapping the query
-                return HttpResponse.badRequest();
-            }
-        } catch (IOException e) {
-            // Error contacting the ElasticSearch server
-            return HttpResponse.serverError();
-        }
-    }
+	@Get(value = "/{query}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public HttpResponse<String> searchQuery(@PathVariable String query) {
+		try {
+            Searcher searcher = new SearcherImpl();
+            String json = searcher.search(query);
+			return HttpResponse.ok().body(json);
+		} catch (JsonProcessingException e) {
+		    // Error mapping the query
+            return HttpResponse.badRequest();
+		} catch (IOException e) {
+			// Error contacting the ElasticSearch server
+			return HttpResponse.serverError();
+		}
+	}
 
 }
