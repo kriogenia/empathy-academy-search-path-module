@@ -1,37 +1,30 @@
 package com.example.search;
 
 import com.example.pojos.SearchResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpHost;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.core.MainResponse;
+import com.example.search.engines.SearchEngine;
+import io.micronaut.context.annotation.Prototype;
+import io.reactivex.annotations.NonNull;
 
-import javax.inject.Singleton;
+import javax.inject.Named;
 import java.io.IOException;
 
-@Singleton
+@Prototype
 public class SearcherImpl implements Searcher {
 
-	private final RestHighLevelClient esClient;
+	@NonNull
+	private SearchEngine engine;
 
-	public SearcherImpl() {
-		// ElasticSearch client
-		esClient = new RestHighLevelClient(
-				RestClient.builder(
-						new HttpHost("localhost", 9200, "http"),
-						new HttpHost("localhost", 9201, "http")
-				)
-		);
+	public SearcherImpl(@NonNull @Named("elastic") SearchEngine engine) {
+		this.engine = engine;
+	}
+
+	public void setEngine(@NonNull SearchEngine engine) {
+		this.engine = engine;
 	}
 
 	@Override
 	public SearchResult search(String query) throws IOException {
-		// ElasticSearch server info
-		MainResponse response = esClient.info(RequestOptions.DEFAULT);
-		String clusterVersion = response.getVersion().getNumber();
 		// Query result
-		return new SearchResult(query, clusterVersion);
+		return new SearchResult(query, engine.getVersion());
 	}
 }
