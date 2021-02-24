@@ -1,13 +1,17 @@
 package com.example.pojos;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SearchResult {
 
-	private String query;
-	private String cluster_name;
+	private final String query;
+	private final String cluster_name;
 
-	public SearchResult() {}
-
-	public SearchResult(String query, String cluster_name) {
+	@JsonCreator
+	public SearchResult(
+			@JsonProperty("query") String query,
+			@JsonProperty("cluster_name") String cluster_name) {
 		this.query = query;
 		this.cluster_name = cluster_name;
 	}
@@ -16,16 +20,8 @@ public class SearchResult {
 		return query;
 	}
 
-	public void setQuery(String query) {
-		this.query = query;
-	}
-
 	public String getCluster_name() {
 		return cluster_name;
-	}
-
-	public void setCluster_name(String cluster_name) {
-		this.cluster_name = cluster_name;
 	}
 
 }

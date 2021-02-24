@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.pojos.SearchResult;
 import com.example.search.Searcher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micronaut.http.HttpResponse;
@@ -20,13 +21,13 @@ public class SearchController {
 
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<String> searchQuery(@QueryValue String query) {
+	public HttpResponse<SearchResult> searchQuery(@QueryValue String query) {
 		try {
-            String json = searcher.search(query);
-			return HttpResponse.ok().body(json);
+            SearchResult result = searcher.search(query);
+			return HttpResponse.ok().body(result);
 		} catch (JsonProcessingException e) {
 		    // Error mapping the query
-            return HttpResponse.badRequest().body("Invalid query");
+            return HttpResponse.badRequest();
 		} catch (IOException e) {
 			// Error contacting the ElasticSearch server
 			return HttpResponse.serverError();

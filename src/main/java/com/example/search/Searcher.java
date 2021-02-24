@@ -1,9 +1,11 @@
 package com.example.search;
 
+import com.example.pojos.SearchResult;
+
 import java.io.IOException;
 
 public interface Searcher {
 
-	String search(String query) throws IOException;
+	SearchResult search(String query) throws IOException;
 
 }

@@ -27,13 +27,11 @@ public class SearcherImpl implements Searcher {
 	}
 
 	@Override
-	public String search(String query) throws IOException {
+	public SearchResult search(String query) throws IOException {
 		// ElasticSearch server info
 		MainResponse response = esClient.info(RequestOptions.DEFAULT);
 		String clusterVersion = response.getVersion().getNumber();
 		// Query result
-		return new ObjectMapper().writeValueAsString(
-					new SearchResult(query, clusterVersion)
-			);
+		return new SearchResult(query, clusterVersion);
 	}
 }

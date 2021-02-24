@@ -1,8 +1,6 @@
 package com.example.controllers;
 
 import com.example.pojos.SearchResult;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -28,17 +26,9 @@ public class SearchControllerTest {
 	public void testSearchWithValidQuery() {
 		String uri = baseUri.queryParam("query", "test").toString();
 		HttpRequest<String> request = HttpRequest.GET(uri);
-		String body = client.toBlocking().retrieve(request);
-		ObjectMapper mapper = new ObjectMapper();
 		SearchResult expected = new SearchResult("test", "7.11.1");
+		SearchResult retrieved = client.toBlocking().retrieve(request, SearchResult.class);
 
-		assertNotNull(body);
-		SearchResult retrieved = null;
-		try {
-			retrieved = mapper.readValue(body, SearchResult.class);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
 		assertNotNull(retrieved);
 		assertEquals(expected.getQuery(), retrieved.getQuery());
 		assertEquals(expected.getCluster_name(), retrieved.getCluster_name());
