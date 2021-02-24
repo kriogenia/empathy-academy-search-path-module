@@ -8,11 +8,13 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 
+@Singleton
 public class SearcherImpl implements Searcher {
 
-	RestHighLevelClient esClient;
+	private final RestHighLevelClient esClient;
 
 	public SearcherImpl() {
 		// ElasticSearch client

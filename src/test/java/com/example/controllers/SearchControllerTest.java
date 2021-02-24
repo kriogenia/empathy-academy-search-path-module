@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-import java.net.URI;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
@@ -48,9 +46,9 @@ public class SearchControllerTest {
 
 	@Test
 	public void testSearchWithoutQuery() {
-		HttpRequest<String> request = HttpRequest.GET("/search");
+		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());
 		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
-		assertEquals(404, exception.getStatus().getCode());
+		assertEquals(400, exception.getStatus().getCode());
 	}
 }
