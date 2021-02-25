@@ -1,4 +1,4 @@
-package com.example.controllers;
+package co.empathy.controllers;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;

@@ -1,6 +1,6 @@
-package com.example.controllers;
+package co.empathy.controllers;
 
-import com.example.pojos.SearchResult;
+import co.empathy.pojos.SearchResult;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;

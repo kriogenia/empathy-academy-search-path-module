@@ -1,4 +1,4 @@
-package com.example;
+package co.empathy;
 
 import io.micronaut.runtime.Micronaut;
 

@@ -1,4 +1,4 @@
-package com.example.search.engines;
+package co.empathy.search.engines;
 
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RequestOptions;
@@ -9,11 +9,17 @@ import org.elasticsearch.client.core.MainResponse;
 import javax.inject.Singleton;
 import java.io.IOException;
 
+/**
+ * Search Engine adapter of Elastic Search
+ */
 @Singleton
 public class ElasticSearchEngine implements SearchEngine {
 
 	private final RestHighLevelClient esClient;
 
+	/**
+	 * Default constructor loading Elastic Search client
+	 */
 	public ElasticSearchEngine() {
 		// ElasticSearch client
 		esClient = new RestHighLevelClient(
