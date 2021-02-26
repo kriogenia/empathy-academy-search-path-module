@@ -31,10 +31,14 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	public void close() throws Exception {
+		esClient.close();
+	}
+
+	@Override
 	public String getVersion() throws IOException {
 		// ElasticSearch server info
 		MainResponse response = esClient.info(RequestOptions.DEFAULT);
 		return response.getVersion().getNumber();
 	}
-
 }

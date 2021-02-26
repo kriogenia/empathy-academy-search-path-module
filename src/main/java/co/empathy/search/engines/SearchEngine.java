@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * Common interface to adapt the search engines
  */
-public interface SearchEngine {
+public interface SearchEngine extends AutoCloseable {
 
 	// void search();
 

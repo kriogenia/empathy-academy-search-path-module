@@ -32,7 +32,7 @@ public class SearchController {
 	public HttpResponse<SearchResult> searchQuery(@QueryValue String query) {
 		try {
             SearchResult result = searcher.search(query);
-			return HttpResponse.ok().body(result);
+			return HttpResponse.ok(result);
 		} catch (JsonProcessingException e) {
 		    // Error mapping the query
             return HttpResponse.badRequest();
