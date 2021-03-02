@@ -1,29 +1,9 @@
-# Project journal
+# Project Journal
 
-## 01/03/2021
-I start the journal now as I forgot to the past week.
-Our assignment the first week was to deploy a docker with ElasticSearch on our computers and a new Micronaut project.
-Then we would do a pretty basic API giving back the query entered, and the ES version.
+This journal will register day to day and week to week the development of this project.
+This project is part of the Search Path of the Empathy internship.
 
-It was pretty simple at first, just create a basic controller that communicated with ES and returned a basic answer.
-It was that easy that I focused more time on working on making a simple JSON serialization and deserialization.
+The intended goal is to develop an API on Micronaut at the same time we learn about search.
+We will use Elastic Search as the Search Engine and, at first, the IMDb database as the data pool.
 
-Our path owner told us to also create a test for our simple call which I did, and it came very handy when I started to 
-change a lot of, so I was able to easily test that I didn't break anything.
-
-We all thought that it was just a simple exercise, but it was not. 
-We will build from that so that first implementation is key to make our things easier.
-So the whole week we were receiving tips from our path owner about our design.
-They were pretty insightful and easily gave us the hints to enter the needed patterns.
-
-And so on I did finish that assignment as he wanted to.
-I'm pretty proud of how I did manage the exceptions and the dependency injection.
-
-## 02/03/2021
-
-Yesterday we started the second week.
-Our new goal is to load the IMDb database into ElasticSearch and make searches from our application.
-The rest of the day I was able to read the file (damn, it's big) and call to ES for the indexing.
-
-It. Was. Slow. It would take me like 35h to process the whole document.
-So I did stop the processing and today I will make the bulk indexing that we were projected to implement too.
+The path is intended to be, at least, eight weeks long. I really want to start learning.
