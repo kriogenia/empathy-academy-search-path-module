@@ -9,18 +9,19 @@ import java.io.IOException;
 
 public class Application {
 
-    public static void main(String[] args) {
-        Micronaut.run(Application.class, args);
-        indexImdb();
-    }
+	public static void main(String[] args) {
+		Micronaut.run(Application.class, args);
+		indexImdb();
+	}
 
-    private static void indexImdb() {
-        final BeanContext context = BeanContext.run();
-        Indexer indexer = context.getBean(Indexer.class);
-        try {
-            indexer.indexFile("src/main/resources/title.basics.tsv");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    }
+	private static void indexImdb() {
+		final BeanContext context = BeanContext.run();
+		Indexer indexer = context.getBean(Indexer.class);
+		try {
+			indexer.bulkIndexFile("src/main/resources/title.basics.tsv");
+			//indexer.indexFile("src/main/resources/title.basics.tsv");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 }

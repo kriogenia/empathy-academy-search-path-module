@@ -14,4 +14,12 @@ public interface Indexer {
 	 */
 	void indexFile(String filePath) throws IOException;
 
+	/**
+	 * Reads and inserts the content of the file into an index
+	 * through Bulk Requests
+	 * @param filePath	path of the file to index
+	 * @throws IOException	if an I/O error occurs opening the file
+	 */
+	void bulkIndexFile(String filePath) throws IOException;
+
 }

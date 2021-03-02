@@ -2,6 +2,7 @@ package co.empathy.engines;
 
 import co.empathy.index.Indexable;
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
@@ -11,6 +12,7 @@ import org.elasticsearch.client.core.MainResponse;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Search Engine adapter of Elastic Search
@@ -43,6 +45,18 @@ public class ElasticSearchEngine implements SearchEngine {
 		IndexRequest request = new IndexRequest("imdb").id(entry.getId()).source(entry.getJson());
 		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
 		System.out.format("Indexed %s\n", entry.getId());
+	}
+
+	@Override
+	public void bulkIndex(String index, List<Indexable> entries) throws IOException {
+		BulkRequest bulk = new BulkRequest();
+		// Creates the index requests
+		var requests = entries.stream().map(
+				x -> new IndexRequest(index).id(x.getId()).source(x.getJson()));
+		// Adds them to the bulk request
+		requests.forEach(bulk::add);
+		// Index the bulk request
+		esClient.bulk(bulk, RequestOptions.DEFAULT);
 	}
 
 	@Override
