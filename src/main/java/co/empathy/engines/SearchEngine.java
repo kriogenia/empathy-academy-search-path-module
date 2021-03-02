@@ -1,4 +1,6 @@
-package co.empathy.search.engines;
+package co.empathy.engines;
+
+import co.empathy.index.Indexable;
 
 import java.io.IOException;
 
@@ -8,6 +10,16 @@ import java.io.IOException;
 public interface SearchEngine extends AutoCloseable {
 
 	// void search();
+
+	/**
+	 * Inserts an entry into the specified index
+	 * @param index	Where to insert the entry
+	 * @param entry	Document to insert
+	 * @throws IOException	when an error occurred with the Search Engine
+	 */
+	void index(String index, Indexable entry) throws IOException;
+
+	// void bulk(collection);
 
 	/**
 	 * Retrieves the version of the cluster of the SearchEngine

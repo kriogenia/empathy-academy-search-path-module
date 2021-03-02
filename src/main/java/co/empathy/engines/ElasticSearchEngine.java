@@ -1,6 +1,9 @@
-package co.empathy.search.engines;
+package co.empathy.engines;
 
+import co.empathy.index.Indexable;
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -33,6 +36,13 @@ public class ElasticSearchEngine implements SearchEngine {
 	@Override
 	public void close() throws Exception {
 		esClient.close();
+	}
+
+	@Override
+	public void index(String index, Indexable entry) throws IOException {
+		IndexRequest request = new IndexRequest("imdb").id(entry.getId()).source(entry.getJson());
+		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
+		System.out.format("Indexed %s\n", entry.getId());
 	}
 
 	@Override

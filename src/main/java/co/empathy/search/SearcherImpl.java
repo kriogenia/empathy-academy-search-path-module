@@ -1,6 +1,6 @@
 package co.empathy.search;
 
-import co.empathy.search.engines.SearchEngine;
+import co.empathy.engines.SearchEngine;
 import co.empathy.pojos.SearchResult;
 import io.micronaut.context.annotation.Prototype;
 import io.reactivex.annotations.NonNull;
@@ -19,7 +19,7 @@ public class SearcherImpl implements Searcher {
 
 	/**
 	 * Constructor of the Searcher.
-	 * Injected loads the ElasticSearchEngine by default.
+	 * As injected loads the ElasticSearchEngine by default.
 	 * @param engine	Engine the Searcher will use.
 	 */
 	public SearcherImpl(@NonNull @Named("elastic") SearchEngine engine) {
