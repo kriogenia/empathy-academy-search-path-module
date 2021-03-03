@@ -1,5 +1,6 @@
 package co.empathy.engines;
 
+import co.empathy.beans.ImdbItem;
 import co.empathy.index.Indexable;
 import co.empathy.beans.SearchResult;
 import org.apache.http.HttpHost;
@@ -47,7 +48,7 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
-		IndexRequest request = new IndexRequest("imdb").id(entry.getId()).source(entry.toJsonMap());
+		IndexRequest request = new IndexRequest(index).id(entry.getId()).source(entry.toJsonMap());
 		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
 		System.out.format("Indexed %s\n", entry.getId());
 	}
@@ -70,7 +71,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		searchRequest.indices(indices);
 		// Build the match title query
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		builder.query(QueryBuilders.matchQuery("originalTitle", title));
+		builder.query(QueryBuilders.matchQuery(ImdbItem.ORIGINAL_TITLE, title));
 		searchRequest.source(builder);
 		// Invokes the search
 		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);

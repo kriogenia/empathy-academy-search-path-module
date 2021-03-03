@@ -5,10 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-import javax.swing.text.html.Option;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Indexable POJO class to manage IMDB entries
@@ -19,13 +18,13 @@ import java.util.Optional;
 public class ImdbItem implements Indexable {
 
 	public static final String ID = "id";
-	public static final String TYPE = "titleType";	// TODO change
-	public static final String TITLE = "primaryTitle";
-	public static final String ORIGINAL_TITLE = "originalTitle";
-	public static final String IS_ADULT = "isAdult";
-	public static final String START = "startYear";
-	public static final String END = "endYear";
-	public static final String RUNTIME_MINUTES = "runtimeMinutes";
+	public static final String TYPE = "type";
+	public static final String TITLE = "title";
+	public static final String ORIGINAL_TITLE = "original_title";
+	public static final String IS_ADULT = "is_adult";
+	public static final String START = "start_year";
+	public static final String END = "end_year";
+	public static final String RUNTIME_MINUTES = "runtime_minutes";
 	public static final String GENRES = "genres";
 
 	@JsonProperty(ID)
@@ -53,7 +52,7 @@ public class ImdbItem implements Indexable {
 	private String runtime;
 
 	@JsonProperty(GENRES)
-	private String genres;
+	private String[] genres;
 
 	/**
 	 * Empty constructor of the JavaBean
@@ -190,20 +189,47 @@ public class ImdbItem implements Indexable {
 	}
 
 	/**
-	 * @return	includes up to three genres associated with the title
+	 * @return	up to three genres associated with the title
 	 */
-	public String getGenres() {
+	public String[] getGenres() {
 		return genres;
 	}
 
 	/**
-	 * @param genres	includes up to three genres associated with the title
-	 * @return 		the item modified
+	 * @param object	up to three genres associated with the title into un unboxed ArrayList
+	 * @return			the modified item
 	 */
-	public ImdbItem setGenres(String genres) {
+	public ImdbItem setGenres(Object object) {
+		try {
+			List<String> genresList = ((List<String>) object);
+			String[] genres = genresList.toArray(new String[0]);
+			return setGenres(genres);
+		} catch (ClassCastException e) {
+			throw new IllegalArgumentException("Bad genres list");
+		}
+	}
+
+	/**
+	 * @param line		string with up to three genres associated with the title
+	 * @return 			the item modified
+	 */
+	public ImdbItem setGenres(String line) {
+		String[] genres = line.split(",");
+		return this.setGenres(genres);
+	}
+
+	/**
+	 * @param genres	up to three genres associated with the title
+	 * @return 			the item modified
+	 */
+	public ImdbItem setGenres(String[] genres) {
+		if (genres.length < 1 || genres.length > 3) {
+			throw new IllegalArgumentException("Invalid number of genres");
+		}
 		this.genres = genres;
 		return this;
 	}
+
 
 	@Override
 	public Map<String, Object> toJsonMap() {

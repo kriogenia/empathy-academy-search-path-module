@@ -28,3 +28,5 @@ Today my main goal is to build the search function properly with what I think is
 The first problem was dealing with the generics, and the SearchResponse item that uses them, but I think I got it abstracting from that class.
 
 The next point is adapting the output to the required names and order.
+As I will do this changing how I indexed the data I will leave it with the old names for now.
+At the moment I index all again I'll make the change.
