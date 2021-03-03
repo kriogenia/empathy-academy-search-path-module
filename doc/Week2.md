@@ -26,3 +26,5 @@ If I have enough time, I should also develop the tests.
 
 Today my main goal is to build the search function properly with what I think is the best possible approach.
 The first problem was dealing with the generics, and the SearchResponse item that uses them, but I think I got it abstracting from that class.
+
+The next point is adapting the output to the required names and order.

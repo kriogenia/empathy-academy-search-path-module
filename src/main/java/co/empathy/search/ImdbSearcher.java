@@ -53,16 +53,17 @@ public class ImdbSearcher implements Searcher {
 	}
 
 	private ImdbItem itemBuilder(Map<String, Object> properties) {
+		// TODO change remaining constants next to the reindex
 		return new ImdbItem()
-				.setId(properties.get("id").toString())
-				.setTitleType(properties.get("titleType").toString())
-				.setPrimaryTitle(properties.get("primaryTitle").toString())
-				.setOriginalTitle(properties.get("originalTitle").toString())
-				.setIsAdult(properties.get("isAdult").toString())
-				.setStartYear(properties.get("startYear").toString())
-				.setEndYear(properties.get("endYear").toString())
-				.setRuntime(properties.get("runtimeMinutes").toString())
-				.setGenres(properties.get("genres").toString());
+				.setId(properties.get(ImdbItem.ID).toString())
+				.setTitleType(properties.get(ImdbItem.TYPE).toString())
+				.setPrimaryTitle(properties.get(ImdbItem.TITLE).toString())
+				.setOriginalTitle(properties.get(ImdbItem.ORIGINAL_TITLE).toString())
+				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString())
+				.setStartYear(properties.get(ImdbItem.START).toString())
+				.setEndYear(properties.get(ImdbItem.END).toString())
+				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
+				.setGenres(properties.get(ImdbItem.GENRES).toString());
 	}
 
 }

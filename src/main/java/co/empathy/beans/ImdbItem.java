@@ -1,7 +1,9 @@
 package co.empathy.beans;
 
 import co.empathy.index.Indexable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,25 +11,46 @@ import java.util.Map;
 /**
  * Indexable POJO class to manage IMDB entries
  */
+@JsonPropertyOrder({ImdbItem.ID, ImdbItem.TITLE, ImdbItem.GENRES,
+		ImdbItem.TYPE, ImdbItem.START, ImdbItem.END})
+@JsonIgnoreProperties({"originalTitle", "isAdult", "runtimeMinutes"})
 public class ImdbItem implements Indexable {
 
-	@JsonProperty("tconst")
+	public static final String ID = "id";
+	public static final String TYPE = "titleType";	// TODO change
+	public static final String TITLE = "primaryTitle";
+	public static final String ORIGINAL_TITLE = "originalTitle";
+	public static final String IS_ADULT = "isAdult";
+	public static final String START = "startYear";
+	public static final String END = "endYear";
+	public static final String RUNTIME_MINUTES = "runtimeMinutes";
+	public static final String GENRES = "genres";
+
+	@JsonProperty(ID)
 	private String id;
-	@JsonProperty("titleType")
+
+	@JsonProperty(TYPE)
 	private String titleType;
-	@JsonProperty("primaryTitle")
+
+	@JsonProperty(TITLE)
 	private String primaryTitle;
-	@JsonProperty("originalTitle")
+
+	@JsonProperty(ORIGINAL_TITLE)
 	private String originalTitle;
-	@JsonProperty("isAdult")
+
+	@JsonProperty(IS_ADULT)
 	private String isAdult;
-	@JsonProperty("startYear")
+
+	@JsonProperty(START)
 	private String startYear;
-	@JsonProperty("endYear")
+
+	@JsonProperty(END)
 	private String endYear;
-	@JsonProperty("runtimeMinutes")
+
+	@JsonProperty(RUNTIME_MINUTES)
 	private String runtime;
-	@JsonProperty("genres")
+
+	@JsonProperty(GENRES)
 	private String genres;
 
 	/**
@@ -174,14 +197,14 @@ public class ImdbItem implements Indexable {
 	@Override
 	public Map<String, Object> toJsonMap() {
 		Map<String, Object> jsonMap = new HashMap<>();
-		jsonMap.put("titleType", titleType);
-		jsonMap.put("primaryTitle", primaryTitle);
-		jsonMap.put("originalTitle", originalTitle);
-		jsonMap.put("isAdult", isAdult);
-		jsonMap.put("startYear", startYear);
-		jsonMap.put("endYear", endYear);
-		jsonMap.put("runtimeMinutes", runtime);
-		jsonMap.put("genres", genres);
+		jsonMap.put(TYPE, titleType);
+		jsonMap.put(TITLE, primaryTitle);
+		jsonMap.put(ORIGINAL_TITLE, originalTitle);
+		jsonMap.put(IS_ADULT, isAdult);
+		jsonMap.put(START, startYear);
+		jsonMap.put(END, endYear);
+		jsonMap.put(RUNTIME_MINUTES, runtime);
+		jsonMap.put(GENRES, genres);
 		return jsonMap;
 	}
 
