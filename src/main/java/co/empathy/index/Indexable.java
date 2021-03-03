@@ -1,11 +1,12 @@
 package co.empathy.index;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * Objects that can be indexed into the search engines
  */
-public interface Indexable {
+public interface Indexable extends Serializable {
 
 	/**
 	 * @return	the ID
@@ -15,5 +16,6 @@ public interface Indexable {
 	/**
 	 * @return	the JSON map of the entry
 	 */
-	Map<String, Object> getJson();
+	Map<String, Object> getJsonMap();
+
 }

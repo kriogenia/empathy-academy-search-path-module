@@ -1,6 +1,5 @@
 package co.empathy.controllers;
 
-import co.empathy.pojos.SearchResult;
 import co.empathy.search.Searcher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micronaut.http.HttpResponse;
@@ -12,6 +11,7 @@ import io.micronaut.http.annotation.QueryValue;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Controller of the API search calls
@@ -24,14 +24,16 @@ public class SearchController {
 
 	/**
 	 * Get the search result of the input query
-	 * @param query	Query to search
+	 * @param title	Query to search original title
 	 * @return	Search result
 	 */
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<SearchResult> searchQuery(@QueryValue String query) {
+	public HttpResponse<Serializable> searchQuery(
+			@QueryValue String title
+	) {
 		try {
-            SearchResult result = searcher.search(query);
+            var result = searcher.searchByTitle(title);
 			return HttpResponse.ok(result);
 		} catch (JsonProcessingException e) {
 		    // Error mapping the query

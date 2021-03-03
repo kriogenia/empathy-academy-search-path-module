@@ -1,10 +1,23 @@
 #Week 2
 
-## 02/03/2021
+## 01/03/2021
 
-Yesterday we started the second week.
+Today we started the second week.
 Our new goal is to load the IMDb database into ElasticSearch and make searches from our application.
 The rest of the day I was able to read the file (damn, it's big) and call to ES for the indexing.
 
 It. Was. Slow. It would take me like 35h to process the whole document.
-So I did stop the processing and today I will make the bulk indexing that we were projected to implement too.
+So I did stop the processing and tomorrow I will make the bulk indexing that we were projected to implement too.
+
+## 02/03/2021
+
+Implement the bulk indexing didn't take long thanks to the index effort in the previous day.
+Now the whole index takes around and hour to finish, but it crashed me.
+I will make a couple of log changes to that process and try again out of the working time.
+
+My next goal will be to make the search api call to retrieve those options matching the title.
+The most difficult part was creating an object to use as interface for all the results.
+Whatever, it works.
+
+Tomorrow I will make some improvements, and I have to take care of some TODOs I did let.
+If I have enough time, I should also develop the tests.

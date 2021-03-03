@@ -1,6 +1,5 @@
 package co.empathy;
 
-import co.empathy.index.ImdbIndexer;
 import co.empathy.index.Indexer;
 import io.micronaut.context.BeanContext;
 import io.micronaut.runtime.Micronaut;
@@ -11,7 +10,7 @@ public class Application {
 
 	public static void main(String[] args) {
 		Micronaut.run(Application.class, args);
-		indexImdb();
+		//indexImdb();
 	}
 
 	private static void indexImdb() {

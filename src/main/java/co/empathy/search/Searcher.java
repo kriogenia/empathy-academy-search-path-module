@@ -1,8 +1,7 @@
 package co.empathy.search;
 
-import co.empathy.pojos.SearchResult;
-
 import java.io.IOException;
+import java.io.Serializable;
 
 /**
  * Module managing the search engines
@@ -10,11 +9,11 @@ import java.io.IOException;
 public interface Searcher {
 
 	/**
-	 * Process a query and gets the search result
-	 * @param query	Query to search
-	 * @return	Result of the search
+	 * Process a query and gets the search result matching the original title
+	 * @param query	Query to match
+	 * @return	Indexable object with the found info
 	 * @throws IOException	when entered invalid queries or search engines failures
 	 */
-	SearchResult search(String query) throws IOException;
+	Serializable searchByTitle(String query) throws IOException;
 
 }
