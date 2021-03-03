@@ -47,7 +47,7 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
-		IndexRequest request = new IndexRequest("imdb").id(entry.getId()).source(entry.getJsonMap());
+		IndexRequest request = new IndexRequest("imdb").id(entry.getId()).source(entry.toJsonMap());
 		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
 		System.out.format("Indexed %s\n", entry.getId());
 	}
@@ -57,7 +57,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		BulkRequest bulk = new BulkRequest();
 		// Creates the index requests
 		var requests = entries.stream().map(
-				x -> new IndexRequest(index).id(x.getId()).source(x.getJsonMap()));
+				x -> new IndexRequest(index).id(x.getId()).source(x.toJsonMap()));
 		// Adds them to the bulk request
 		requests.forEach(bulk::add);
 		// Index the bulk request

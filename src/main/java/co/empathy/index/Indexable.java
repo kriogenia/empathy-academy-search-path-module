@@ -16,6 +16,6 @@ public interface Indexable extends Serializable {
 	/**
 	 * @return	the JSON map of the entry
 	 */
-	Map<String, Object> getJsonMap();
+	Map<String, Object> toJsonMap();
 
 }

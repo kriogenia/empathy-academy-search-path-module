@@ -21,3 +21,8 @@ Whatever, it works.
 
 Tomorrow I will make some improvements, and I have to take care of some TODOs I did let.
 If I have enough time, I should also develop the tests.
+
+## 03/03/2021
+
+Today my main goal is to build the search function properly with what I think is the best possible approach.
+The first problem was dealing with the generics, and the SearchResponse item that uses them, but I think I got it abstracting from that class.

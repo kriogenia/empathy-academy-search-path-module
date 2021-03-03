@@ -9,6 +9,7 @@ import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -41,18 +42,27 @@ public class ImdbSearcher implements Searcher {
 	public Serializable searchByTitle(String query) throws IOException {
 		// Retrieve the query result
 		var result = engine.searchByTitle(query, "imdb");
-/*		// Convert map to items
+		// Convert map to items
 		var items = result.getItems().stream().map(
-				ImdbItem::builder
+				this::itemBuilder
 		).collect(Collectors.toList());
 		// Generate a response object*/
-		SearchResponse<ImdbItem> response = new SearchResponse<>();
-		response.setTotal(result.getTotal());
-		return response;
+		return new SearchResponse<ImdbItem>()
+				.setTotal(result.getTotal())
+				.setItems(items);
 	}
-/*
-	private ImdbItem itemBuilder() {
 
-	}*/
+	private ImdbItem itemBuilder(Map<String, Object> properties) {
+		return new ImdbItem()
+				.setId(properties.get("id").toString())
+				.setTitleType(properties.get("titleType").toString())
+				.setPrimaryTitle(properties.get("primaryTitle").toString())
+				.setOriginalTitle(properties.get("originalTitle").toString())
+				.setIsAdult(properties.get("isAdult").toString())
+				.setStartYear(properties.get("startYear").toString())
+				.setEndYear(properties.get("endYear").toString())
+				.setRuntime(properties.get("runtimeMinutes").toString())
+				.setGenres(properties.get("genres").toString());
+	}
 
 }
