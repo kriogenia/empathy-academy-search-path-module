@@ -5,15 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Indexable POJO class to manage IMDB entries
  */
 @JsonPropertyOrder({ImdbItem.ID, ImdbItem.TITLE, ImdbItem.GENRES,
 		ImdbItem.TYPE, ImdbItem.START, ImdbItem.END})
-@JsonIgnoreProperties({"originalTitle", "isAdult", "runtimeMinutes"})
+@JsonIgnoreProperties({ImdbItem.ORIGINAL_TITLE, ImdbItem.IS_ADULT, ImdbItem.RUNTIME_MINUTES})
 public class ImdbItem implements Indexable {
 
 	public static final String ID = "id";
@@ -67,6 +69,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param id	alphanumeric unique identifier of the title
+	 * @return 		the item modified
 	 */
 	public ImdbItem setId(String id) {
 		this.id = id;
@@ -82,6 +85,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param titleType	the type/format of the title (e.g. movie, short, tv series...)
+	 * @return 		the item modified
 	 */
 	public ImdbItem setTitleType(String titleType) {
 		this.titleType = titleType;
@@ -98,6 +102,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param primaryTitle	the more popular title / title used on promotional materials
+	 * @return 		the item modified
 	 */
 	public ImdbItem setPrimaryTitle(String primaryTitle) {
 		this.primaryTitle = primaryTitle;
@@ -113,6 +118,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param originalTitle	original title, in the original language
+	 * @return 		the item modified
 	 */
 	public ImdbItem setOriginalTitle(String originalTitle) {
 		this.originalTitle = originalTitle;
@@ -128,6 +134,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param isAdult	O: non-adult title; 1: original title
+	 * @return 		the item modified
 	 */
 	public ImdbItem setIsAdult(String isAdult) {
 		this.isAdult = isAdult;
@@ -143,6 +150,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param startYear    release year of a title (YYYY)
+	 * @return 		the item modified
 	 */
 	public ImdbItem setStartYear(String startYear) {
 		this.startYear = startYear;
@@ -150,7 +158,7 @@ public class ImdbItem implements Indexable {
 	}
 
 	/**
-	 * @return	TV Series end year, '\N' for all other title types
+	 * @return	if it exists, TV Series end year, '\N' for all other title types
 	 */
 	public String getEndYear() {
 		return endYear;
@@ -158,9 +166,10 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param endYear	TV Series end year, '\N' for all other title types
+	 * @return 			the item modified
 	 */
 	public ImdbItem setEndYear(String endYear) {
-		this.endYear = endYear;
+		this.endYear = endYear.equals("\\N") ? null : endYear;
 		return this;
 	}
 
@@ -173,6 +182,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param runtime	primary runtime of the title, in minutes
+	 * @return 		the item modified
 	 */
 	public ImdbItem setRuntime(String runtime) {
 		this.runtime = runtime;
@@ -188,6 +198,7 @@ public class ImdbItem implements Indexable {
 
 	/**
 	 * @param genres	includes up to three genres associated with the title
+	 * @return 		the item modified
 	 */
 	public ImdbItem setGenres(String genres) {
 		this.genres = genres;
@@ -196,6 +207,7 @@ public class ImdbItem implements Indexable {
 
 	@Override
 	public Map<String, Object> toJsonMap() {
+		String endYear = this.endYear == null ? "\\N" : this.endYear;
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put(TYPE, titleType);
 		jsonMap.put(TITLE, primaryTitle);
@@ -208,7 +220,8 @@ public class ImdbItem implements Indexable {
 		return jsonMap;
 	}
 
-	public static ImdbItem buildFromString(String... params) {
+	public static ImdbItem buildFromString(String line) {
+		String[] params =  line.split("\t");
 		if (params.length != 9) {
 			throw new IllegalArgumentException("IMDB items must have nine fields");
 		}

@@ -46,12 +46,17 @@ public class ImdbSearcher implements Searcher {
 		var items = result.getItems().stream().map(
 				this::itemBuilder
 		).collect(Collectors.toList());
-		// Generate a response object*/
+		// Generate a response object
 		return new SearchResponse<ImdbItem>()
 				.setTotal(result.getTotal())
 				.setItems(items);
 	}
 
+	/**
+	 * Builds an ImdbItem from the properties map
+	 * @param properties	Retrieved properties of the search
+	 * @return				Imdb Item with the specified properties
+	 */
 	private ImdbItem itemBuilder(Map<String, Object> properties) {
 		// TODO change remaining constants next to the reindex
 		return new ImdbItem()

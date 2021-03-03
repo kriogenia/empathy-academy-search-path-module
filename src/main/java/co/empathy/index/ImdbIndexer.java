@@ -35,7 +35,7 @@ public class ImdbIndexer implements Indexer {
 	public void indexFile(String filePath) throws IOException {
 		System.out.format("Starting %s indexing...\n", filePath);
 		Stream<String> stream = Files.lines(Paths.get(filePath)).skip(1);
-		stream.map(x -> ImdbItem.buildFromString(x.split("\t"))).
+		stream.map(ImdbItem::buildFromString).
 				forEach(this::callIndex);
 	}
 
@@ -56,7 +56,7 @@ public class ImdbIndexer implements Indexer {
 						LocalDateTime.now());
 			}
 			// Add the entry to the bulk and advance one line
-			bulk.add(ImdbItem.buildFromString(line.split("\t")));
+			bulk.add(ImdbItem.buildFromString(line));
 			line = reader.readLine();
 		}
 		engine.bulkIndex(INDEX_KEY, bulk);
