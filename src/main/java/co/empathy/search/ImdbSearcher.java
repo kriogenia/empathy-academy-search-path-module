@@ -9,6 +9,7 @@ import io.reactivex.annotations.NonNull;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,6 +60,17 @@ public class ImdbSearcher implements Searcher {
 	 * @return				Imdb Item with the specified properties
 	 */
 	private ImdbItem itemBuilder(Map<String, Object> properties) {
+		// Cast the genres list
+		List<String> genresList = new ArrayList<>();
+		Object retrieved = properties.get(ImdbItem.GENRES);
+		if (retrieved instanceof List<?>) {
+			for (Object o: (List<?>) retrieved) {
+				if (o instanceof String) {
+					genresList.add((String) o);
+				}
+			}
+		}
+		// Build and return the item
 		return new ImdbItem()
 				.setId(properties.get(ImdbItem.ID).toString())
 				.setTitleType(properties.get(ImdbItem.TYPE).toString())
@@ -68,7 +80,7 @@ public class ImdbSearcher implements Searcher {
 				.setStartYear(properties.get(ImdbItem.START).toString())
 				.setEndYear(properties.get(ImdbItem.END).toString())
 				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
-				.setGenres(properties.get(ImdbItem.GENRES));
+				.setGenres(genresList.toArray(new String[0]));
 	}
 
 }

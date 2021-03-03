@@ -196,20 +196,6 @@ public class ImdbItem implements Indexable {
 	}
 
 	/**
-	 * @param object	up to three genres associated with the title into un unboxed ArrayList
-	 * @return			the modified item
-	 */
-	public ImdbItem setGenres(Object object) {
-		try {
-			List<String> genresList = ((List<String>) object);
-			String[] genres = genresList.toArray(new String[0]);
-			return setGenres(genres);
-		} catch (ClassCastException e) {
-			throw new IllegalArgumentException("Bad genres list");
-		}
-	}
-
-	/**
 	 * @param line		string with up to three genres associated with the title
 	 * @return 			the item modified
 	 */
