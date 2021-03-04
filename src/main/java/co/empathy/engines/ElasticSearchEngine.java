@@ -12,11 +12,16 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -66,6 +71,7 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException {
+		// Build and launch the search
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		builder.query(QueryBuilders.matchQuery(field, query));
 		return launchSearch(builder, indices);
@@ -74,8 +80,12 @@ public class ElasticSearchEngine implements SearchEngine {
 	@Override
 	public SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException {
 		// Build the multi match query
+		var multiBuilder = new MultiMatchQueryBuilder(query, fields);
+		multiBuilder.type(MultiMatchQueryBuilder.Type.CROSS_FIELDS);
+		multiBuilder.operator(Operator.AND);
+		// Build and launch the search
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		builder.query(QueryBuilders.multiMatchQuery(query, fields));
+		builder.query(multiBuilder);
 		return launchSearch(builder, indices);
 	}
 

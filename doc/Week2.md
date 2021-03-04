@@ -41,4 +41,7 @@ This way I finished the week assignment and focused on code improvements.
 
 Our owner gave us an extra task as we all almost finished, expanding on the fields to search.
 I decided to give it a take with the ES multi match search and built a new query URL for it.
-Thanks to my architecture it was really easy to implement.
+Thanks to my architecture it was really easy to implement. It didn't work as I expected.
+
+Thank god the ElasticSearch documentation is good, and I was able to find how to refine the search.
+Adding the cross fields type of the search the results were, indeed, an improvement. So I did some tests.
