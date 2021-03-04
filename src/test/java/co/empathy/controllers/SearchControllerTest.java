@@ -31,6 +31,7 @@ public class SearchControllerTest {
 	TestHelper helper;
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
+	private final UriBuilder allUri = UriBuilder.of("/search/all");
 
 	@Test
 	public void testSearchTitleWithSingleWordAndFewResults() throws JsonProcessingException {
@@ -87,9 +88,34 @@ public class SearchControllerTest {
 	}
 
 	@Test
-	public void testSearchWithoutQuery() {
+	public void testSearchQuery() throws JsonProcessingException {
+		var uri = allUri.queryParam("query", "Spiderman movie").toString();
+		var request = HttpRequest.GET(uri);
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+
+		assertNotNull(retrieved);
+		assertEquals(6, retrieved.getTotal());
+		assertEquals(6, retrieved.getItems().size());
+		// Matching words test
+		assertTrue(retrieved.getItems().stream().allMatch(
+				x -> 	x.getPrimaryTitle().contains("Spiderman") && (
+						x.getPrimaryTitle().matches(".*[Mm]ovie.*") ||
+						x.getTitleType().equals("movie"))));
+	}
+
+	@Test
+	public void testSearchWithoutTitle() {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());
 		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
+				() -> client.toBlocking().exchange(request));
+		assertEquals(400, exception.getStatus().getCode());
+	}
+
+	@Test
+	public void testSearchWithoutQuery() {
+		var request = HttpRequest.GET(allUri.toString());
+		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
 	}
