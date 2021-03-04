@@ -80,7 +80,7 @@ public class SearchControllerTest {
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(1200, retrieved.getTotal());
+		assertEquals(1224, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle)
 				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));
