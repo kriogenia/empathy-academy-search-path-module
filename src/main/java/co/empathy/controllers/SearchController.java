@@ -23,13 +23,13 @@ public class SearchController {
 	Searcher searcher;
 
 	/**
-	 * Get the search result of the input query
+	 * Get the search result of the input title query
 	 * @param title	Query to search original title
 	 * @return	Search result
 	 */
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<Serializable> searchQuery(
+	public HttpResponse<Serializable> searchTitle(
 			@QueryValue String title
 	) {
 		try {
@@ -44,4 +44,25 @@ public class SearchController {
 		}
 	}
 
+	/**
+	 * Get the general search result of the input query
+	 * @param query	Query to search in the general fields
+	 * @return	Search result
+	 */
+	@Get("/all")
+	@Produces(MediaType.APPLICATION_JSON)
+	public HttpResponse<Serializable> searchQuery(
+			@QueryValue String query
+	) {
+		try {
+			var result = searcher.searchByQuery(query);
+			return HttpResponse.ok(result);
+		} catch (JsonProcessingException e) {
+			// Error mapping the query
+			return HttpResponse.badRequest();
+		} catch (IOException e) {
+			// Error contacting the ElasticSearch server
+			return HttpResponse.serverError();
+		}
+	}
 }

@@ -28,13 +28,24 @@ public interface SearchEngine extends AutoCloseable {
 	void bulkIndex(String index, List<Indexable> entries) throws IOException;
 
 	/**
-	 * Retrieves the search of a matching title query
-	 * @param title			Query to match
-	 * @param indices		Indices to search
+	 * Retrieves the search using match against a single field
+	 * @param query			query of the search
+	 * @param field			field to match
+	 * @param indices		indices to search
 	 * @return				result of the search
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
-	SearchResult searchByTitle(String title, String... indices) throws IOException;
+	SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException;
+
+	/**
+	 * Retrieves the search using match against multiple fields
+	 * @param query			query to match
+	 * @param fields		fields to match
+	 * @param indices		indices to search
+	 * @return				result of the search
+	 * @throws IOException	if an error occurred with the Search Engine
+	 */
+	SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the version of the cluster of the SearchEngine

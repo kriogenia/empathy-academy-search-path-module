@@ -1,6 +1,5 @@
 package co.empathy.engines;
 
-import co.empathy.beans.ImdbItem;
 import co.empathy.index.Indexable;
 import co.empathy.beans.SearchResult;
 import org.apache.http.HttpHost;
@@ -50,7 +49,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	public void index(String index, Indexable entry) throws IOException {
 		IndexRequest request = new IndexRequest(index).id(entry.getId()).source(entry.toJsonMap());
 		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
-		System.out.format("Indexed %s\n", entry.getId());
+		System.out.format("Indexed %s (%s)\n", entry.getId(), response.getId());
 	}
 
 	@Override
@@ -66,16 +65,18 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchByTitle(String title, String... indices) throws IOException {
-		SearchRequest searchRequest = new SearchRequest();
-		searchRequest.indices(indices);
-		// Build the match title query
+	public SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException {
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		builder.query(QueryBuilders.matchQuery(ImdbItem.ORIGINAL_TITLE, title));
-		searchRequest.source(builder);
-		// Invokes the search
-		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
-		return SearchResult.builder(response);
+		builder.query(QueryBuilders.matchQuery(field, query));
+		return launchSearch(builder, indices);
+	}
+
+	@Override
+	public SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException {
+		// Build the multi match query
+		SearchSourceBuilder builder = new SearchSourceBuilder();
+		builder.query(QueryBuilders.multiMatchQuery(query, fields));
+		return launchSearch(builder, indices);
 	}
 
 	@Override
@@ -83,5 +84,21 @@ public class ElasticSearchEngine implements SearchEngine {
 		// ElasticSearch server info
 		MainResponse response = esClient.info(RequestOptions.DEFAULT);
 		return response.getVersion().getNumber();
+	}
+
+	/**
+	 * Create and send the search request
+	 * @param builder		built query
+	 * @param indices		indices to search
+	 * @return				search result
+	 * @throws IOException	if an error with the search engine has occurred
+	 */
+	private SearchResult launchSearch(SearchSourceBuilder builder, String... indices) throws IOException {
+		SearchRequest searchRequest = new SearchRequest();
+		searchRequest.indices(indices);
+		searchRequest.source(builder);
+		// Invokes the search
+		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
+		return SearchResult.builder(response);
 	}
 }

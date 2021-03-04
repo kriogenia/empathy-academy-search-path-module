@@ -36,5 +36,9 @@ I was able to fix, and I only have left making just a couple of tests.
 
 # 04/03/2021
 
-Starting the day I'll completely focus on finishing the tests.
-This way I'll complete the week assignment and focus on improvements.
+Starting the day I completely focused on finishing the tests.
+This way I finished the week assignment and focused on code improvements.
+
+Our owner gave us an extra task as we all almost finished, expanding on the fields to search.
+I decided to give it a take with the ES multi match search and built a new query URL for it.
+Thanks to my architecture it was really easy to implement.

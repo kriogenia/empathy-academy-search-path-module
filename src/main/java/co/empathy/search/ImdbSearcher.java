@@ -1,5 +1,6 @@
 package co.empathy.search;
 
+import co.empathy.beans.SearchResult;
 import co.empathy.engines.SearchEngine;
 import co.empathy.beans.ImdbItem;
 import co.empathy.beans.SearchResponse;
@@ -41,9 +42,27 @@ public class ImdbSearcher implements Searcher {
 	}
 
 	@Override
+	public Serializable searchByQuery(String query) throws IOException {
+		// Generate the array with the fields to search - Can be moved to a dedicated class if needed
+		var fields = new String[]{ImdbItem.ORIGINAL_TITLE, ImdbItem.TYPE};
+		// Retrieve and return  the query result
+		var result = engine.searchMultiMatch(query, fields, "imdb");
+		return buildResponse(result);
+	}
+
+	@Override
 	public Serializable searchByTitle(String query) throws IOException {
-		// Retrieve the query result
-		var result = engine.searchByTitle(query, "imdb");
+		// Retrieve and return  the query result
+		var result = engine.searchSingleMatch(query, ImdbItem.TITLE, "imdb");
+		return buildResponse(result);
+	}
+
+	/**
+	 * Converts a SearchResult into a SearchResponse
+	 * @param result	result of the search given by the engine
+	 * @return			SearchResponse with the ImdbItems
+	 */
+	private Serializable buildResponse(SearchResult result) {
 		// Convert map to items
 		var items = result.getItems().stream().map(
 				this::itemBuilder
