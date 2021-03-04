@@ -30,3 +30,11 @@ The first problem was dealing with the generics, and the SearchResponse item tha
 The next point is adapting the output to the required names and order.
 As I will do this changing how I indexed the data I will leave it with the old names for now.
 At the moment I index all again I'll make the change.
+
+The last thing I did was start the test, but it was difficult as making the response generic broke my JSON serialization.
+I was able to fix, and I only have left making just a couple of tests.
+
+# 04/03/2021
+
+Starting the day I'll completely focus on finishing the tests.
+This way I'll complete the week assignment and focus on improvements.

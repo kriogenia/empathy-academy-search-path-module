@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -196,15 +195,6 @@ public class ImdbItem implements Indexable {
 	}
 
 	/**
-	 * @param line		string with up to three genres associated with the title
-	 * @return 			the item modified
-	 */
-	public ImdbItem setGenres(String line) {
-		String[] genres = line.split(",");
-		return this.setGenres(genres);
-	}
-
-	/**
 	 * @param genres	up to three genres associated with the title
 	 * @return 			the item modified
 	 */
@@ -246,7 +236,16 @@ public class ImdbItem implements Indexable {
 				.setStartYear(params[5])
 				.setEndYear(params[6])
 				.setRuntime(params[7])
-				.setGenres(params[8]);
+				.parseGenres(params[8]);
+	}
+
+	/**
+	 * @param line		string with up to three genres associated with the title
+	 * @return 			the item modified
+	 */
+	public ImdbItem parseGenres(String line) {
+		String[] genres = line.split(",");
+		return this.setGenres(genres);
 	}
 
 }
