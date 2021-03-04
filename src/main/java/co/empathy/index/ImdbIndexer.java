@@ -3,8 +3,9 @@ package co.empathy.index;
 import co.empathy.engines.SearchEngine;
 import co.empathy.beans.ImdbItem;
 import io.micronaut.context.annotation.Prototype;
+import io.reactivex.annotations.NonNull;
 
-import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,11 +26,25 @@ public class ImdbIndexer implements Indexer {
 	public static final int BULK_SIZE = 10000;
 	public static final int TOTAL_BULKS = 766;
 
-	private int counter = 0;
+	@NonNull
+	private SearchEngine engine;
 
-	//TODO abstract the engine from the indexer to pick one
-	@Inject
-	SearchEngine engine;
+	/**
+	 * Constructor of the IMDB Indexer.
+	 * As injected automatically loads the ElasticSearchEngine by default.
+	 * @param engine	Engine the Indexer will use.
+	 */
+	public ImdbIndexer(@NonNull @Named("elastic") SearchEngine engine) {
+		this.engine = engine;
+	}
+
+	/**
+	 * Changes the Indexer engine
+	 * @param engine	New SearchEngine to use
+	 */
+	public void setEngine(@NonNull SearchEngine engine) {
+		this.engine = engine;
+	}
 
 	@Override
 	public void indexFile(String filePath) throws IOException {
@@ -47,6 +62,7 @@ public class ImdbIndexer implements Indexer {
 		reader.readLine();								// Skip the tab header
 		String line = reader.readLine();
 		// For each line create a new entry
+		int counter = 0;
 		while (line != null) {
 			// When the bulk is full send it to index
 			if (bulk.size() >= BULK_SIZE) {
