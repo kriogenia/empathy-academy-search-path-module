@@ -1,9 +1,8 @@
 package co.empathy.controllers;
 
 import co.empathy.beans.ImdbItem;
-import co.empathy.beans.SearchResponse;
+import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
@@ -28,6 +27,9 @@ public class SearchControllerTest {
 	@Inject
 	ObjectMapper mapper;
 
+	@Inject
+	TestHelper helper;
+
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 
 	@Test
@@ -36,7 +38,7 @@ public class SearchControllerTest {
 		String uri = baseUri.queryParam("title", "Carmencita").toString();
 		HttpRequest<String> request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
-		var retrieved = mapper.readValue(jsonResult, getImdbResponseType());
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 		// Result check
 		assertNotNull(retrieved);
 		assertEquals(7, retrieved.getTotal());
@@ -61,7 +63,7 @@ public class SearchControllerTest {
 		var uri = baseUri.queryParam("title", "Jumanji").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
-		var retrieved = mapper.readValue(jsonResult, getImdbResponseType());
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
 		assertEquals(98, retrieved.getTotal());
@@ -71,6 +73,20 @@ public class SearchControllerTest {
 
 
 	@Test
+	public void testSearchTitleWithMultipleWords() throws JsonProcessingException {
+		var uri = baseUri.queryParam("title", "Shawshank Redemption").toString();
+		var request = HttpRequest.GET(uri);
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+
+		assertNotNull(retrieved);
+		assertEquals(1200, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
+		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle)
+				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));
+	}
+
+	@Test
 	public void testSearchWithoutQuery() {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());
 		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
@@ -78,11 +94,4 @@ public class SearchControllerTest {
 		assertEquals(400, exception.getStatus().getCode());
 	}
 
-	/**
-	 * Builds the type to parse the responses
-	 * @return	SearchResponse<ImdbItem> TypeReference
-	 */
-	private TypeReference<SearchResponse<ImdbItem>> getImdbResponseType() {
-		return new TypeReference<>() {};
-	}
 }
