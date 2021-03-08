@@ -1,0 +1,46 @@
+{
+  "mappings": {
+    "properties": {
+      "original_title": {
+        "type": "text",
+        "search_analyzer": "title_search_analyzer",
+        "analyzer": "title_analyzer"
+      },
+      "type": {
+        "type": "text",
+        "search_analyzer": "type_search_analyzer",
+        "analyzer": "type_analyzer"
+      }
+    }
+  },
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "title_search_analyzer": {
+          "type": "custom",
+          "tokenizer": "",
+          "char_filter": [],
+          "filter": []
+        },
+        "title_analyzer": {
+          "type": "custom",
+          "tokenizer": "",
+          "char_filter": [],
+          "filter": []
+        },
+        "type_search_analyzer": {
+          "type": "custom",
+          "tokenizer": "",
+          "char_filter": [],
+          "filter": []
+        },
+        "type_analyzer": {
+          "type": "custom",
+          "tokenizer": "",
+          "char_filter": [],
+          "filter": []
+        }
+      }
+    }
+  }
+}

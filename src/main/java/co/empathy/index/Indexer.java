@@ -1,5 +1,9 @@
 package co.empathy.index;
 
+import co.empathy.engines.SearchEngine;
+import co.empathy.index.configuration.IndexConfiguration;
+import io.reactivex.annotations.NonNull;
+
 import java.io.IOException;
 
 /**
@@ -8,18 +12,30 @@ import java.io.IOException;
 public interface Indexer {
 
 	/**
+	 * Changes the Indexer engine
+	 * @param engine	new SearchEngine to use
+	 * @return 			modified indexer
+	 */
+	Indexer setEngine(@NonNull SearchEngine engine);
+
+	/**
+	 * Changes the Indexer configuration
+	 * @param configuration	new IndexConfiguration to use
+	 * @return 				modified indexer
+	 */
+	Indexer setConfiguration(@NonNull IndexConfiguration configuration);
+
+	/**
 	 * Reads and inserts the content of the file into an index
-	 * @param filePath	path of the file to index
 	 * @throws IOException	if an I/O error occurs opening the file
 	 */
-	void indexFile(String filePath) throws IOException;
+	void indexFile() throws IOException;
 
 	/**
 	 * Reads and inserts the content of the file into an index
 	 * through Bulk Requests
-	 * @param filePath	path of the file to index
 	 * @throws IOException	if an I/O error occurs opening the file
 	 */
-	void bulkIndexFile(String filePath) throws IOException;
+	void bulkIndexFile() throws IOException;
 
 }

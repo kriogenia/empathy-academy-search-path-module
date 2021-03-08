@@ -10,15 +10,15 @@ public class Application {
 
 	public static void main(String[] args) {
 		Micronaut.run(Application.class, args);
-		//indexImdb();
+		indexImdb();
 	}
 
 	private static void indexImdb() {
 		final BeanContext context = BeanContext.run();
 		Indexer indexer = context.getBean(Indexer.class);
 		try {
-			indexer.bulkIndexFile("src/main/resources/title.basics.tsv");
-			//indexer.indexFile("src/main/resources/title.basics.tsv");
+			indexer.bulkIndexFile();
+			//indexer.indexFile();
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}

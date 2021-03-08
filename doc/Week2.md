@@ -45,3 +45,7 @@ Thanks to my architecture it was really easy to implement. It didn't work as I e
 
 Thank god the ElasticSearch documentation is good, and I was able to find how to refine the search.
 Adding the cross fields type of the search the results were, indeed, an improvement. So I did some tests.
+
+## 05/03/2021
+
+As I have my weekly tasks out of the way, today I'll be extensively reading the Elastic Search documentation.
