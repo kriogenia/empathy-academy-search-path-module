@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "title_search_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "title_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "type_search_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        },
+        "type_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "original_title": {
+        "type": "text",
+        "search_analyzer": "title_search_analyzer",
+        "analyzer": "title_analyzer"
+      },
+      "type": {
+        "type": "text",
+        "search_analyzer": "type_search_analyzer",
+        "analyzer": "type_analyzer"
+      }
+    }
+  }
+}
