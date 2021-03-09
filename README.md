@@ -19,4 +19,10 @@ Documentation of interest:
 ## Feature http-client documentation
 
 - [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+---
+
+## Dataset
+
+The database used to index and search on this demo is the *title.basics.tsv.gz* from IMDB 
+which can be downloaded [here](https://datasets.imdbws.com). It should be placed on resources/imdb to work. 
 

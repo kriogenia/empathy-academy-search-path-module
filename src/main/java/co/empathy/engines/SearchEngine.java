@@ -50,8 +50,15 @@ public interface SearchEngine extends AutoCloseable {
 	/**
 	 * Retrieves the version of the cluster of the SearchEngine
 	 * @return	Version number of the SearchEngine in use
-	 * @throws IOException	to SearchEngine failures
+	 * @throws IOException	if an error occurred with the Search Engine
 	 */
 	String getVersion() throws IOException;
+
+	/**
+	 * @param key	key of the index to check
+	 * @return		true if the index already exists in the engine, false if it doesn't
+	 * @throws IOException	if an error occurred with the Search Engine
+	 */
+	boolean hasIndex(String key) throws IOException;
 
 }

@@ -1,5 +1,8 @@
 package co.empathy.index.configuration;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class ImdbIndexConfiguration implements IndexConfiguration {
 
 	public static final String INDEX_KEY = "imdb";
@@ -20,5 +23,10 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 	@Override
 	public int getBulkSize() {
 		return BULK_SIZE;
+	}
+
+	@Override
+	public int getTotalBulks() {
+		return TOTAL_BULKS;
 	}
 }

@@ -104,10 +104,9 @@ public class BaseIndexer implements Indexer {
 	/**
 	 * @return	true if the specified index exists, false in case it doesn't
 	 */
-	private boolean existsIndex() {
+	private boolean existsIndex() throws IOException {
 		System.out.println("Checking if the index already exists...");
-		// Call engine to know if index exists
-		return false;
+		return engine.hasIndex(config.getKey());
 	}
 
 	/**
