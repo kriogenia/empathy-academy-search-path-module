@@ -13,4 +13,4 @@ out/
 .classpath
 .factorypath
 /src/main/resources/imdb/title.basics.tsv
-/src/java/resources/test/
+/src/java/resources/test/*

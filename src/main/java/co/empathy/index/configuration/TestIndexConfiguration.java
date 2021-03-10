@@ -7,16 +7,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Index configuration to load a portion of the database with
+ * a test configuration
+ */
 @Singleton
-public class ImdbIndexConfiguration implements IndexConfiguration {
+public class TestIndexConfiguration implements IndexConfiguration {
 
 	// TODO move configuration to resource files
 
-	public static final String INDEX_KEY = "imdb";
-	public static final String BASE_PATH = "src/main/resources/imdb";
-	public static final String FILE_PATH = BASE_PATH + "/title.basics.tsv";
+	public static final String INDEX_KEY = "test";
+	public static final String BASE_PATH = "src/test/resources/test";
+	public static final String FILE_PATH = BASE_PATH + "/test.tsv";
 	public static final int BULK_SIZE = 5000;
-	public static final int TOTAL_BULKS = 7662622 / BULK_SIZE;
+	public static final int TOTAL_BULKS = 162622 / BULK_SIZE;
 
 	@Override
 	public String getKey() {
@@ -40,7 +44,8 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 
 	@Override
 	public String getSource(EEngine requesterInfo) throws IOException {
-		String path = BASE_PATH + "/" + requesterInfo.getKey() + "_index_config.json";
+		System.out.println("Retrieving test database");
+		String path = BASE_PATH + "/index.json";
 		return new String(Files.readAllBytes(Paths.get(path)));
 	}
 }
