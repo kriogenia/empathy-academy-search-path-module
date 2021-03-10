@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
-public class Week2SearchTest {
+public class Week2SearchIntegrationTest {
 
 	@Inject
 	@Client("/")

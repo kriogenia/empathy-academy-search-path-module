@@ -2,6 +2,7 @@ package co.empathy.engines;
 
 import co.empathy.index.Indexable;
 import co.empathy.beans.SearchResult;
+import co.empathy.index.configuration.IndexConfiguration;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,5 +61,11 @@ public interface SearchEngine extends AutoCloseable {
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
 	boolean hasIndex(String key) throws IOException;
+
+	/**
+	 * Creates and index with the specified configuration
+	 * @param configuration	index requested configuration
+	 */
+	void createIndex(IndexConfiguration configuration) throws IOException;
 
 }

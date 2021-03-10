@@ -112,9 +112,9 @@ public class BaseIndexer implements Indexer {
 	/**
 	 * Builds an index with the
 	 */
-	private void createIndex() {
+	private void createIndex() throws IOException {
 		System.out.println("Creating new index...");
-		// Call engine to create index with the current configuration
+		engine.createIndex(config);
 		System.out.println("Index successfully built");
 	}
 

@@ -1,10 +1,9 @@
 package co.empathy.engines;
 
-import co.empathy.index.Indexable;
 import co.empathy.beans.SearchResult;
+import co.empathy.index.Indexable;
+import co.empathy.index.configuration.IndexConfiguration;
 import org.apache.http.HttpHost;
-import org.elasticsearch.action.ActionFuture;
-import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -14,18 +13,16 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
+import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.cluster.metadata.IndexMetadata;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -35,6 +32,8 @@ import java.util.List;
 public class ElasticSearchEngine implements SearchEngine {
 
 	private final RestHighLevelClient esClient;
+	private final EEngine info = EEngine.ELASTIC_SEARCH;
+
 
 	/**
 	 * Default constructor loading Elastic Search client
@@ -51,6 +50,7 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public void close() throws Exception {
+		System.out.println("Closing ElasticSearch client");
 		esClient.close();
 	}
 
@@ -104,6 +104,14 @@ public class ElasticSearchEngine implements SearchEngine {
 	public boolean hasIndex(String key) throws IOException {
 		GetIndexRequest request = new GetIndexRequest(key);
 		return esClient.indices().exists(request, RequestOptions.DEFAULT);
+	}
+
+	@Override
+	public void createIndex(IndexConfiguration configuration) throws IOException {
+		CreateIndexRequest create = new CreateIndexRequest(configuration.getKey());
+		String mapping = configuration.getSource(info);
+		create.source(mapping, XContentType.JSON);
+		esClient.indices().create(create, RequestOptions.DEFAULT);
 	}
 
 	/**

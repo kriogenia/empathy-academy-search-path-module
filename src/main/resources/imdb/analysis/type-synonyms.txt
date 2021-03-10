@@ -1,0 +1,4 @@
+film, picture => movie
+series => tvseries
+ep, episode => tvepisode
+special => tvspecial
