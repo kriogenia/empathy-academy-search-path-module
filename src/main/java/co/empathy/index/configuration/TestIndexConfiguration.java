@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 public class TestIndexConfiguration implements IndexConfiguration {
 
 	// TODO move configuration to resource files
+	// TODO refactor general test to ImdbTest
 
 	public static final String INDEX_KEY = "test";
 	public static final String BASE_PATH = "src/test/resources/test";

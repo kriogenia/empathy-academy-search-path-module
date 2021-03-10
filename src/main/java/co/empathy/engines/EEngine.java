@@ -4,7 +4,8 @@ package co.empathy.engines;
  * Enumerated list of search engines
  */
 public enum EEngine {
-	ELASTIC_SEARCH("es");
+	ELASTIC_SEARCH("es"),
+	TEST("test");
 
 	private final String key;
 

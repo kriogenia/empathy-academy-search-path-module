@@ -34,4 +34,7 @@ Then I tried my analyzers with searches against the whole database, it didn't go
 My approach with the types was bad, keeping only the wanted keywords made that everything matched the query,
 So I will erase the keep filter, but I will still look for the better way to search on keyword properties.
 
-Right now my next step will make a ton of tests testing absolutely everything, and that will requires building test index and classes.
+I made a ton of tests, and that involved creating test index and classes.
+It took me the whole morning, but it should save my a lot of future time.
+
+

@@ -1,11 +1,14 @@
 package co.empathy.search;
 
+import io.micronaut.context.annotation.DefaultImplementation;
+
 import java.io.IOException;
 import java.io.Serializable;
 
 /**
  * Module managing the search engines
  */
+@DefaultImplementation(ImdbSearcher.class)
 public interface Searcher {
 
 	/**

@@ -34,7 +34,6 @@ public class ElasticSearchEngine implements SearchEngine {
 	private final RestHighLevelClient esClient;
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
 
-
 	/**
 	 * Default constructor loading Elastic Search client
 	 */
@@ -86,7 +85,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		// Build the multi match query
 		var multiBuilder = new MultiMatchQueryBuilder(query, fields);
 		multiBuilder.type(MultiMatchQueryBuilder.Type.CROSS_FIELDS);
-		multiBuilder.operator(Operator.AND);
+		multiBuilder.operator(Operator.OR);
 		// Build and launch the search
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		builder.query(multiBuilder);

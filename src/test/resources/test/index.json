@@ -36,7 +36,9 @@
             "film, picture => movie",
             "series => tvseries",
             "ep, episode => tvepisode",
-            "special => tvspecial"
+            "special => tvspecial",
+            "miniseries => tvminiseries",
+            "game => videogame"
           ]
         },
         "type_keep_f" : {

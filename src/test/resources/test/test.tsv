@@ -1,0 +1,22 @@
+
+tconst	titleType	primaryTitle	originalTitle	isAdult	startYear	endYear	runtimeMinutes	genres
+tt0000001	short	Carmencita	Carmencita	0	1894	\N	0	Documentary,Short
+tt0000002	movie	The Avengers	The Avengers	0	2014	\N	143	Action
+tt0000003	tvEpisode	Dr. Who and the Daleks	Dr, Who and the Daleks	0	2019	\N	\N	News
+tt0000004	video	People	People	0	2019	\N	\N	Music
+tt0000005	tvSeries	Super Mero	Super Mero	0	2019	2019	30	Comedy,Sci-Fi
+tt0000006	tvMovie	Mink Coat Mafia	Mink Coat Mafia	0	2019	\N	\N	Comedy
+tt0000007	tvMiniSeries	Family	Family	0	1994	\N	118	Drama
+tt0000008	videoGame	Dragon's Lair	Dragon's Lair	0	1983	\N	\N	Adventure,Animation,Fantasy
+tt0000009	tvSpecial	Saltimbanco	Saltimbanco	0	1997	\N	56	Family,Musical
+tt0000010	movie	Parasite	Gisaengchung	0	2019	\N	132	Comedy,Drama,Thriller
+tt0000011	movie	The Amazing Spider-Man 2	The Amazing Spider-Man 2	0	2014	\N	142	Action,Adventure,Fantasy
+tt0000012	tvEpisode	You're Fired!	You're Fired!	0	2011	\N	\N	Reality-TV
+tt0000013	movie	Ocaña, la memoria del sol	Ocaña, la memoria del sol	0	2010	\N	99	Biography
+tt0000014	movie	Rocky IV	Rocky IV	0	1985	\N	91	Drama,Sport
+tt0000015	movie	The Fantastic Four	The Fantastic Four	0	1994	\N	90	Action,Adventure,Family
+tt0000016	movie	It	It	0	2017	\N	135	Horror
+tt0000017	tvEpisode	Dr. Who?	Dr. Who?	0	2008	\N	\N	Comedy
+tt0000018	movie	Soul	Soul	0	2020	\N	100	Animation,Adventure,Comedy
+tt0000019	movie	Coming to America	Coming to America	0	1988	\N	117	Comedy,Romance
+tt0000020	movie	Akira	Akira	0	1988	\N	124	Animation,Action,Sci-Fi

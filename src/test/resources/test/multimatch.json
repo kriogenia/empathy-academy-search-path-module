@@ -1,7 +1,7 @@
 {
   "query": {
     "multi_match": {
-      "query": "The Avengers movie",
+      "query": "Spiderman movie",
       "type": "cross_fields",
       "fields": [
         "original_title",
