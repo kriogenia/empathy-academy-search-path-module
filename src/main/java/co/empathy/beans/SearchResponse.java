@@ -7,9 +7,12 @@ import java.util.List;
 
 public class SearchResponse<T extends Serializable> implements Serializable {
 
-	@JsonProperty("total")
+	public static final String TOTAL = "total";
+	public static final String ITEMS = "items";
+
+	@JsonProperty(TOTAL)
 	private long total;
-	@JsonProperty("items")
+	@JsonProperty(ITEMS)
 	private List<T> items;
 
 	/**

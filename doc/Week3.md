@@ -47,3 +47,6 @@ To make it easier and more readable I extracted some common operations to a help
 Then I jumped to the ImdbItem ,and I found a mistake on the class while doing those.
 That's good, they work and servers a purpose.
 
+SearchResponse looked easy at first, even with the generic typing. It was not.
+I had a hard time being able to test properly the json conversion. I did it tho.
+

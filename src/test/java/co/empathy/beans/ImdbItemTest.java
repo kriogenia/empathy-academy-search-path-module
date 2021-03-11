@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ImdbItemTest {
 
 	@Inject
-	ObjectMapper mapper;
+	private ObjectMapper mapper;
 
 	private ImdbItem item;
 
