@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
  */
 public class SearchResult {
 
+	public final static String TOTAL = "total";
+	public final static String ITEMS = "items";
+
 	private final long total;
 	private final List<Map<String, Object>> items;
 
@@ -24,8 +27,8 @@ public class SearchResult {
 	 */
 	@JsonCreator
 	public SearchResult(
-			@JsonProperty("total") long total,
-			@JsonProperty("items") List<Map<String, Object>> items) {
+			@JsonProperty(TOTAL) long total,
+			@JsonProperty(ITEMS) List<Map<String, Object>> items) {
 		this.total = total;
 		this.items = items;
 	}

@@ -20,7 +20,7 @@ import static co.empathy.util.ElasticSearchTestHelper.*;
 public class ElasticSearchEngineImdbTest {
 
 	@Inject
-	private ElasticSearchEngine engine;
+	ElasticSearchEngine engine;
 
 	/**
 	 * Test the ascii_folding filters applied to the titles

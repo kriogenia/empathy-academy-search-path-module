@@ -4,7 +4,7 @@ plugins {
 }
 
 version = "0.1"
-group = "com.example"
+group = "co.empathy"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.example.*")
+        annotations("co.empathy.*")
     }
 }
 
@@ -27,6 +27,8 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.elasticsearch:micronaut-elasticsearch")
     runtimeOnly("ch.qos.logback:logback-classic")
+    testCompile("org.mockito:mockito-core:2.+")
+    testImplementation("org.mockito:mockito-inline:3.+")
 }
 
 

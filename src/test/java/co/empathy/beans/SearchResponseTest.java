@@ -19,10 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SearchResponseTest {
 
 	@Inject
-	private ObjectMapper mapper;
+	ObjectMapper mapper;
 
 	@Inject
-	private TestHelper helper;
+	TestHelper helper;
 
 	private SearchResponse<Serializable> response;
 
@@ -35,7 +35,7 @@ public class SearchResponseTest {
 	}
 
 	/**
-	 * Tests the automatic conversion of the object to Json
+	 * Tests the automatic conversion of the object to JSON
 	 * @throws JsonProcessingException	if the parsing fails
 	 */
 	@Test
@@ -47,14 +47,18 @@ public class SearchResponseTest {
 		assertEquals(total, jsonMap.get(SearchResponse.TOTAL));
 		// Items
 		assertTrue(jsonMap.get(SearchResponse.ITEMS) instanceof List<?>);
-		var genres = jsonMap.get(SearchResponse.ITEMS);
-		for (Object o: (List<?>) genres) {
+		var items = jsonMap.get(SearchResponse.ITEMS);
+		for (Object o: (List<?>) items) {
 			assertTrue(o instanceof Map);
 			var id = ((Map)o).get(ImdbItem.ID).toString();
 			assertTrue(id.contains("tt000000"));
 		}
 	}
 
+	/**
+	 * Test the automatic conversion from JSON to object
+	 * @throws JsonProcessingException	if the parsing fails
+	 */
 	@Test
 	public void fromJsonTest() throws JsonProcessingException {
 		var item1 = ImdbItem.buildFromString("tt0000001\tshort\tCarmencita\tCarmencita\t0\t1894\t\\N\t0\tDocumentary,Short");
@@ -67,8 +71,8 @@ public class SearchResponseTest {
 		var read = mapper.readValue(json, helper.getImdbResponseType());
 		// Total
 		assertEquals(response.getTotal(), read.getTotal());
-		assertEquals(response.getItems().size(), read.getItems().size());
 		// Items
+		assertEquals(response.getItems().size(), read.getItems().size());
 		assertEquals("tt0000001",  read.getItems().get(0).getId());
 		assertEquals("tt0000002",  read.getItems().get(1).getId());
 

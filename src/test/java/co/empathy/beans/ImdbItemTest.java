@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ImdbItemTest {
 
 	@Inject
-	private ObjectMapper mapper;
+	ObjectMapper mapper;
 
 	private ImdbItem item;
 
@@ -94,7 +94,7 @@ public class ImdbItemTest {
 	 * Tests the setEndYear
 	 */
 	@Test
-	public void setEndYear() {
+	public void setEndYearTest() {
 		assertNull(item.getEndYear());
 		item.setEndYear("1900");
 		assertEquals("1900", item.getEndYear());
@@ -106,7 +106,7 @@ public class ImdbItemTest {
 	 * Tests the setGenres of ImdbItem and its exceptions
 	 */
 	@Test
-	public void setGenres() {
+	public void setGenresTest() {
 		// Less than one genre - INVALID
 		String[] no_genres = new String[0];
 		var exception = assertThrows(IllegalArgumentException.class,
@@ -126,7 +126,7 @@ public class ImdbItemTest {
 	 * Tests the toJsonMap of Indexable
 	 */
 	@Test
-	public void toJsonMap() {
+	public void toJsonMapTest() {
 		var map = item.toJsonMap();
 		Map<String, Object> jsonMap = new HashMap<>();
 		// No ID
@@ -158,7 +158,7 @@ public class ImdbItemTest {
 	 * Test the parseGenres of ImdbItem and its exceptions
 	 */
 	@Test
-	public void parseGenres() {
+	public void parseGenresTest() {
 		// Less than one - INVALID
 		String no_genres = "";
 		var exception = assertThrows(IllegalArgumentException.class,
@@ -178,7 +178,7 @@ public class ImdbItemTest {
 	 * Tests the buildFromString from ImdbItem and its exceptions
 	 */
 	@Test
-	public void buildFromString() {
+	public void buildFromStringTest() {
 		// Less than 9 arguments
 		String less_than_9 = "a\tb\tc\td\te\tf\tg\th";
 		var exception = assertThrows(IllegalArgumentException.class,

@@ -28,7 +28,7 @@ public class ElasticSearchEngineTest {
 	 * @throws IOException	produced in the tested function
 	 */
 	@Test
-	public void searchSingleMatch() throws IOException {
+	public void searchSingleMatchTest() throws IOException {
 		// One result
 		var items = performSingleMatch(engine, "Carmencita", 1, 1);
 		var item = items.get(0);
@@ -50,7 +50,7 @@ public class ElasticSearchEngineTest {
 	 * @throws IOException	produced in the tested function
 	 */
 	@Test
-	public void searchMultiMatch() throws IOException {
+	public void searchMultiMatchTest() throws IOException {
 		// Less than 10 results
 		var items = performMultiMatch(engine, "the tvEpisode", 6, 6);
 		for (var item: items) {
@@ -74,7 +74,7 @@ public class ElasticSearchEngineTest {
 	 * @throws IOException	produced in the tested function
 	 */
 	@Test
-	public void getVersion() throws IOException {
+	public void getVersionTest() throws IOException {
 		var result = engine.getVersion();
 		assertEquals(CURRENT_VERSION, result);
 	}
@@ -84,7 +84,7 @@ public class ElasticSearchEngineTest {
 	 * @throws IOException produced in the tested function
 	 */
 	@Test
-	public void hasIndex() throws IOException {
+	public void hasIndexTest() throws IOException {
 		assertTrue(engine.hasIndex("test"));
 		assertFalse(engine.hasIndex("this_index_does_not_exist"));
 	}
