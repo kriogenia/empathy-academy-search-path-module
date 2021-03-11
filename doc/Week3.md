@@ -37,4 +37,13 @@ So I will erase the keep filter, but I will still look for the better way to sea
 I made a ton of tests, and that involved creating test index and classes.
 It took me the whole morning, but it should save my a lot of future time.
 
+#11/03/2021
+
+So, a full testing day. 
+
+First I finished the ElasticSearchEngine tests, which were the key ones.
+To make it easier and more readable I extracted some common operations to a helper class.
+
+Then I jumped to the ImdbItem ,and I found a mistake on the class while doing those.
+That's good, they work and servers a purpose.
 

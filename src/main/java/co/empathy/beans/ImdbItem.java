@@ -197,6 +197,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @param genres	up to three genres associated with the title
 	 * @return 			the item modified
+	 * @throws IllegalArgumentException	if there's less than one genre or more than 3
 	 */
 	public ImdbItem setGenres(String[] genres) {
 		if (genres.length < 1 || genres.length > 3) {
@@ -205,7 +206,6 @@ public class ImdbItem implements Indexable {
 		this.genres = genres;
 		return this;
 	}
-
 
 	@Override
 	public Map<String, Object> toJsonMap() {
@@ -222,6 +222,12 @@ public class ImdbItem implements Indexable {
 		return jsonMap;
 	}
 
+	/**
+	 * Builds an ImdbItem from a single line string
+	 * @param line	string with the properties separated by tabs
+	 * @return		built ImdbItem
+	 * @throws IllegalArgumentException	if the string doesn't have exactly nine properties
+	 */
 	public static ImdbItem buildFromString(String line) {
 		String[] params =  line.split("\t");
 		if (params.length != 9) {
@@ -242,8 +248,12 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @param line		string with up to three genres associated with the title
 	 * @return 			the item modified
+	 * @throws IllegalArgumentException	if there's less than one gender or more than three
 	 */
 	public ImdbItem parseGenres(String line) {
+		if (line.length() == 0) {
+			throw new IllegalArgumentException("Invalid number of genres");
+		}
 		String[] genres = line.split(",");
 		return this.setGenres(genres);
 	}
