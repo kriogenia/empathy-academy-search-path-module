@@ -1,18 +1,18 @@
 package co.empathy.engines;
 
-import co.empathy.beans.ImdbItem;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.io.IOException;
 
+import static co.empathy.util.ElasticSearchTestHelper.performMultiMatch;
+import static co.empathy.util.ElasticSearchTestHelper.performSingleMatch;
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 public class ElasticSearchEngineTest {
 
-	public static final String INDEX = "test";
 	public static final String CURRENT_VERSION = "7.11.1";
 
 	@Inject
@@ -30,11 +30,7 @@ public class ElasticSearchEngineTest {
 	@Test
 	public void searchSingleMatch() throws IOException {
 		// One result
-		var result = engine.searchSingleMatch("Carmencita",
-				ImdbItem.ORIGINAL_TITLE, INDEX);
-		assertEquals(1, result.getTotal());
-		var items = result.getItems();
-		assertEquals(1, items.size());
+		var items = performSingleMatch(engine, "Carmencita", 1, 1);
 		var item = items.get(0);
 		assertEquals("tt0000001", item.get("id"));
 		assertEquals("Carmencita", item.get("title"));
@@ -43,10 +39,7 @@ public class ElasticSearchEngineTest {
 		assertEquals("\\N", item.get("end_year"));
 
 		// More than one result
-		result = engine.searchSingleMatch("the", ImdbItem.ORIGINAL_TITLE, INDEX);
-		assertEquals(4, result.getTotal());
-		items = result.getItems();
-		assertEquals(4, items.size());
+		items = performSingleMatch(engine, "the", 4, 4);
 		assertTrue(items.stream().map(x -> x.get("title").toString()).allMatch(
 				x -> x.matches(".*[Tt]he.*")));
 	}
@@ -59,11 +52,7 @@ public class ElasticSearchEngineTest {
 	@Test
 	public void searchMultiMatch() throws IOException {
 		// Less than 10 results
-		var result = engine.searchMultiMatch("the tvEpisode",
-				new String[]{ImdbItem.ORIGINAL_TITLE, ImdbItem.TYPE}, INDEX);
-		assertEquals(6, result.getTotal());
-		var items = result.getItems();
-		assertEquals(6, items.size());
+		var items = performMultiMatch(engine, "the tvEpisode", 6, 6);
 		for (var item: items) {
 			String title = item.get("title").toString();
 			String type = item.get("type").toString();
@@ -71,11 +60,7 @@ public class ElasticSearchEngineTest {
 					|| title.matches(".*[Tt][Vv].*") || type.equals("tvEpisode"));
 		}
 		// More then 10 results
-		result = engine.searchMultiMatch("the movie",
-				new String[]{ImdbItem.ORIGINAL_TITLE, ImdbItem.TYPE}, INDEX);
-		assertEquals(11, result.getTotal());
-		items = result.getItems();
-		assertEquals(10, items.size());
+		items = performMultiMatch(engine, "the movie", 11, 10);
 		for (var item: items) {
 			String title = item.get("title").toString();
 			String type = item.get("type").toString();
@@ -100,8 +85,8 @@ public class ElasticSearchEngineTest {
 	 */
 	@Test
 	public void hasIndex() throws IOException {
-		assertTrue(engine.hasIndex(INDEX));
-		assertFalse(engine.hasIndex("this_index_does_not_exists"));
+		assertTrue(engine.hasIndex("test"));
+		assertFalse(engine.hasIndex("this_index_does_not_exist"));
 	}
 
 	//TODO test createIndex

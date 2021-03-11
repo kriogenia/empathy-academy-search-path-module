@@ -103,14 +103,6 @@ public class SearchControllerIntegrationTest {
 						x.getTitleType().equals("movie"))));
 	}
 
-	// TODO test search with asciifolding
-	// TODO test search with decimal digit
-	// TODO test search with uppercase / lowercase
-	// TODO test search with numbers
-	// TODO test search with -
-	// TODO test search with possessives
-
-
 	@Test
 	public void testSearchWithoutTitle() {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());

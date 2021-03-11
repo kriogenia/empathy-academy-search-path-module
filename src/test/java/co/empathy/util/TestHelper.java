@@ -16,4 +16,5 @@ public class TestHelper {
 	public TypeReference<SearchResponse<ImdbItem>> getImdbResponseType() {
 		return new TypeReference<>() {};
 	}
+
 }

@@ -1,13 +1,13 @@
 {
   "query": {
     "multi_match": {
-      "query": "Spiderman movie",
+      "query": "it film",
       "type": "cross_fields",
       "fields": [
         "original_title",
         "type"
       ],
-      "operator": "and"
+      "operator": "or"
     }
   }
 }

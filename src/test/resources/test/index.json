@@ -78,7 +78,9 @@
           "filter": [
             "asciifolding",
             "decimal_digit",
-            "lowercase"
+            "lowercase",
+            "title_word_delimiter_graph_f",
+            "flatten_graph"
           ]
         },
         "type_analyzer": {
