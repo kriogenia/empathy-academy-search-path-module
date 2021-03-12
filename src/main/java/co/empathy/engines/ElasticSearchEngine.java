@@ -4,6 +4,7 @@ import co.empathy.beans.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import org.apache.http.HttpHost;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
@@ -111,6 +112,12 @@ public class ElasticSearchEngine implements SearchEngine {
 		String mapping = configuration.getSource(info);
 		create.source(mapping, XContentType.JSON);
 		esClient.indices().create(create, RequestOptions.DEFAULT);
+	}
+
+	@Override
+	public void deleteIndex(String key) throws IOException {
+		DeleteIndexRequest request = new DeleteIndexRequest(key);
+		esClient.indices().delete(request, RequestOptions.DEFAULT);
 	}
 
 	/**

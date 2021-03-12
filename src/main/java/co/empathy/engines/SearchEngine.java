@@ -65,7 +65,15 @@ public interface SearchEngine extends AutoCloseable {
 	/**
 	 * Creates and index with the specified configuration
 	 * @param configuration	index requested configuration
+	 * @throws IOException	if an error occurred with the search engine
 	 */
 	void createIndex(IndexConfiguration configuration) throws IOException;
+
+	/**
+	 * Deletes the requested index
+	 * @param key	key of the index to delete
+	 * @throws IOException	if an error occurred with the search engine
+	 */
+	void deleteIndex(String key) throws IOException;
 
 }
