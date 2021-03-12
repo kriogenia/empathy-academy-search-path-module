@@ -36,7 +36,7 @@ public class ElasticSearchEngineTest {
 		assertEquals("Carmencita", item.get("title"));
 		assertEquals("short", item.get("type"));
 		assertEquals("1894", item.get("start_year"));
-		assertEquals("\\N", item.get("end_year"));
+		assertNull(item.get("end_year"));
 
 		// More than one result
 		items = performSingleMatch(engine, "the", 4, 4);

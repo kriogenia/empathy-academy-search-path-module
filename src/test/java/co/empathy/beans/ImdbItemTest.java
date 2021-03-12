@@ -96,9 +96,14 @@ public class ImdbItemTest {
 	@Test
 	public void setEndYearTest() {
 		assertNull(item.getEndYear());
+		// Valid end year
 		item.setEndYear("1900");
 		assertEquals("1900", item.getEndYear());
+		// No end year
 		item.setEndYear("\\N");
+		assertNull(item.getEndYear());
+		// Null end year
+		item.setEndYear(null);
 		assertNull(item.getEndYear());
 	}
 
@@ -148,7 +153,7 @@ public class ImdbItemTest {
 		var genres = (String[]) map.get(ImdbItem.GENRES);
 		assertArrayEquals(new String[]{"Documentary", "Short"}, genres);
 		// No end year
-		assertEquals("\\N", map.get(ImdbItem.END));
+		assertNull(map.get(ImdbItem.END));
 		item.setEndYear("1900");
 		map = item.toJsonMap();
 		assertEquals("1900", map.get(ImdbItem.END));

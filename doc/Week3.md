@@ -56,4 +56,6 @@ SearchResult was almost the same, but it did need mocking and therefore the inst
 First thing in the day, apart from the stand-up-like message was create a search engine function to delete an index.
 It was really easy, and I should have made it previously. I'm glad I was able to do it before the meetings.
 
-Next to the meeting my intention is to improve the ImdbItem types.
+Next to the meeting I did try some things with the multi search, being able to improve it.
+Then I jumped to change ImdbItem and its indexing, making the dates ase such f.e.
+That led me to add annotations to all the item properties improving the contract of the item.

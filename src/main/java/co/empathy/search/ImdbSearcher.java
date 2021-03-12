@@ -90,16 +90,19 @@ public class ImdbSearcher implements Searcher {
 			}
 		}
 		// Build and return the item
-		return new ImdbItem()
+		ImdbItem item = new ImdbItem()
 				.setId(properties.get(ImdbItem.ID).toString())
 				.setTitleType(properties.get(ImdbItem.TYPE).toString())
 				.setPrimaryTitle(properties.get(ImdbItem.TITLE).toString())
 				.setOriginalTitle(properties.get(ImdbItem.ORIGINAL_TITLE).toString())
 				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString())
 				.setStartYear(properties.get(ImdbItem.START).toString())
-				.setEndYear(properties.get(ImdbItem.END).toString())
 				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
 				.setGenres(genresList.toArray(new String[0]));
+		if (properties.get(ImdbItem.END) != null) {
+			item.setEndYear(properties.get(ImdbItem.END).toString());
+		}
+		return item;
 	}
 
 }

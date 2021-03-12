@@ -122,10 +122,12 @@
         "type": "keyword"
       },
       "start_year": {
-        "type": "text"
+        "type": "date",
+        "format": "yyyy"
       },
       "end_year": {
-        "type": "text"
+        "type": "date",
+        "format": "yyyy"
       },
       "runtime_minutes": {
         "type": "text"
