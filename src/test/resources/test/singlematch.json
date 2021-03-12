@@ -1,7 +1,7 @@
 {
   "query": {
     "match": {
-      "original_title": "spiderman"
+      "original_title": "carmencita"
     }
   }
 }

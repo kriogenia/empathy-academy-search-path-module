@@ -87,6 +87,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		var multiBuilder = new MultiMatchQueryBuilder(query, fields);
 		multiBuilder.type(MultiMatchQueryBuilder.Type.CROSS_FIELDS);
 		multiBuilder.operator(Operator.OR);
+		multiBuilder.tieBreaker(1.0F);
 		// Build and launch the search
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		builder.query(multiBuilder);

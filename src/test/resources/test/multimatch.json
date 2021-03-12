@@ -1,13 +1,14 @@
 {
   "query": {
     "multi_match": {
-      "query": "it film",
+      "query": "avengers film",
       "type": "cross_fields",
       "fields": [
         "original_title",
         "type"
       ],
-      "operator": "or"
+      "operator": "or",
+      "tie_breaker": "1.0"
     }
   }
 }

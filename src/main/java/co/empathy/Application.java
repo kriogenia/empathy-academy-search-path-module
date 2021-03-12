@@ -18,7 +18,7 @@ public class Application {
 		final BeanContext context = BeanContext.run();
 		Indexer indexer = context.getBean(Indexer.class);
 		// Uncomment to load the reduced database
-		indexer.setConfiguration(context.getBean(TestIndexConfiguration.class));
+		// indexer.setConfiguration(context.getBean(TestIndexConfiguration.class));
 		try {
 			indexer.deleteIndex();
 			indexer.bulkIndexFile();
