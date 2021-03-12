@@ -28,6 +28,7 @@ public interface Indexer {
 	/**
 	 * Reads and inserts the content of the file into an index
 	 * @throws IOException	if an I/O error occurs opening the file
+	 * 						or with the search engine
 	 */
 	void indexFile() throws IOException;
 
@@ -35,7 +36,15 @@ public interface Indexer {
 	 * Reads and inserts the content of the file into an index
 	 * through Bulk Requests
 	 * @throws IOException	if an I/O error occurs opening the file
+	 * 						or with the search engine
 	 */
 	void bulkIndexFile() throws IOException;
+
+	/**
+	 * Deletes the index specified by the current IndexConfiguration
+	 * @throws IOException	if an I/O error occurs opening the file
+	 * 						or with the search engine
+	 */
+	void deleteIndex() throws IOException;
 
 }

@@ -101,6 +101,12 @@ public class BaseIndexer implements Indexer {
 		System.out.format("Ending %s bulk indexing...\n", config.getFilePath());
 	}
 
+	@Override
+	public void deleteIndex() throws IOException {
+		System.out.format("Deleting %s index...\n", config.getKey());
+		engine.deleteIndex(config.getKey());
+	}
+
 	/**
 	 * @return	true if the specified index exists, false in case it doesn't
 	 */

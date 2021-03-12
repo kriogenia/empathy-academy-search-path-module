@@ -46,11 +46,13 @@
           "keep_words": [
             "movie",
             "short",
+            "tvminiseries",
             "tvseries",
             "tvepisode",
             "tvspecial",
             "tvmovie",
-            "video"
+            "video",
+            "videogame"
           ]
         }
       },
@@ -74,7 +76,7 @@
           "char_filter" : [
             "html_strip"
           ],
-          "tokenizer": "standard",
+          "tokenizer": "whitespace",
           "filter": [
             "asciifolding",
             "decimal_digit",
@@ -112,6 +114,24 @@
         "type": "text",
         "search_analyzer": "type_search_analyzer",
         "analyzer": "type_analyzer"
+      },
+      "title": {
+        "type": "text"
+      },
+      "is_adult": {
+        "type": "keyword"
+      },
+      "start_year": {
+        "type": "text"
+      },
+      "end_year": {
+        "type": "text"
+      },
+      "runtime_minutes": {
+        "type": "text"
+      },
+      "genres": {
+        "type": "keyword"
       }
     }
   }

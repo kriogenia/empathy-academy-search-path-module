@@ -20,6 +20,7 @@ public class Application {
 		// Uncomment to load the reduced database
 		indexer.setConfiguration(context.getBean(TestIndexConfiguration.class));
 		try {
+			indexer.deleteIndex();
 			indexer.bulkIndexFile();
 			//indexer.indexFile();
 		} catch (IOException ioe) {

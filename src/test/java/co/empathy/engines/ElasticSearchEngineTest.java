@@ -91,4 +91,6 @@ public class ElasticSearchEngineTest {
 
 	//TODO test createIndex
 
+	//TODO test deleteIndex
+
 }
