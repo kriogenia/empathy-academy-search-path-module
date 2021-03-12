@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -133,7 +132,6 @@ public class ImdbItemTest {
 	@Test
 	public void toJsonMapTest() {
 		var map = item.toJsonMap();
-		Map<String, Object> jsonMap = new HashMap<>();
 		// No ID
 		assertNull(map.get(ImdbItem.ID));
 		// Type

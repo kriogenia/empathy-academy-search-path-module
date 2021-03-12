@@ -9,6 +9,8 @@ import java.io.IOException;
  */
 public interface IndexConfiguration {
 
+	// TODO all index configurations to factory
+
 	/**
 	 * @return	key of the index
 	 */
