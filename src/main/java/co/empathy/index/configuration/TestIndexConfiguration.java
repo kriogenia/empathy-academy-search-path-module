@@ -45,7 +45,6 @@ public class TestIndexConfiguration implements IndexConfiguration {
 
 	@Override
 	public String getSource(EEngine requesterInfo) throws IOException {
-		System.out.println("Retrieving test database");
 		String path = BASE_PATH + "/index.json";
 		return new String(Files.readAllBytes(Paths.get(path)));
 	}

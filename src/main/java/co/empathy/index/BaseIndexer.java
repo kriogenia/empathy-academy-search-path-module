@@ -5,6 +5,8 @@ import co.empathy.engines.SearchEngine;
 import co.empathy.index.configuration.IndexConfiguration;
 import io.micronaut.context.annotation.Prototype;
 import io.reactivex.annotations.NonNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.io.BufferedReader;
@@ -22,6 +24,8 @@ import java.util.stream.Stream;
  */
 @Prototype
 public class BaseIndexer implements Indexer {
+
+	private static final Logger LOG = LoggerFactory.getLogger(BaseIndexer.class);
 
 	@NonNull
 	private SearchEngine engine;
@@ -56,28 +60,28 @@ public class BaseIndexer implements Indexer {
 
 	@Override
 	public void indexFile() throws IOException {
-		System.out.format("Starting %s indexing...\n", config.getFilePath());
-		// Create index in case it doesn't exists
+		LOG.info("Starting {} indexing...", config.getFilePath());
+		// Create index in case it doesn't exist
 		if (!existsIndex()) {
 			createIndex();
 		}
 		// Start indexing the files
-		System.out.println("Index ready, indexing the files...");
+		LOG.info("Index ready, indexing the files...");
 		Stream<String> stream = Files.lines(Paths.get(config.getFilePath())).skip(1);
 		stream.map(ImdbItem::buildFromString).
 				forEach(this::callIndex);
-		System.out.format("Ending %s indexing...\n", config.getFilePath());
+		LOG.info("Ending {} indexing...", config.getFilePath());
 	}
 
 	@Override
 	public void bulkIndexFile() throws IOException {
-		System.out.format("Starting %s bulk indexing...\n", config.getFilePath());
+		LOG.info("Starting {} bulk indexing...", config.getFilePath());
 		// Create index in case it doesn't exists
 		if (!existsIndex()) {
 			createIndex();
 		}
 		// Start the bulk index
-		System.out.println("Index ready, bulk indexing the files...");
+		LOG.info("Index ready, bulk indexing the files...");
 		List<Indexable> bulk = new ArrayList<>();		// Create the bulk list
 		BufferedReader reader = new BufferedReader(new FileReader(config.getFilePath()));
 		reader.readLine();								// Skip the tab header
@@ -90,20 +94,19 @@ public class BaseIndexer implements Indexer {
 				engine.bulkIndex(config.getKey(), bulk);
 				bulk = new ArrayList<>();
 				// Log progress
-				System.out.println((++counter) * 100 / config.getTotalBulks() + "% - Filling new bulk - " +
-						LocalDateTime.now());
+				LOG.info("{}% completed - Filling new bulk", (++counter) * 100 / config.getTotalBulks());
 			}
 			// Add the entry to the bulk and advance one line
 			bulk.add(ImdbItem.buildFromString(line));
 			line = reader.readLine();
 		}
 		engine.bulkIndex(config.getKey(), bulk);
-		System.out.format("Ending %s bulk indexing...\n", config.getFilePath());
+		LOG.info("Ending {} bulk indexing...", config.getFilePath());
 	}
 
 	@Override
 	public void deleteIndex() throws IOException {
-		System.out.format("Deleting %s index...\n", config.getKey());
+		LOG.info("Deleting {} index...", config.getKey());
 		engine.deleteIndex(config.getKey());
 	}
 
@@ -111,7 +114,7 @@ public class BaseIndexer implements Indexer {
 	 * @return	true if the specified index exists, false in case it doesn't
 	 */
 	private boolean existsIndex() throws IOException {
-		System.out.println("Checking if the index already exists...");
+		LOG.info("Checking if the index already exists...");
 		return engine.hasIndex(config.getKey());
 	}
 
@@ -119,9 +122,9 @@ public class BaseIndexer implements Indexer {
 	 * Builds an index with the
 	 */
 	private void createIndex() throws IOException {
-		System.out.println("Creating new index...");
+		LOG.info("Creating new index...");
 		engine.createIndex(config);
-		System.out.println("Index successfully built");
+		LOG.info("Index successfully built");
 	}
 
 	/**

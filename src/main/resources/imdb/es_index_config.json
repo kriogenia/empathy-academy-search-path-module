@@ -36,7 +36,9 @@
             "film, picture => movie",
             "series => tvseries",
             "ep, episode => tvepisode",
-            "special => tvspecial"
+            "special => tvspecial",
+            "miniseries => tvminiseries",
+            "game => videogame"
           ]
         },
         "type_keep_f" : {
@@ -44,11 +46,13 @@
           "keep_words": [
             "movie",
             "short",
+            "tvminiseries",
             "tvseries",
             "tvepisode",
             "tvspecial",
             "tvmovie",
-            "video"
+            "video",
+            "videogame"
           ]
         }
       },
@@ -72,11 +76,13 @@
           "char_filter" : [
             "html_strip"
           ],
-          "tokenizer": "standard",
+          "tokenizer": "whitespace",
           "filter": [
             "asciifolding",
             "decimal_digit",
-            "lowercase"
+            "lowercase",
+            "title_word_delimiter_graph_f",
+            "flatten_graph"
           ]
         },
         "type_analyzer": {
@@ -108,6 +114,26 @@
         "type": "text",
         "search_analyzer": "type_search_analyzer",
         "analyzer": "type_analyzer"
+      },
+      "title": {
+        "type": "text"
+      },
+      "is_adult": {
+        "type": "keyword"
+      },
+      "start_year": {
+        "type": "date",
+        "format": "yyyy"
+      },
+      "end_year": {
+        "type": "date",
+        "format": "yyyy"
+      },
+      "runtime_minutes": {
+        "type": "text"
+      },
+      "genres": {
+        "type": "keyword"
       }
     }
   }

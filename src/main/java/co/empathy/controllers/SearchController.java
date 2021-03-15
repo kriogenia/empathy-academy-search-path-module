@@ -29,9 +29,7 @@ public class SearchController {
 	 */
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<Serializable> searchTitle(
-			@QueryValue String title
-	) {
+	public HttpResponse<Serializable> searchTitle(@QueryValue String title) {
 		try {
             var result = searcher.searchByTitle(title);
 			return HttpResponse.ok(result);
@@ -51,9 +49,7 @@ public class SearchController {
 	 */
 	@Get("/all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<Serializable> searchQuery(
-			@QueryValue String query
-	) {
+	public HttpResponse<Serializable> searchQuery(@QueryValue String query) {
 		try {
 			var result = searcher.searchByQuery(query);
 			return HttpResponse.ok(result);

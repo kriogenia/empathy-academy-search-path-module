@@ -21,6 +21,8 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.IOException;
@@ -31,6 +33,8 @@ import java.util.List;
  */
 @Singleton
 public class ElasticSearchEngine implements SearchEngine {
+
+	private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchEngine.class);
 
 	private final RestHighLevelClient esClient;
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
@@ -50,15 +54,17 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public void close() throws Exception {
-		System.out.println("Closing ElasticSearch client");
+		// Close client when the engine is destroyed
+		LOG.info("Closing ElasticSearch client");
 		esClient.close();
 	}
 
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
+		// Index a single entry into the specified index
 		IndexRequest request = new IndexRequest(index).id(entry.getId()).source(entry.toJsonMap());
 		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
-		System.out.format("Indexed %s (%s)\n", entry.getId(), response.getId());
+		LOG.info("Indexed {} ({})", entry.getId(), response.getId());
 	}
 
 	@Override
@@ -96,13 +102,14 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public String getVersion() throws IOException {
-		// ElasticSearch server info
+		// ElasticSearch server info request
 		MainResponse response = esClient.info(RequestOptions.DEFAULT);
 		return response.getVersion().getNumber();
 	}
 
 	@Override
 	public boolean hasIndex(String key) throws IOException {
+		// Request and existence retrieval
 		GetIndexRequest request = new GetIndexRequest(key);
 		return esClient.indices().exists(request, RequestOptions.DEFAULT);
 	}
@@ -113,12 +120,14 @@ public class ElasticSearchEngine implements SearchEngine {
 		String mapping = configuration.getSource(info);
 		create.source(mapping, XContentType.JSON);
 		esClient.indices().create(create, RequestOptions.DEFAULT);
+		LOG.info("New index {} created", configuration.getKey());
 	}
 
 	@Override
 	public void deleteIndex(String key) throws IOException {
 		DeleteIndexRequest request = new DeleteIndexRequest(key);
 		esClient.indices().delete(request, RequestOptions.DEFAULT);
+		LOG.info("Index {} deleted", key);
 	}
 
 	/**
@@ -129,6 +138,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	 * @throws IOException	if an error with the search engine has occurred
 	 */
 	private SearchResult launchSearch(SearchSourceBuilder builder, String... indices) throws IOException {
+		// Creates the request
 		SearchRequest searchRequest = new SearchRequest();
 		searchRequest.indices(indices);
 		searchRequest.source(builder);
@@ -136,4 +146,5 @@ public class ElasticSearchEngine implements SearchEngine {
 		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
 		return SearchResult.builder(response);
 	}
+
 }
