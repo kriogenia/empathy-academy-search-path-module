@@ -11,16 +11,16 @@ public class Application {
 
 	public static void main(String[] args) {
 		Micronaut.run(Application.class, args);
-		indexImdb();
+		//indexImdb();
 	}
 
 	private static void indexImdb() {
 		final BeanContext context = BeanContext.run();
 		Indexer indexer = context.getBean(Indexer.class);
 		// Uncomment to load the reduced database
-		indexer.setConfiguration(context.getBean(TestIndexConfiguration.class));
+		//indexer.setConfiguration(context.getBean(TestIndexConfiguration.class));
 		try {
-			//indexer.deleteIndex();
+			indexer.deleteIndex();
 			indexer.bulkIndexFile();
 			//indexer.indexFile();
 		} catch (IOException ioe) {
