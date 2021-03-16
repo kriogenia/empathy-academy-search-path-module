@@ -85,16 +85,9 @@
             "flatten_graph"
           ]
         },
-        "type_analyzer": {
-          "type": "custom",
-          "tokenizer": "keyword",
-          "filter": [
-            "lowercase"
-          ]
-        },
         "type_search_analyzer": {
           "type": "custom",
-          "tokenizer": "standard",
+          "tokenizer": "keyword",
           "filter": [
             "lowercase",
             "type_synonyms_f"
@@ -111,9 +104,8 @@
         "analyzer": "title_analyzer"
       },
       "type": {
-        "type": "text",
-        "search_analyzer": "type_search_analyzer",
-        "analyzer": "type_analyzer"
+        "type": "keyword",
+        "normalizer": "lowercase"
       },
       "title": {
         "type": "text"
@@ -133,7 +125,8 @@
         "type": "text"
       },
       "genres": {
-        "type": "keyword"
+        "type": "keyword",
+        "normalizer": "lowercase"
       }
     }
   }

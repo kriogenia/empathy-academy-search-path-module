@@ -40,14 +40,21 @@ public class MovieRequest implements MyRequest {
 
 	@Override
 	@NotNull
-	public Map<String, String> queries(){
+	public Map<String, String> musts(){
 		Map<String, String> map = new HashMap<>();
 		map.put(ImdbItem.ORIGINAL_TITLE, query);
+		return map;
+	}
+
+	@Override
+	@NotNull
+	public Map<String, String[]> filters() {
+		Map<String, String[]> map = new HashMap<>();
 		if (genres != null) {
-			map.put(ImdbItem.GENRES, String.join(" ", genres));
+			map.put(ImdbItem.GENRES, genres);
 		}
 		if (types != null) {
-			map.put(ImdbItem.TYPE, String.join(" ", types));
+			map.put(ImdbItem.TYPE, types);
 		}
 		return map;
 	}

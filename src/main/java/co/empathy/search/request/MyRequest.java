@@ -6,9 +6,15 @@ import java.util.Map;
 public interface MyRequest {
 
 	/**
-	 * @return  map with the specified queries
+	 * @return  map with the required queries
 	 */
 	@NotNull
-	Map<String, String> queries();
+	Map<String, String> musts();
+
+	/**
+	 * @return  map with the filtering queries
+	 */
+	@NotNull
+	Map<String, String[]> filters();
 
 }

@@ -1,0 +1,35 @@
+{
+  "query": {
+    "bool": {
+      "must": {
+        "match": {
+          "original_title": "avengers"
+        }
+      },
+      "filter": [
+        {
+          "terms": {
+            "genres": ["news", "comedy"]
+          }
+        },
+        {
+          "terms": {
+            "type": ["tvMovie"]
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "genres": {
+      "terms": {
+        "field": "genres"
+      }
+    },
+    "type":{
+      "terms": {
+        "field": "type"
+      }
+    }
+  }
+}

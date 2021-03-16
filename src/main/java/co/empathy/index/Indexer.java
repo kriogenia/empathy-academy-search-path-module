@@ -45,6 +45,6 @@ public interface Indexer {
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */
-	void deleteIndex() throws IOException;
+	boolean deleteIndex() throws IOException;
 
 }

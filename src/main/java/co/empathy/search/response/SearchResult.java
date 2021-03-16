@@ -19,6 +19,7 @@ public class SearchResult {
 
 	private final long total;
 	private final List<Map<String, Object>> items;
+	//private final Map<Map<String, Object>> aggregations;
 
 	/**
 	 * Constructor and JSON creator of the search result object

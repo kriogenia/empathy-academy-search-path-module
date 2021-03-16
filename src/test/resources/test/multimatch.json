@@ -10,5 +10,17 @@
       "operator": "or",
       "tie_breaker": "1.0"
     }
+  },
+  "aggs": {
+    "genres": {
+      "terms": {
+        "field": "genres"
+      }
+    },
+    "type":{
+      "terms": {
+        "field": "type"
+      }
+    }
   }
 }

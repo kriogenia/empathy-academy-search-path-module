@@ -104,9 +104,16 @@ public class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public void deleteIndex() throws IOException {
+	public boolean deleteIndex() throws IOException {
 		LOG.info("Deleting {} index...", config.getKey());
-		engine.deleteIndex(config.getKey());
+		if (existsIndex()) {
+			engine.deleteIndex(config.getKey());
+			LOG.info("Index {} successfully deleted", config.getKey());
+			return true;
+		} else {
+			LOG.info("Index {} doesn't exists and can't be deleted", config.getKey());
+			return false;
+		}
 	}
 
 	/**
@@ -121,9 +128,9 @@ public class BaseIndexer implements Indexer {
 	 * Builds an index with the
 	 */
 	private void createIndex() throws IOException {
-		LOG.info("Creating new index...");
+		LOG.info("Creating new index.{}..", config.getKey());
 		engine.createIndex(config);
-		LOG.info("Index successfully built");
+		LOG.info("Index {} successfully built", config.getKey());
 	}
 
 	/**

@@ -1,6 +1,7 @@
 package co.empathy.engines;
 
 import co.empathy.index.Indexable;
+import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.index.configuration.IndexConfiguration;
 
@@ -30,13 +31,13 @@ public interface SearchEngine extends AutoCloseable {
 	void bulkIndex(String index, List<Indexable> entries) throws IOException;
 
 	/**
-	 * Retrieves the search using match against pairs of field and queries
-	 * @param queries		pairs of field and queries to search matching all
+	 * Retrieves the search of the specified request
+	 * @param request		object with all the specified clauses
 	 * @param indices		indices to search
 	 * @return				result of the search
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
-	SearchResult searchMultiMatch(Map<String, String> queries, String... indices) throws IOException;
+	SearchResult searchMultiMatch(MyRequest request, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the search using match against multiple fields

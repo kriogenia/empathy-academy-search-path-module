@@ -1,5 +1,6 @@
 package co.empathy.engines;
 
+import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
@@ -27,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Search Engine adapter of Elastic Search
@@ -81,14 +81,18 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchMultiMatch(Map<String, String> queries, String... indices) throws IOException {
-		SearchSourceBuilder builder = new SearchSourceBuilder();
+	public SearchResult searchMultiMatch(MyRequest request, String... indices) throws IOException {
 		// Build and add the boolean query with all the specified pairs
+		SearchSourceBuilder builder = new SearchSourceBuilder();
 		var queryBuilder = QueryBuilders.boolQuery();
-		queries.forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
-		builder.query(queryBuilder);
-		// Build and add the aggregations
+		// Musts
+		request.musts().forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
+		// Filters (as of right now it only accept term filters so I'll leave it like this
+		request.filters().forEach((field, text) -> queryBuilder.filter(QueryBuilders.termsQuery(field, text)));
+		// Add the aggregations
 		// TODO
+		// Build the query
+		builder.query(queryBuilder);
 		return launchSearch(builder, indices);
 	}
 
