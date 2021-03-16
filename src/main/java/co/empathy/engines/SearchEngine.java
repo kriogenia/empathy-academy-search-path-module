@@ -1,11 +1,12 @@
 package co.empathy.engines;
 
 import co.empathy.index.Indexable;
-import co.empathy.beans.SearchResult;
+import co.empathy.search.response.SearchResult;
 import co.empathy.index.configuration.IndexConfiguration;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Common interface to adapt the search engines
@@ -29,14 +30,13 @@ public interface SearchEngine extends AutoCloseable {
 	void bulkIndex(String index, List<Indexable> entries) throws IOException;
 
 	/**
-	 * Retrieves the search using match against a single field
-	 * @param query			query of the search
-	 * @param field			field to match
+	 * Retrieves the search using match against pairs of field and queries
+	 * @param queries		pairs of field and queries to search matching all
 	 * @param indices		indices to search
 	 * @return				result of the search
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
-	SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException;
+	SearchResult searchMultiMatch(Map<String, String> queries, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the search using match against multiple fields
@@ -46,7 +46,7 @@ public interface SearchEngine extends AutoCloseable {
 	 * @return				result of the search
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
-	SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException;
+	SearchResult crossSearch(String query, String[] fields, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the version of the cluster of the SearchEngine

@@ -1,4 +1,4 @@
-package co.empathy.common.beans;
+package co.empathy.common;
 
 import co.empathy.index.Indexable;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

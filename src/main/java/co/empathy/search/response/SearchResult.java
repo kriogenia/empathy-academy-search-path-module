@@ -1,4 +1,4 @@
-package co.empathy.search.beans;
+package co.empathy.search.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

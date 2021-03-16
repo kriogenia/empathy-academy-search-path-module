@@ -1,4 +1,4 @@
-package co.empathy.common.beans;
+package co.empathy.common;
 
 import co.empathy.search.response.SearchResponse;
 import co.empathy.util.TestHelper;

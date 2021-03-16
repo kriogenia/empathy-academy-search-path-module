@@ -1,7 +1,7 @@
 package co.empathy.util;
 
-import co.empathy.beans.ImdbItem;
-import co.empathy.beans.SearchResponse;
+import co.empathy.common.ImdbItem;
+import co.empathy.search.response.SearchResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.inject.Singleton;

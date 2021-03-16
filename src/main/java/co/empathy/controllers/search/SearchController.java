@@ -1,6 +1,6 @@
 package co.empathy.controllers.search;
 
-import co.empathy.beans.MovieSearchRequest;
+import co.empathy.search.request.MovieRequest;
 import co.empathy.search.Searcher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micronaut.http.HttpResponse;
@@ -31,9 +31,9 @@ public class SearchController {
 	 */
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public HttpResponse<Serializable> search(@Valid @RequestBean MovieSearchRequest request) {
+	public HttpResponse<Serializable> searchByQuery(@Valid @RequestBean MovieRequest request) {
 		try {
-            var result = searcher.searchByTitle("hola");
+            var result = searcher.searchByQuery(request);
 			return HttpResponse.ok(result);
 		} catch (JsonProcessingException e) {
 		    // Error mapping the query

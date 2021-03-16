@@ -1,9 +1,10 @@
 package co.empathy.search;
 
-import co.empathy.beans.SearchResult;
+import co.empathy.search.request.MyRequest;
+import co.empathy.search.response.SearchResult;
 import co.empathy.engines.SearchEngine;
-import co.empathy.beans.ImdbItem;
-import co.empathy.beans.SearchResponse;
+import co.empathy.common.ImdbItem;
+import co.empathy.search.response.SearchResponse;
 import io.micronaut.context.annotation.Prototype;
 import io.reactivex.annotations.NonNull;
 
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
  */
 @Prototype
 public class ImdbSearcher implements Searcher {
+
+	public static final String INDEX = "imdb";
 
 	@NonNull
 	private SearchEngine engine;
@@ -42,18 +45,9 @@ public class ImdbSearcher implements Searcher {
 	}
 
 	@Override
-	public Serializable searchByQuery(String query) throws IOException {
-		// Generate the array with the fields to search - Can be moved to a dedicated class if needed
-		var fields = new String[]{ImdbItem.ORIGINAL_TITLE, ImdbItem.TYPE};
-		// Retrieve and return  the query result
-		var result = engine.searchMultiMatch(query, fields, "imdb");
-		return buildResponse(result);
-	}
-
-	@Override
-	public Serializable searchByTitle(String query) throws IOException {
-		// Retrieve and return  the query result
-		var result = engine.searchSingleMatch(query, ImdbItem.TITLE, "imdb");
+	public Serializable searchByQuery(MyRequest request) throws IOException {
+		var queries = request.queries();
+		var result = engine.searchMultiMatch(queries, INDEX);
 		return buildResponse(result);
 	}
 

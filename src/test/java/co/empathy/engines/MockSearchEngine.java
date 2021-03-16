@@ -1,6 +1,6 @@
 package co.empathy.engines;
 
-import co.empathy.beans.SearchResult;
+import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import io.micronaut.context.annotation.Replaces;
@@ -39,7 +39,7 @@ public class MockSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException {
+	public SearchResult crossSearch(String query, String[] fields, String... indices) throws IOException {
 		return null;
 	}
 

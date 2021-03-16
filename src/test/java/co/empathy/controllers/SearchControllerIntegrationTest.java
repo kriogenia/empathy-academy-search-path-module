@@ -1,6 +1,6 @@
 package co.empathy.controllers;
 
-import co.empathy.beans.ImdbItem;
+import co.empathy.common.ImdbItem;
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

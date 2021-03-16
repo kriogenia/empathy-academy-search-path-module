@@ -1,6 +1,6 @@
 package co.empathy.index;
 
-import co.empathy.beans.ImdbItem;
+import co.empathy.common.ImdbItem;
 import co.empathy.engines.SearchEngine;
 import co.empathy.index.configuration.IndexConfiguration;
 import io.micronaut.context.annotation.Prototype;
@@ -14,7 +14,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;

@@ -1,6 +1,6 @@
 package co.empathy.engines;
 
-import co.empathy.beans.SearchResult;
+import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import org.apache.http.HttpHost;
@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Search Engine adapter of Elastic Search
@@ -80,15 +81,19 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException {
-		// Build and launch the search
+	public SearchResult searchMultiMatch(Map<String, String> queries, String... indices) throws IOException {
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		builder.query(QueryBuilders.matchQuery(field, query));
+		// Build and add the boolean query with all the specified pairs
+		var queryBuilder = QueryBuilders.boolQuery();
+		queries.forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
+		builder.query(queryBuilder);
+		// Build and add the aggregations
+		// TODO
 		return launchSearch(builder, indices);
 	}
 
 	@Override
-	public SearchResult searchMultiMatch(String query, String[] fields, String... indices) throws IOException {
+	public SearchResult crossSearch(String query, String[] fields, String... indices) throws IOException {
 		// Build the multi match query
 		var multiBuilder = new MultiMatchQueryBuilder(query, fields);
 		multiBuilder.type(MultiMatchQueryBuilder.Type.CROSS_FIELDS);

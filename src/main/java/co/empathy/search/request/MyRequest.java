@@ -1,4 +1,4 @@
-package co.empathy.search.beans;
+package co.empathy.search.request;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -6,14 +6,9 @@ import java.util.Map;
 public interface MyRequest {
 
 	/**
-	 * @return  base query of the search
+	 * @return  map with the specified queries
 	 */
 	@NotNull
-	String getQuery();
+	Map<String, String> queries();
 
-	/**
-	 * @return  map with the specified buckets
-	 */
-	@NotNull
-	Map<String, String[]> getBuckets();
 }

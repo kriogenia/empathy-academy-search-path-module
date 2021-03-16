@@ -1,6 +1,6 @@
 package co.empathy.util;
 
-import co.empathy.beans.ImdbItem;
+import co.empathy.common.ImdbItem;
 import co.empathy.engines.SearchEngine;
 
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ElasticSearchTestHelper {
 	public static List<Map<String, Object>> performMultiMatch(
 			SearchEngine engine, String query, int total, int size)
 			throws IOException {
-		var result = engine.searchMultiMatch(query,
+		var result = engine.crossSearch(query,
 				new String[]{ImdbItem.ORIGINAL_TITLE, ImdbItem.TYPE}, INDEX);
 		assertEquals(total, result.getTotal());
 		var items = result.getItems();
