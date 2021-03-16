@@ -76,6 +76,7 @@ public class MockSearchEngine implements SearchEngine {
 		map.put("key", "pair");
 		List<Map<String, Object>> list = new ArrayList<>();
 		list.add(map);
-		return new SearchResult(1L, list);
+		// TODO change mock
+		return new SearchResult(1L, list, null);
 	}
 }

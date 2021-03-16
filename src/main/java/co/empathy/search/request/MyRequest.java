@@ -17,4 +17,10 @@ public interface MyRequest {
 	@NotNull
 	Map<String, String[]> filters();
 
+	/**
+	 * @return  map with the aggregation requests
+	 */
+	@NotNull
+	Map<String, String> aggregationBuckets();
+
 }

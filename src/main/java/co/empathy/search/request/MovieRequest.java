@@ -14,6 +14,9 @@ import java.util.Map;
 @Introspected
 public class MovieRequest implements MyRequest {
 
+	public static final String GENRES_AGG = "genres";
+	public static final String TYPES_AGG = "types";
+
 	private final HttpRequest<?> httpRequest;
 
 	@NotNull
@@ -56,6 +59,15 @@ public class MovieRequest implements MyRequest {
 		if (types != null) {
 			map.put(ImdbItem.TYPE, types);
 		}
+		return map;
+	}
+
+	@Override
+	@NotNull
+	public Map<String, String> aggregationBuckets() {
+		Map<String, String> map = new HashMap<>();
+		map.put(GENRES_AGG, ImdbItem.GENRES);
+		map.put(TYPES_AGG,ImdbItem.TYPE);
 		return map;
 	}
 }

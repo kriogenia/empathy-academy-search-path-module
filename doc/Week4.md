@@ -11,6 +11,11 @@ So I decided to make a few changes to my controller, so it maps all the query op
 This way I can use it as interface to build the requests on each engine and deprecate concrete methods like searchTitle.
 
 ##2021-03-16
-Changing the controller was a bit tricky. At first, I was able ti implement the movie item easily, but it was not that easy.
-Creating a get method on the movie bean broke everything and did took me a while to know why.
+Changing the controller was a bit tricky. 
+At first, I was able to implement the movie item easily, but it was really not that easy.
+Creating a get method on the movie bean broke everything and took me a while to know why.
 It is fixed now tho, so the search is now more complex.
+
+Looking at the documentation I decided to change the filter approach.
+I changed the list of musts for one must for the query and filters to the type and genres.
+I had to change the index to make those filters as keywords too, that gave me some errors, but I fixed them.

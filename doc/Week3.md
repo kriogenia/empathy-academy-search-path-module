@@ -1,6 +1,6 @@
 #Week 3
 
-##08/03/2021
+##2021-03-08
 
 Today we had our meeting with the path owner. 
 This week will be focused on the tokenization part.
@@ -14,7 +14,7 @@ So, now I can't create new indices with different configurations without the nee
 I'm still thinking about extracting all that indexing configuration to files instead of classes.
 As for now, I think I'll leave it like this.
 
-##09/03/2021
+##2021-03-09
 
 First I built on top of my changes yesterday and implement a function to check if an index already exists.
 Then I implemented a way to build and index using a configuration file, only called when the index doesn't exist.
@@ -27,7 +27,7 @@ Tomorrow I should ask about adding some config files to the ElasticSearch image.
 At the end of the day I had a nice analyzer for indexing titles that I think it worked close to the popular engines I tried.
 I was still lacking some things tho, like the roman or spelled numbers to swap with the arabic.
 
-##10/03/2021
+##2021-03-10
 
 It was difficult, but I implemented a basic way of handling the number spelling.
 Then I tried my analyzers with searches against the whole database, it didn't go well.
@@ -37,7 +37,7 @@ So I will erase the keep filter, but I will still look for the better way to sea
 I made a ton of tests, and that involved creating test index and classes.
 It took me the whole morning, but it should save my a lot of future time.
 
-##11/03/2021
+##2021-03-11
 
 So, a full testing day. 
 
@@ -51,7 +51,7 @@ SearchResponse looked easy at first, even with the generic typing. It was not.
 I had a hard time being able to test properly the json conversion. I did it tho.
 SearchResult was almost the same, but it did need mocking and therefore the installation of Mockito.
 
-##12/03/2021
+##2021-03-12
 
 First thing in the day, apart from the stand-up-like message was create a search engine function to delete an index.
 It was really easy, and I should have made it previously. I'm glad I was able to do it before the meetings.

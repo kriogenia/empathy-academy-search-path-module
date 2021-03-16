@@ -1,6 +1,6 @@
 # Week 1
 
-## 01/03/2021
+## 2021-03-01
 I start the journal now as I forgot to the past week.
 Our assignment the first week was to deploy a docker with ElasticSearch on our computers and a new Micronaut project.
 Then we would do a pretty basic API giving back the query entered, and the ES version.

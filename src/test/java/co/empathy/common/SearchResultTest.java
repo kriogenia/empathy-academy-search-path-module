@@ -40,7 +40,7 @@ public class SearchResultTest {
 		map2.put("id", "tt0000002");
 		map2.put("title", "test");
 		list.add(map2);
-		result = new SearchResult(2, list);
+		result = new SearchResult(2, list, null);
 	}
 
 	/**

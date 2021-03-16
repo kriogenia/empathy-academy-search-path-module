@@ -21,6 +21,9 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,9 +92,11 @@ public class ElasticSearchEngine implements SearchEngine {
 		request.musts().forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
 		// Filters (as of right now it only accept term filters so I'll leave it like this
 		request.filters().forEach((field, text) -> queryBuilder.filter(QueryBuilders.termsQuery(field, text)));
-		// Add the aggregations
-		// TODO
-		// Build the query
+		// Build and add the the aggregations
+		request.aggregationBuckets().forEach((name, type) -> builder.aggregation(
+				AggregationBuilders.terms(name).field(type)
+		));
+		// Build and launch the request
 		builder.query(queryBuilder);
 		return launchSearch(builder, indices);
 	}
