@@ -1,5 +1,6 @@
-package co.empathy.beans;
+package co.empathy.common.beans;
 
+import co.empathy.search.response.SearchResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;

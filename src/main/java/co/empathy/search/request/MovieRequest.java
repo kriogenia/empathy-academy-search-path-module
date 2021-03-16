@@ -1,4 +1,4 @@
-package co.empathy.beans;
+package co.empathy.search.beans.requests;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
@@ -8,7 +8,7 @@ import io.reactivex.annotations.NonNull;
 import javax.annotation.Nullable;
 
 @Introspected
-public class MovieSearchRequest {
+public class MovieRequest {
 
 	private final HttpRequest<?> httpRequest;
 
@@ -24,10 +24,10 @@ public class MovieSearchRequest {
 	@QueryValue
 	private String[] type;
 
-	public MovieSearchRequest(HttpRequest<?> httpRequest,
-	                          @NonNull String query,
-	                          @Nullable String genres,
-	                          @Nullable String type) {
+	public MovieRequest(HttpRequest<?> httpRequest,
+	                    @NonNull String query,
+	                    @Nullable String genres,
+	                    @Nullable String type) {
 		this.httpRequest = httpRequest;
 		this.query = query;
 		this.genres = (genres != null) ? genres.split(",") : null;

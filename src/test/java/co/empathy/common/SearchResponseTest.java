@@ -1,9 +1,11 @@
-package co.empathy.beans;
+package co.empathy.common.beans;
 
+import co.empathy.search.response.SearchResponse;
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -73,8 +75,8 @@ public class SearchResponseTest {
 		assertEquals(response.getTotal(), read.getTotal());
 		// Items
 		assertEquals(response.getItems().size(), read.getItems().size());
-		assertEquals("tt0000001",  read.getItems().get(0).getId());
-		assertEquals("tt0000002",  read.getItems().get(1).getId());
+		Assertions.assertEquals("tt0000001",  read.getItems().get(0).getId());
+		Assertions.assertEquals("tt0000002",  read.getItems().get(1).getId());
 
 	}
 

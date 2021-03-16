@@ -1,4 +1,4 @@
-package co.empathy.beans;
+package co.empathy.common.beans;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
