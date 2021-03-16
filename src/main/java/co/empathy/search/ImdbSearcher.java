@@ -63,7 +63,8 @@ public class ImdbSearcher implements Searcher {
 		// Generate a response object
 		return new SearchResponse<ImdbItem>()
 				.setTotal(result.getTotal())
-				.setItems(items);
+				.setItems(items)
+				.setAggregations(result.getAggregations());
 	}
 
 	/**

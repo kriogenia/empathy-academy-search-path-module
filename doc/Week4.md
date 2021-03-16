@@ -19,3 +19,7 @@ It is fixed now tho, so the search is now more complex.
 Looking at the documentation I decided to change the filter approach.
 I changed the list of musts for one must for the query and filters to the type and genres.
 I had to change the index to make those filters as keywords too, that gave me some errors, but I fixed them.
+
+Finally, I dedicated the rest of the day to implement the aggregations.
+I had some problems to extract them from the ES type but for now it does the trick and works.
+I have some TODOs to improve this later.
