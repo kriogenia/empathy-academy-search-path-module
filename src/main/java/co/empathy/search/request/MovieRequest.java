@@ -67,7 +67,7 @@ public class MovieRequest implements MyRequest {
 	public Map<String, String> aggregationBuckets() {
 		Map<String, String> map = new HashMap<>();
 		map.put(GENRES_AGG, ImdbItem.GENRES);
-		map.put(TYPES_AGG,ImdbItem.TYPE);
+		map.put(TYPES_AGG, ImdbItem.TYPE);
 		return map;
 	}
 }

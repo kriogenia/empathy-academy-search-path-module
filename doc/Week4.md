@@ -26,4 +26,8 @@ I have some TODOs to improve this later.
 
 ##2021-03-17
 I had to change the majority of my tests. It was kinda tedious, but no difficult.
-I still have a lot more tests to do, they can wait tho. First I will extract a SearchResult builder.
+I still have a lot more tests to do, they can wait tho. 
+First I extracted a SearchResult builder and refactored the methods as the same time I added the aggregations.
+It's not a good test as I was unable to mock a class, I'll leave it for later.
+
+

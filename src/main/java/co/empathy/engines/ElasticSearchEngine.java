@@ -4,6 +4,7 @@ import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
+import co.empathy.search.response.SearchResultBuilder;
 import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -26,6 +27,7 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
@@ -40,6 +42,9 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	private final RestHighLevelClient esClient;
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
+
+	@Inject
+	SearchResultBuilder factory;
 
 	/**
 	 * Default constructor loading Elastic Search client
@@ -156,7 +161,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		searchRequest.source(builder);
 		// Invokes the search
 		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
-		return SearchResult.builder(response);
+		return factory.build(response);
 	}
 
 }

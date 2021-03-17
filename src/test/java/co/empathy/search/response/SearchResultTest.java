@@ -1,23 +1,15 @@
 package co.empathy.search.response;
 
-import co.empathy.search.response.SearchResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.apache.lucene.search.TotalHits;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 public class SearchResultTest {
@@ -26,21 +18,35 @@ public class SearchResultTest {
 	ObjectMapper mapper;
 
 	private SearchResult result;
-	private Map<String, Object> map1;
-	private Map<String, Object> map2;
+	private Map<String, Object> firstResult;
+	private Map<String, Object> secondResult;
+	private Map<String, Long> genres;
+	private Map<String, Long> types;
+
 
 	@BeforeEach
 	public void resetResult() {
+		// List
 		List<Map<String, Object>> list = new ArrayList<>();
-		map1 = new LinkedHashMap<>();
-		map2 = new LinkedHashMap<>();
-		map1.put("id", "tt0000001");
-		map1.put("title", "test");
-		list.add(map1);
-		map2.put("id", "tt0000002");
-		map2.put("title", "test");
-		list.add(map2);
-		result = new SearchResult(2, list, null);
+		firstResult = new LinkedHashMap<>();
+		firstResult.put("id", "tt0000001");
+		firstResult.put("title", "test");
+		list.add(firstResult);
+		secondResult = new LinkedHashMap<>();
+		secondResult.put("id", "tt0000002");
+		secondResult.put("title", "test");
+		list.add(secondResult);
+		// Aggregations
+		Map<String, Map<String, Long>> aggs = new HashMap<>();
+		types = new LinkedHashMap<>();
+		types.put("movie", 1L);
+		types.put("short", 1L);
+		aggs.put("types", types);
+		genres = new LinkedHashMap<>();
+		genres.put("comedy", 2L);
+		genres.put("action", 1L);
+		aggs.put("genres", genres);
+		result = new SearchResult(2, list, aggs);
 	}
 
 	/**
@@ -62,6 +68,18 @@ public class SearchResultTest {
 			assertTrue(((Map)o).get("id").toString().contains("tt000000"));
 			assertEquals("test", ((Map) o).get("title").toString());
 		}
+		// Aggregations
+		assertTrue(jsonMap.get(SearchResult.AGGREGATIONS) instanceof Map<?,?>);
+		Map<?, ?> aggs = (Map<?, ?>) jsonMap.get(SearchResult.AGGREGATIONS);
+		assertTrue(aggs.get("types") instanceof Map);
+		Map<?, ?> types = (Map<?, ?>) aggs.get("types");
+		assertEquals(1, types.get("movie"));
+		assertEquals(1, types.get("short"));
+		assertTrue(aggs.get("genres") instanceof Map);
+		Map<?, ?> genres = (Map<?, ?>) aggs.get("genres");
+		assertEquals(2, genres.get("comedy"));
+		assertEquals(1, genres.get("action"));
+
 	}
 
 	/**
@@ -70,40 +88,29 @@ public class SearchResultTest {
 	 */
 	@Test
 	public void fromJsonTest() throws JsonProcessingException {
-		String json1 = mapper.writeValueAsString(map1);
-		String json2 = mapper.writeValueAsString(map2);
+		String jsonFirstResult = mapper.writeValueAsString(firstResult);
+		String jsonSecondResult = mapper.writeValueAsString(secondResult);
+		String jsonTypes = mapper.writeValueAsString(types);
+		String jsonGenres = mapper.writeValueAsString(genres);
 		String json = "{" + "\"" + SearchResult.TOTAL + "\": 2," +
 				"\"" + SearchResult.ITEMS + "\": [" +
-				json1 + ", " + json2 + "]}";
+				jsonFirstResult + ", " + jsonSecondResult + "]," +
+				"\"" + SearchResult.AGGREGATIONS + "\": {" +
+				"\"types\": " + jsonTypes + ", " +
+				"\"genres\": " + jsonGenres +"}}";
 		var read = mapper.readValue(json, SearchResult.class);
 		// Total
 		assertEquals(result.getTotal(), read.getTotal());
 		// Items
 		assertEquals(result.getItems().size(), read.getItems().size());
 		assertEquals(result.getItems(), read.getItems());
-	}
+		// Aggregations
+		assertEquals(1, result.getAggregations().get("types").get("movie"));
+		assertEquals(1, result.getAggregations().get("types").get("short"));
+		assertEquals(2, result.getAggregations().get("genres").get("comedy"));
+		assertEquals(1, result.getAggregations().get("genres").get("action"));
 
-	/**
-	 * Tests the SearchResult builder
-	 */
-	@Test
-	public void builderTest() {
-		long value = 2;
-		TotalHits total = new TotalHits(value, TotalHits.Relation.EQUAL_TO);
-		SearchHit hit = mock(SearchHit.class);
-		when(hit.getId()).thenReturn("tt000000");
-		when(hit.getSourceAsMap()).thenReturn(new HashMap<>());
-		SearchHit[] hits = {hit};
-		SearchHits searchHits = mock(SearchHits.class);
-		when(searchHits.getTotalHits()).thenReturn(total);
-		when(searchHits.getHits()).thenReturn(hits);
-		SearchResponse response = mock(SearchResponse.class);
-		when(response.getHits()).thenReturn(searchHits);
 
-		var built = SearchResult.builder(response);
-		assertEquals(value, built.getTotal());
-		var items = built.getItems();
-		assertEquals("tt000000", items.get(0).get("id"));
 	}
 
 }
