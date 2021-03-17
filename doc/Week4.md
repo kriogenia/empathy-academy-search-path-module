@@ -23,3 +23,7 @@ I had to change the index to make those filters as keywords too, that gave me so
 Finally, I dedicated the rest of the day to implement the aggregations.
 I had some problems to extract them from the ES type but for now it does the trick and works.
 I have some TODOs to improve this later.
+
+##2021-03-17
+I had to change the majority of my tests. It was kinda tedious, but no difficult.
+I still have a lot more tests to do, they can wait tho. First I will extract a SearchResult builder.

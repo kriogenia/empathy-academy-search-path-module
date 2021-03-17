@@ -1,67 +1,115 @@
 package co.empathy.engines;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.MockMyRequest;
 import co.empathy.search.response.SearchResult;
+import co.empathy.util.ElasticSearchTestHelper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import javax.inject.Inject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import static co.empathy.util.ElasticSearchTestHelper.*;
+import static co.empathy.util.TestHelper.*;
 
 @MicronautTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ElasticSearchEngineImdbTest {
 
 	@Inject
 	ElasticSearchEngine engine;
 
+	@Inject
+	ElasticSearchTestHelper helper;
+
+	@Inject
+	MockMyRequest request;
+
+	// Maps of the request
+	Map<String, String> must = new HashMap<>();
+	Map<String, String[]> filter = new HashMap<>();
+	Map<String, String> aggs = new HashMap<>();
+
+	/**
+	 * Specifies the maps to use on the mocks
+	 */
+	@BeforeAll
+	public void createRequest() {
+		request.mockMusts(must);
+		request.mockFilters(filter);
+		request.mockAggregationBuckets(aggs);
+	}
+
+	/**
+	 * Clears all the maps between tests
+	 */
+	@BeforeEach
+	public void clearMaps() {
+		must.clear();
+		filter.clear();
+		aggs.clear();
+	}
+
 	/**
 	 * Test the ascii_folding filters applied to the titles
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testAsciiFoldingFilter() throws IOException {
 		// Ñ
-		var items = performSingleMatch(engine, "Ocana", 1, 1);
-		assertTrue(allContains("title","Ocaña", items));
+		must.put(ImdbItem.ORIGINAL_TITLE, "Ocana");
+		var items = helper.performSingleMatch(engine, request, 1, 1);
+		assertTrue(allContains("title", "Ocaña", items));
 	}
 
 	/**
 	 * Tests the lowercase filters applied to the titles
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testLowercaseFilter() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// All lowercase
-		results.add(engine.searchSingleMatch("carmencita", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "carmencita");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// All uppercase
-		results.add(engine.searchSingleMatch("CARMENCITA", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "CARMENCITA");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// Combined
-		results.add(engine.searchSingleMatch("CarMeNCiTA", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "CarMeNCiTA");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());
-			allContains("title", "Carmencita", result.getItems());
+			allContains(ImdbItem.TITLE, "Carmencita", result.getItems());
 		}
 	}
 
 	/**
 	 * Tests the number extensive search filter applied to the titles
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testNumberExtensionFilter() throws IOException {
 		// Text and roman to arabic
-		var result1 = engine.searchSingleMatch("two", ImdbItem.ORIGINAL_TITLE, INDEX);
-		var result2 = engine.searchSingleMatch("ii", ImdbItem.ORIGINAL_TITLE, INDEX);
+		must.put(ImdbItem.ORIGINAL_TITLE, "two");
+		var result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		must.clear();
+		must.put(ImdbItem.ORIGINAL_TITLE, "ii");
+		var result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -69,8 +117,12 @@ public class ElasticSearchEngineImdbTest {
 		assertTrue(allContains("title","The Amazing Spider-Man 2", result2.getItems()));
 
 		// Roman and arabic to text
-		result1 = engine.searchSingleMatch("iv", ImdbItem.ORIGINAL_TITLE, INDEX);
-		result2 = engine.searchSingleMatch("4", ImdbItem.ORIGINAL_TITLE, INDEX);
+		must.clear();
+		must.put(ImdbItem.ORIGINAL_TITLE, "iv");
+		result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		must.clear();
+		must.put(ImdbItem.ORIGINAL_TITLE, "4");
+		result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -78,8 +130,12 @@ public class ElasticSearchEngineImdbTest {
 		assertTrue(allContains("title","The Fantastic Four", result2.getItems()));
 
 		// Arabic and text to roman
-		result1 = engine.searchSingleMatch("5", ImdbItem.ORIGINAL_TITLE, INDEX);
-		result2 = engine.searchSingleMatch("five", ImdbItem.ORIGINAL_TITLE, INDEX);
+		must.clear();
+		must.put(ImdbItem.ORIGINAL_TITLE, "5");
+		result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		must.clear();
+		must.put(ImdbItem.ORIGINAL_TITLE, "five");
+		result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -90,16 +146,21 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the word delimited filter with the -
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testDelimiterWithHyphen() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
-		results.add(engine.searchSingleMatch("spiderman", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "spiderman");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// Split
-		results.add(engine.searchSingleMatch("spider man", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "spider man");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// With hyphen
-		results.add(engine.searchSingleMatch("spider-man", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "spider-man");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());
@@ -110,16 +171,21 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test the word delimiter filter with the '
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testDelimiterWithApostrophes() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
-		results.add(engine.searchSingleMatch("youre", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "youre");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// Split
-		results.add(engine.searchSingleMatch("you re", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "you re");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		must.clear();
 		// With hyphen
-		results.add(engine.searchSingleMatch("you're", ImdbItem.ORIGINAL_TITLE, INDEX));
+		must.put(ImdbItem.ORIGINAL_TITLE, "you're");
+		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());
@@ -130,47 +196,93 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test the word delimiter with . and ?
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testDelimiterWithOtherSymbols() throws IOException {
 		//dr who to Dr. Who and Dr. Who?
-		var items = performSingleMatch(engine, "dr who", 2, 2);
+		must.put(ImdbItem.ORIGINAL_TITLE, "dr who");
+		var items = helper.performSingleMatch(engine, request, 2, 2);
 		assertTrue(allContains("title", "Dr. Who", items));
 	}
 
 	/**
 	 * Tests the matches are related to only the original_title
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testDifferentTitles() throws IOException {
 		// Original title
-		var items = performSingleMatch(engine, "Gisaengchung", 1,1);
-		assertTrue(allContains("title","Parasite", items));
+		must.put(ImdbItem.ORIGINAL_TITLE, "Gisaengchung");
+		var items = helper.performSingleMatch(engine, request, 1,1);
+		assertTrue(allContains(ImdbItem.TITLE,"Parasite", items));
+		must.clear();
 		// Primary title
-		items = performSingleMatch(engine, "Parasite", 0, 0);
+		must.put(ImdbItem.ORIGINAL_TITLE, "Parasite");
+		items = helper.performSingleMatch(engine, request, 0, 0);
 		assertEquals(0, items.size());
 	}
 
 	/**
 	 * Test that the search can find stop word titles like It
 	 * @throws IOException	if the engine fails
-	 * /
+	 */
 	@Test
 	public void testStopWords() throws IOException {
-		var items = performSingleMatch(engine,"It", 1, 1);
-		assertTrue(allContains("title", "It", items));
+		must.put(ImdbItem.ORIGINAL_TITLE, "It");
+		var items = helper.performSingleMatch(engine, request, 1, 1);
+		assertTrue(allContains(ImdbItem.TITLE, "It", items));
 	}
 
 	/**
-	 * Tests the synonyms filter applied to the types
-	 * @throws IOException	if the engine fails
-	 * /
+	 * Test that the search can filter titles using the type
+	 * @throws IOException  if the engine fails
+	 */
 	@Test
-	public void testTypeSynonyms() throws IOException {
+	public void testTypeFilter() throws IOException {
+		// No types
+		must.put(ImdbItem.ORIGINAL_TITLE, "the");
+		var items = helper.performSingleMatch(engine, request, 5, 5);
+		// One type
+		filter.put(ImdbItem.TYPE, new String[]{"movie"});
+		items = helper.performSingleMatch(engine, request, 3, 3);
+		assertTrue(allContains(ImdbItem.TYPE, "movie", items));
+		filter.clear();
+		// Various types
+		filter.put(ImdbItem.TYPE, new String[]{"movie", "tvSeries"});
+		items = helper.performSingleMatch(engine, request, 4, 4);
+		assertTrue(items.stream().map(x -> x.get(ImdbItem.TYPE).toString())
+				.allMatch(x -> x.contains("movie") || x.contains("tvSeries")));
+		filter.clear();
+	}
+
+	/**
+	 * Test that the search can filter titles using the genres
+	 * @throws IOException  if the engine fails
+	 */
+	@Test
+	public void testGenresFilter() throws IOException {
+		// No genres
+		must.put(ImdbItem.ORIGINAL_TITLE, "the");
+		var items = helper.performSingleMatch(engine, request, 5, 5);
+		// One type
+		filter.put(ImdbItem.GENRES, new String[]{"action"});
+		items = helper.performSingleMatch(engine, request, 3, 3);
+		assertTrue(allContains(ImdbItem.GENRES, "Action", items));
+		filter.clear();
+		// Various types
+		filter.put(ImdbItem.GENRES, new String[]{"family", "comedy"});
+		items = helper.performSingleMatch(engine, request, 2, 2);
+		assertTrue(items.stream().map(x -> x.get(ImdbItem.GENRES).toString())
+				.allMatch(x -> x.contains("Family") || x.contains("Comedy")));
+		filter.clear();
+	}
+
+	@Test
+	public void testTypeSynonyms()  {/*
 		// film => movie
-		var items = performMultiMatch(engine, "it film", 10, 10);
-		assertTrue(allContains("type", "movie", items));
+		must.put(ImdbItem.TYPE, "film");
+		var items = helper.performSingleMatch(engine, request, 10, 10);
+		assertTrue(allContains("type", "movie", items));}
 		// picture => movie
 		items = performMultiMatch(engine, "it picture", 10, 10);
 		assertTrue(allContains("type", "movie", items));
@@ -199,10 +311,9 @@ public class ElasticSearchEngineImdbTest {
 		items = performMultiMatch(engine,"mink game", 2, 2);
 		assertTrue(anyContains("type", "videoGame", items) ||
 				anyContains("title", "Mink", items)
-		);
+		);*/
 	}
 
 	// TODO test search with decimal digit
 
 }
-*/

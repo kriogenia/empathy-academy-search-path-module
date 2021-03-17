@@ -83,7 +83,7 @@ public class ElasticSearchEngineTest {
 		// More than one result, no filter, no aggregations
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "the");
-		items = helper.performSingleMatch(engine, request, 4, 4);
+		items = helper.performSingleMatch(engine, request, 5, 5);
 		assertTrue(items.stream().map(x -> x.get("title").toString()).allMatch(
 				x -> x.matches(".*[Tt]he.*")));
 
@@ -110,7 +110,7 @@ public class ElasticSearchEngineTest {
 	@Test
 	public void crossSearchTest() throws IOException {
 		// Less than 10 results
-		var items = helper.performCrossSearch(engine, "the tvEpisode", 4, 4);
+		var items = helper.performCrossSearch(engine, "the tvEpisode", 5, 5);
 		for (var item: items) {
 			String title = item.get("title").toString();
 			String type = item.get("type").toString();
@@ -118,7 +118,7 @@ public class ElasticSearchEngineTest {
 					|| title.matches(".*[Tt][Vv].*") || type.equals("tvEpisode"));
 		}
 		// More then 10 results
-		items = helper.performCrossSearch(engine, "the movie", 4, 4);
+		items = helper.performCrossSearch(engine, "the movie", 5, 5);
 		for (var item: items) {
 			String title = item.get("title").toString();
 			String type = item.get("type").toString();
