@@ -30,4 +30,7 @@ I still have a lot more tests to do, they can wait tho.
 First I extracted a SearchResult builder and refactored the methods as the same time I added the aggregations.
 It's not a good test as I was unable to mock a class, I'll leave it for later.
 
-
+I jumped to the range filter task, it looked fascinating to make.
+I knew I would need to make some changes to my filters approach to manage different types.
+So I used a visitor, which is the pattern I like and understand the less, but I think it's the best approach.
+I don't think the filters should know how to convert to each engine, the engine should create the transformations.

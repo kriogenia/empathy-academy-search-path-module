@@ -1,6 +1,8 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.filters.RequestFilter;
+import co.empathy.search.request.filters.TermsFilter;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.QueryValue;
@@ -8,7 +10,9 @@ import io.reactivex.annotations.NonNull;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Introspected
@@ -25,11 +29,8 @@ public class MovieRequest implements MyRequest {
 
 	@Nullable
 	@QueryValue
-	private final String[] genres;
+	private final List<RequestFilter> filters;
 
-	@Nullable
-	@QueryValue
-	private final String[] types;
 
 	public MovieRequest(HttpRequest<?> httpRequest,
 	                    @NonNull String query,
@@ -37,8 +38,13 @@ public class MovieRequest implements MyRequest {
 	                    @Nullable String type) {
 		this.httpRequest = httpRequest;
 		this.query = query;
-		this.genres = (genres != null) ? genres.split(",") : null;
-		this.types = (type != null) ? type.split(",") : null;
+		this.filters = new ArrayList<>();
+		if (genres != null) {
+			this.filters.add(new TermsFilter(ImdbItem.GENRES, genres));
+		}
+		if (type != null) {
+			this.filters.add(new TermsFilter(ImdbItem.TYPE, type));
+		}
 	}
 
 	@Override
@@ -50,16 +56,8 @@ public class MovieRequest implements MyRequest {
 	}
 
 	@Override
-	@NotNull
-	public Map<String, String[]> filters() {
-		Map<String, String[]> map = new HashMap<>();
-		if (genres != null) {
-			map.put(ImdbItem.GENRES, genres);
-		}
-		if (types != null) {
-			map.put(ImdbItem.TYPE, types);
-		}
-		return map;
+	public @NotNull List<RequestFilter> filters() {
+		return filters;
 	}
 
 	@Override

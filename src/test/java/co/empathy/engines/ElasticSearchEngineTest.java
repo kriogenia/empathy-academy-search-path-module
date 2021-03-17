@@ -1,8 +1,11 @@
 package co.empathy.engines;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.search.request.MockMyRequest;
 import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.filters.RequestFilter;
+import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.util.ElasticSearchTestHelper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,7 +15,9 @@ import org.junit.jupiter.api.TestInstance;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +40,7 @@ public class ElasticSearchEngineTest {
 
 	// Maps of the request
 	Map<String, String> must = new HashMap<>();
-	Map<String, String[]> filter = new HashMap<>();
+	List<RequestFilter> filter = new ArrayList<>();
 	Map<String, String> aggs = new HashMap<>();
 
 	//TODO test close
@@ -88,7 +93,7 @@ public class ElasticSearchEngineTest {
 				x -> x.matches(".*[Tt]he.*")));
 
 		// More than one result, one filter, no aggregations
-		filter.put(ImdbItem.TYPE, new String[]{"movie"});
+		filter.add(new TermsFilter(ImdbItem.TYPE, "movie"));
 		items = helper.performSingleMatch(engine, request, 3, 3);
 		assertTrue(allContains("type", "movie", items));
 

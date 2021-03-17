@@ -1,5 +1,7 @@
-package co.empathy.engines;
+package co.empathy.engines.elastic;
 
+import co.empathy.engines.EEngine;
+import co.empathy.engines.SearchEngine;
 import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
@@ -21,6 +23,7 @@ import org.elasticsearch.client.indices.GetIndexRequest;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -44,7 +47,11 @@ public class ElasticSearchEngine implements SearchEngine {
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
 
 	@Inject
+	ElasticFilterVisitor filterParser;
+
+	@Inject
 	SearchResultBuilder factory;
+
 
 	/**
 	 * Default constructor loading Elastic Search client
@@ -93,8 +100,8 @@ public class ElasticSearchEngine implements SearchEngine {
 		var queryBuilder = QueryBuilders.boolQuery();
 		// Musts
 		request.musts().forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
-		// Filters (as of right now it only accept term filters so I'll leave it like this
-		request.filters().forEach((field, text) -> queryBuilder.filter(QueryBuilders.termsQuery(field, text)));
+		// Filters
+		request.filters().forEach((filter) -> queryBuilder.filter((QueryBuilder) filter.accept(filterParser)));
 		// Build and add the the aggregations
 		request.aggregationBuckets().forEach((name, type) -> builder.aggregation(
 				AggregationBuilders.terms(name).field(type)

@@ -1,6 +1,7 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.filters.TermsFilter;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
@@ -21,23 +22,20 @@ public class MovieRequestTest {
 		// One genre, no type
 		MovieRequest request = new MovieRequest(null, "test", "genre", null);
 		var filters = request.filters();
-		assertTrue(filters.containsKey(ImdbItem.GENRES));
-		assertFalse(filters.containsKey(ImdbItem.TYPE));
-		assertArrayEquals(new String[]{"genre"}, filters.get(ImdbItem.GENRES));
+		assertEquals(1, filters.size());
+		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
 		// One genre, one type
 		request = new MovieRequest(null, "test", "genre", "movie");
 		filters = request.filters();
-		assertTrue(filters.containsKey(ImdbItem.GENRES));
-		assertTrue(filters.containsKey(ImdbItem.TYPE));
-		assertArrayEquals(new String[]{"genre"}, filters.get(ImdbItem.GENRES));
-		assertArrayEquals(new String[]{"movie"}, filters.get(ImdbItem.TYPE));
+		assertEquals(2, filters.size());
+		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
+		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
 		// Various genres, one type
 		request = new MovieRequest(null, "test", "a,b", "movie");
 		filters = request.filters();
-		assertTrue(filters.containsKey(ImdbItem.GENRES));
-		assertTrue(filters.containsKey(ImdbItem.TYPE));
-		assertArrayEquals(new String[]{"a","b"}, filters.get(ImdbItem.GENRES));
-		assertArrayEquals(new String[]{"movie"}, filters.get(ImdbItem.TYPE));
+		assertEquals(2, filters.size());
+		assertArrayEquals(new String[]{"a","b"}, ((TermsFilter) filters.get(0)).getTerms());
+		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
 	}
 
 	@Test

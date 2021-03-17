@@ -1,6 +1,9 @@
 package co.empathy.search.request;
 
+import co.empathy.search.request.filters.RequestFilter;
+
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Map;
 
 public interface MyRequest {
@@ -12,10 +15,9 @@ public interface MyRequest {
 	Map<String, String> musts();
 
 	/**
-	 * @return  map with the filtering queries
+	 * @return  list of the requested filters
 	 */
-	@NotNull
-	Map<String, String[]> filters();
+	@NotNull List<RequestFilter> filters();
 
 	/**
 	 * @return  map with the aggregation requests

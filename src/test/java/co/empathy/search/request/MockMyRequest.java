@@ -1,10 +1,13 @@
 package co.empathy.search.request;
 
+import co.empathy.search.request.filters.RequestFilter;
 import io.micronaut.context.annotation.Replaces;
 
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Replaces(MyRequest.class)
@@ -15,14 +18,14 @@ public class MockMyRequest implements MyRequest {
 	private Map<String, String> musts;
 
 	@NotNull
-	private Map<String, String[]> filters;
+	private List<RequestFilter> filters;
 
 	@NotNull
 	private Map<String, String> aggregationBuckets;
 
 	public MockMyRequest() {
 		this.musts = new HashMap<>();
-		this.filters = new HashMap<>();
+		this.filters = new ArrayList<>();
 		this.aggregationBuckets = new HashMap<>();
 	}
 
@@ -39,14 +42,14 @@ public class MockMyRequest implements MyRequest {
 	}
 
 	@Override
-	public @NotNull Map<String, String[]> filters() {
+	public @NotNull List<RequestFilter> filters() {
 		return filters;
 	}
 
 	/**
 	 * @param filters   mock of the filters() call
 	 */
-	public void mockFilters(Map<String, String[]> filters) {
+	public void mockFilters(List<RequestFilter> filters) {
 		this.filters = filters;
 	}
 

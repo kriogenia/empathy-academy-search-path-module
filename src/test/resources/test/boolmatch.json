@@ -3,18 +3,17 @@
     "bool": {
       "must": {
         "match": {
-          "original_title": "avengers"
+          "original_title": "the"
         }
       },
       "filter": [
         {
-          "terms": {
-            "genres": ["news", "comedy"]
-          }
-        },
-        {
-          "terms": {
-            "type": ["tvMovie"]
+          "range": {
+            "start_year": {
+              "gte": "2015",
+              "lte": "2020",
+              "format": "YYYY"
+            }
           }
         }
       ]

@@ -1,7 +1,10 @@
 package co.empathy.engines;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.search.request.MockMyRequest;
+import co.empathy.search.request.filters.RequestFilter;
+import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.search.response.SearchResult;
 import co.empathy.util.ElasticSearchTestHelper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -38,7 +41,7 @@ public class ElasticSearchEngineImdbTest {
 
 	// Maps of the request
 	Map<String, String> must = new HashMap<>();
-	Map<String, String[]> filter = new HashMap<>();
+	List<RequestFilter> filter = new ArrayList<>();
 	Map<String, String> aggs = new HashMap<>();
 
 	/**
@@ -243,12 +246,12 @@ public class ElasticSearchEngineImdbTest {
 		must.put(ImdbItem.ORIGINAL_TITLE, "the");
 		var items = helper.performSingleMatch(engine, request, 5, 5);
 		// One type
-		filter.put(ImdbItem.TYPE, new String[]{"movie"});
+		filter.add(new TermsFilter(ImdbItem.TYPE, "movie"));
 		items = helper.performSingleMatch(engine, request, 3, 3);
 		assertTrue(allContains(ImdbItem.TYPE, "movie", items));
 		filter.clear();
 		// Various types
-		filter.put(ImdbItem.TYPE, new String[]{"movie", "tvSeries"});
+		filter.add(new TermsFilter(ImdbItem.TYPE, "movie,tvSeries"));
 		items = helper.performSingleMatch(engine, request, 4, 4);
 		assertTrue(items.stream().map(x -> x.get(ImdbItem.TYPE).toString())
 				.allMatch(x -> x.contains("movie") || x.contains("tvSeries")));
@@ -265,12 +268,12 @@ public class ElasticSearchEngineImdbTest {
 		must.put(ImdbItem.ORIGINAL_TITLE, "the");
 		var items = helper.performSingleMatch(engine, request, 5, 5);
 		// One type
-		filter.put(ImdbItem.GENRES, new String[]{"action"});
+		filter.add(new TermsFilter(ImdbItem.GENRES, "action"));
 		items = helper.performSingleMatch(engine, request, 3, 3);
 		assertTrue(allContains(ImdbItem.GENRES, "Action", items));
 		filter.clear();
 		// Various types
-		filter.put(ImdbItem.GENRES, new String[]{"family", "comedy"});
+		filter.add(new TermsFilter(ImdbItem.GENRES, "family,comedy"));
 		items = helper.performSingleMatch(engine, request, 2, 2);
 		assertTrue(items.stream().map(x -> x.get(ImdbItem.GENRES).toString())
 				.allMatch(x -> x.contains("Family") || x.contains("Comedy")));

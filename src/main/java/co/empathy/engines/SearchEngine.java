@@ -7,7 +7,6 @@ import co.empathy.index.configuration.IndexConfiguration;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Common interface to adapt the search engines
