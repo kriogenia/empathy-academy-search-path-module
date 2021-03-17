@@ -14,6 +14,9 @@ import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
@@ -30,14 +33,11 @@ public class SearchControllerIntegrationTest {
 	TestHelper helper;
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
-	private final UriBuilder allUri = UriBuilder.of("/search/all");
-
-	// TODO fix all
 
 	@Test
 	public void testSearchTitleWithSingleWordAndFewResults() throws JsonProcessingException {
 		// Less than 10 results
-		String uri = baseUri.queryParam("title", "Carmencita").toString();
+		String uri = baseUri.queryParam("query", "Carmencita").toString();
 		HttpRequest<String> request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
@@ -62,13 +62,13 @@ public class SearchControllerIntegrationTest {
 	@Test
 	public void testSearchTitleWithSingleWordAndManyResults() throws JsonProcessingException {
 		// More than 10 results
-		var uri = baseUri.queryParam("title", "Jumanji").toString();
+		var uri = baseUri.queryParam("query", "Jumanji").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(98, retrieved.getTotal());
+		assertEquals(96, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).allMatch(x -> x.contains("Jumanji")));
 	}
@@ -76,49 +76,48 @@ public class SearchControllerIntegrationTest {
 
 	@Test
 	public void testSearchTitleWithMultipleWords() throws JsonProcessingException {
-		var uri = baseUri.queryParam("title", "Shawshank Redemption").toString();
+		var uri = baseUri.queryParam("query", "Shawshank Redemption").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(1224, retrieved.getTotal());
+		assertEquals(1137, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
-		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle)
+		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).filter(Objects::nonNull)
 				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));
 	}
 
 	@Test
-	public void testSearchQuery() throws JsonProcessingException {
-		var uri = allUri.queryParam("query", "Spiderman movie").toString();
-		var request = HttpRequest.GET(uri);
+	public void testSearchTitleWithGenre() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("genres", "action");
+		var request = HttpRequest.GET(uri.toString());
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(6, retrieved.getTotal());
-		assertEquals(6, retrieved.getItems().size());
+		assertEquals(206, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
 		// Matching words test
 		assertTrue(retrieved.getItems().stream().allMatch(
-				x -> 	x.getPrimaryTitle().contains("Spiderman") && (
-						x.getPrimaryTitle().matches(".*[Mm]ovie.*") ||
-						x.getTitleType().equals("movie"))));
+				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")
+						&& Objects.requireNonNull(Arrays.toString(x.getGenres())).contains("Action")));
 	}
 
+	// TODO test search title with type
+
+	// TODO test search title with range
+
+	// TODO test search with all filters
+
 	@Test
-	public void testSearchWithoutTitle() {
+	public void testSearchWithoutQuery() {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());
 		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
 	}
 
-	@Test
-	public void testSearchWithoutQuery() {
-		var request = HttpRequest.GET(allUri.toString());
-		var exception = assertThrows(HttpClientResponseException.class,
-				() -> client.toBlocking().exchange(request));
-		assertEquals(400, exception.getStatus().getCode());
-	}
 
 }

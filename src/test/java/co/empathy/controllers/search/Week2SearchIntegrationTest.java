@@ -35,14 +35,13 @@ public class Week2SearchIntegrationTest {
 	// TODO fix all
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
-	private final UriBuilder allUri = UriBuilder.of("/search/all");
 
 	private final Logger LOG = LoggerFactory.getLogger(Week2SearchIntegrationTest.class);
 
 	@Test
 	public void testForrestGump() throws JsonProcessingException {
 		LOG.info("Search the Forrest Gump movie with title query");
-		var uri = baseUri.queryParam("title", "Forrest Gump").toString();
+		var uri = baseUri.queryParam("query", "Forrest Gump").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
@@ -63,7 +62,7 @@ public class Week2SearchIntegrationTest {
 	@Test
 	public void testTheAvengersSingle() throws JsonProcessingException {
 		LOG.info("Search the 2012 The Avengers movie with title query");
-		var uri = baseUri.queryParam("title", "The Avengers").toString();
+		var uri = baseUri.queryParam("query", "The Avengers").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
@@ -78,10 +77,11 @@ public class Week2SearchIntegrationTest {
 	}
 
 	@Test
-	public void testTheAvengersMulti() throws JsonProcessingException {
+	public void testTheAvengersWithType() throws JsonProcessingException {
 		LOG.info("Search the 2012 The Avengers movie with general query");
-		var uri = allUri.queryParam("query", "the avengers movie").toString();
-		var request = HttpRequest.GET(uri);
+		var uri = baseUri.queryParam("query", "the avengers");
+		uri.queryParam("type", "movie");
+		var request = HttpRequest.GET(uri.toString());
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 		// Check we got the 2012 movie
@@ -97,7 +97,7 @@ public class Week2SearchIntegrationTest {
 	@Test
 	public void testSpidermanSingle() throws JsonProcessingException {
 		LOG.info("Search the 2002 Spiderman movie with title query");
-		var uri = baseUri.queryParam("title", "Spiderman").toString();
+		var uri = baseUri.queryParam("query", "Spiderman").toString();
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
@@ -114,8 +114,9 @@ public class Week2SearchIntegrationTest {
 	@Test
 	public void testSpidermanMulti() throws JsonProcessingException {
 		LOG.info("Search the 2002 Spiderman movie with general query");
-		var uri = allUri.queryParam("query", "Spiderman movie").toString();
-		var request = HttpRequest.GET(uri);
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("type", "movie");
+		var request = HttpRequest.GET(uri.toString());
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 		// Check we got the movie
