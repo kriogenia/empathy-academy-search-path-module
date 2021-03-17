@@ -1,4 +1,4 @@
-package co.empathy.engines;
+package co.empathy.engines.elastic;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.engines.elastic.ElasticSearchEngine;

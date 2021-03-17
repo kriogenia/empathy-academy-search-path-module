@@ -26,6 +26,6 @@ public class TermsFilter extends BaseRequestFilter {
 	@Override
 	@NotNull
 	public Object accept(FilterVisitor visitor) {
-		return visitor.visit(this);
+		return visitor.transform(this);
 	}
 }
