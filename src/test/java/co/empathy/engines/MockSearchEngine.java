@@ -1,5 +1,7 @@
+/*
 package co.empathy.engines;
 
+import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
@@ -23,6 +25,11 @@ public class MockSearchEngine implements SearchEngine {
 	private final Logger LOG = LoggerFactory.getLogger(MockSearchEngine.class);
 
 	@Override
+	public void close() throws Exception {
+		LOG.info("Closed MockSearchEngine connection");
+	}
+
+	@Override
 	public void index(String index, Indexable entry) throws IOException {
 		LOG.info("Indexed {} in {}", entry.getId(), index);
 	}
@@ -33,8 +40,7 @@ public class MockSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchSingleMatch(String query, String field, String... indices) throws IOException {
-		SearchResult result = generateSearchResult();
+	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
 		return null;
 	}
 
@@ -63,14 +69,9 @@ public class MockSearchEngine implements SearchEngine {
 
 	}
 
-	@Override
-	public void close() throws Exception {
-		LOG.info("Closed MockSearchEngine connection");
-	}
-
 	/**
 	 * @return  test SearchResult
-	 */
+	 * /
 	private SearchResult generateSearchResult() {
 		Map<String, Object> map = new LinkedHashMap<>();
 		map.put("key", "pair");
@@ -80,3 +81,4 @@ public class MockSearchEngine implements SearchEngine {
 		return new SearchResult(1L, list, null);
 	}
 }
+*/

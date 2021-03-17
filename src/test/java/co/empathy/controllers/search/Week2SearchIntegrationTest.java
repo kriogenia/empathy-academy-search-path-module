@@ -1,4 +1,4 @@
-package co.empathy.controllers;
+package co.empathy.controllers.search;
 
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,6 +31,8 @@ public class Week2SearchIntegrationTest {
 
 	@Inject
 	TestHelper helper;
+
+	// TODO fix all
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 	private final UriBuilder allUri = UriBuilder.of("/search/all");

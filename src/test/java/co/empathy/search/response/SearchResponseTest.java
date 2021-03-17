@@ -1,5 +1,6 @@
-package co.empathy.common;
+package co.empathy.search.response;
 
+import co.empathy.common.ImdbItem;
 import co.empathy.search.response.SearchResponse;
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;

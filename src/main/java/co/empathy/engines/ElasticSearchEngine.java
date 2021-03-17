@@ -21,9 +21,7 @@ import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +82,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchMultiMatch(MyRequest request, String... indices) throws IOException {
+	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
 		// Build and add the boolean query with all the specified pairs
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		var queryBuilder = QueryBuilders.boolQuery();

@@ -25,7 +25,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test the ascii_folding filters applied to the titles
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testAsciiFoldingFilter() throws IOException {
 		// Ñ
@@ -36,7 +36,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the lowercase filters applied to the titles
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testLowercaseFilter() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
@@ -56,7 +56,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the number extensive search filter applied to the titles
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testNumberExtensionFilter() throws IOException {
 		// Text and roman to arabic
@@ -90,7 +90,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the word delimited filter with the -
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testDelimiterWithHyphen() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
@@ -110,7 +110,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test the word delimiter filter with the '
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testDelimiterWithApostrophes() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
@@ -130,7 +130,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test the word delimiter with . and ?
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testDelimiterWithOtherSymbols() throws IOException {
 		//dr who to Dr. Who and Dr. Who?
@@ -141,7 +141,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the matches are related to only the original_title
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testDifferentTitles() throws IOException {
 		// Original title
@@ -155,7 +155,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Test that the search can find stop word titles like It
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testStopWords() throws IOException {
 		var items = performSingleMatch(engine,"It", 1, 1);
@@ -165,7 +165,7 @@ public class ElasticSearchEngineImdbTest {
 	/**
 	 * Tests the synonyms filter applied to the types
 	 * @throws IOException	if the engine fails
-	 */
+	 * /
 	@Test
 	public void testTypeSynonyms() throws IOException {
 		// film => movie
@@ -205,3 +205,4 @@ public class ElasticSearchEngineImdbTest {
 	// TODO test search with decimal digit
 
 }
+*/

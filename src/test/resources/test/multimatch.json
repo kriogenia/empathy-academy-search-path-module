@@ -1,7 +1,7 @@
 {
   "query": {
     "multi_match": {
-      "query": "avengers film",
+      "query": "the movie",
       "type": "cross_fields",
       "fields": [
         "original_title",
@@ -9,18 +9,6 @@
       ],
       "operator": "or",
       "tie_breaker": "1.0"
-    }
-  },
-  "aggs": {
-    "genres": {
-      "terms": {
-        "field": "genres"
-      }
-    },
-    "type":{
-      "terms": {
-        "field": "type"
-      }
     }
   }
 }

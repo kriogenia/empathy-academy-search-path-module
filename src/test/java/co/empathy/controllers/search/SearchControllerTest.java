@@ -1,4 +1,4 @@
-package co.empathy.controllers;
+package co.empathy.controllers.search;
 
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 

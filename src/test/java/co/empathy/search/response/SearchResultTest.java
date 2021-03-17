@@ -1,4 +1,4 @@
-package co.empathy.common;
+package co.empathy.search.response;
 
 import co.empathy.search.response.SearchResult;
 import com.fasterxml.jackson.core.JsonProcessingException;

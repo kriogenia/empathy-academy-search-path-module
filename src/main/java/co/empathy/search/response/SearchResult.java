@@ -50,8 +50,10 @@ public class SearchResult {
 		long totalHits = hits.getTotalHits().value;
 		var items = Arrays.stream(hits.getHits()).map(SearchResult::flatHit);
 		var aggregations = new HashMap<String, Map<String, Long>>();
-		for (var key : esResponse.getAggregations().getAsMap().keySet()) {
-			aggregations.put(key, flatAggregation(esResponse.getAggregations().get(key)));
+		if (esResponse.getAggregations() != null ) {
+			for (var key : esResponse.getAggregations().getAsMap().keySet()) {
+				aggregations.put(key, flatAggregation(esResponse.getAggregations().get(key)));
+			}
 		}
 		return new SearchResult(totalHits, items.collect(Collectors.toList()), aggregations);
 	}

@@ -1,4 +1,4 @@
-package co.empathy.controllers;
+package co.empathy.controllers.search;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.util.TestHelper;
@@ -31,6 +31,8 @@ public class SearchControllerIntegrationTest {
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 	private final UriBuilder allUri = UriBuilder.of("/search/all");
+
+	// TODO fix all
 
 	@Test
 	public void testSearchTitleWithSingleWordAndFewResults() throws JsonProcessingException {
