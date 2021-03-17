@@ -27,6 +27,8 @@ public class SearchController {
 	 *                      ?query: specified query to search a movie based on the original title
 	 *                      [?genres]: comma separated list of genres to which titles must belong to
 	 *                      [?type]: comma separated list of types to which titles must belong to
+	 *                      [?year]: comma separated list of ranges, such as 2000/2010, to which
+	 *                                  titles have been released during such period
 	 * @return	Search result
 	 */
 	@Get

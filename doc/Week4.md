@@ -34,3 +34,7 @@ I jumped to the range filter task, it looked fascinating to make.
 I knew I would need to make some changes to my filters approach to manage different types.
 So I used a visitor, which is the pattern I like and understand the less, but I think it's the best approach.
 I don't think the filters should know how to convert to each engine, the engine should create the transformations.
+
+It took me a while to complete the refactoring, but the positive effects were discernible from the first second.
+Once the range filter and its visitor were in line I only needed to a couple of things to the MovieRequest and everything worked.
+Back to test now, I'll leave the range aggregation for tomorrow.

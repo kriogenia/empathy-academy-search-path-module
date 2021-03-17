@@ -1,6 +1,7 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.filters.RangeFilter;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import io.micronaut.core.annotation.Introspected;
@@ -31,11 +32,11 @@ public class MovieRequest implements MyRequest {
 	@QueryValue
 	private final List<RequestFilter> filters;
 
-
 	public MovieRequest(HttpRequest<?> httpRequest,
 	                    @NonNull String query,
 	                    @Nullable String genres,
-	                    @Nullable String type) {
+	                    @Nullable String type,
+	                    @Nullable String year) {
 		this.httpRequest = httpRequest;
 		this.query = query;
 		this.filters = new ArrayList<>();
@@ -44,6 +45,9 @@ public class MovieRequest implements MyRequest {
 		}
 		if (type != null) {
 			this.filters.add(new TermsFilter(ImdbItem.TYPE, type));
+		}
+		if (year != null) {
+			this.filters.add(new RangeFilter(ImdbItem.START, year));
 		}
 	}
 
