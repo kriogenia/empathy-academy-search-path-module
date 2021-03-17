@@ -2,6 +2,9 @@ package co.empathy.search.request.filters;
 
 import co.empathy.engines.FilterVisitor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 /**
  * Filters received on the search requests
  */
@@ -10,6 +13,7 @@ public interface RequestFilter {
 	/**
 	 * @return  name of the field to filter
 	 */
+	@NotEmpty
 	String getField();
 
 	/**
@@ -17,6 +21,7 @@ public interface RequestFilter {
 	 * @param visitor   visitor to manage the parsing
 	 * @return          parsed filter made by the visitor
 	 */
+	@NotNull
 	Object accept(FilterVisitor visitor);
 
 

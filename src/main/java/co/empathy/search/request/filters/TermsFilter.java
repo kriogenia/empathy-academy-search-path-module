@@ -5,31 +5,26 @@ import co.empathy.engines.FilterVisitor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-public class TermsFilter implements RequestFilter {
+public class TermsFilter extends BaseRequestFilter {
 
-	@NotEmpty
-	private final String field;
-
-	private String[] terms;
+	@NotNull
+	private final String[] terms;
 
 	public TermsFilter(@NotEmpty String field, @NotNull String terms) {
-		this.field = field;
+		super(field);
 		this.terms = terms.split(",");
-	}
-
-	@Override
-	public String getField() {
-		return this.field;
 	}
 
 	/**
 	 * @return  the list of terms to use in the filter
 	 */
+	@NotNull
 	public String[] getTerms() {
 		return terms;
 	}
 
 	@Override
+	@NotNull
 	public Object accept(FilterVisitor visitor) {
 		return visitor.visit(this);
 	}
