@@ -7,7 +7,6 @@ import co.empathy.search.response.SearchResult;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import co.empathy.search.response.SearchResultBuilder;
-import org.apache.http.HttpHost;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
@@ -15,7 +14,6 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -44,27 +42,15 @@ public class ElasticSearchEngine implements SearchEngine {
 	private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchEngine.class);
 
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
-	private final RestHighLevelClient client;
+
+	@Inject
+	RestHighLevelClient client;
 
 	@Inject
 	ElasticFilterVisitor filterParser;
 
 	@Inject
 	SearchResultBuilder factory;
-
-
-	/**
-	 * Default constructor loading Elastic Search client
-	 */
-	public ElasticSearchEngine() {
-		// ElasticSearch client
-		client = new RestHighLevelClient(
-				RestClient.builder(
-						new HttpHost("localhost", 9200, "http"),
-						new HttpHost("localhost", 9201, "http")
-				)
-		);
-	}
 
 	@Override
 	public void close() throws Exception {
@@ -106,6 +92,10 @@ public class ElasticSearchEngine implements SearchEngine {
 		request.aggregationBuckets().forEach((name, type) -> builder.aggregation(
 				AggregationBuilders.terms(name).field(type)
 		));
+		var date = AggregationBuilders.dateRange("year");
+		date.field("start_year");
+		date.addRange("2010", "2020");
+		builder.aggregation(date);
 		// Build and launch the request
 		builder.query(queryBuilder);
 		return launchSearch(builder, indices);

@@ -10,7 +10,7 @@
         {
           "range": {
             "start_year": {
-              "gte": "2015",
+              "gte": "2005",
               "lte": "2020",
               "format": "YYYY"
             }
@@ -25,9 +25,20 @@
         "field": "genres"
       }
     },
-    "type":{
+    "type": {
       "terms": {
         "field": "type"
+      }
+    },
+    "year": {
+      "date_range": {
+        "field": "start_year",
+        "ranges": [
+          {
+            "from": "2010",
+            "to": "2020"
+          }
+        ]
       }
     }
   }
