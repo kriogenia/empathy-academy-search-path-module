@@ -22,7 +22,6 @@ public interface RequestFilter {
 	 * @return          parsed filter made by the visitor
 	 */
 	@NotNull
-	Object accept(FilterVisitor visitor);
-
+	Object accept(@NotNull FilterVisitor visitor);
 
 }

@@ -4,6 +4,7 @@ import co.empathy.engines.SearchEngine;
 import co.empathy.index.configuration.IndexConfiguration;
 import io.reactivex.annotations.NonNull;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 
 /**
@@ -16,6 +17,7 @@ public interface Indexer {
 	 * @param engine	new SearchEngine to use
 	 * @return 			modified indexer
 	 */
+	@NotNull
 	Indexer setEngine(@NonNull SearchEngine engine);
 
 	/**
@@ -23,6 +25,7 @@ public interface Indexer {
 	 * @param configuration	new IndexConfiguration to use
 	 * @return 				modified indexer
 	 */
+	@NotNull
 	Indexer setConfiguration(@NonNull IndexConfiguration configuration);
 
 	/**

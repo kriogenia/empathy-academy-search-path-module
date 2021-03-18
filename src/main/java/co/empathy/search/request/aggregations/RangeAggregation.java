@@ -22,7 +22,7 @@ public class RangeAggregation extends BaseRequestAggregation {
 	}
 
 	@Override
-	public @NotNull Object accept(AggregationVisitor visitor) {
+	public @NotNull Object accept(@NotNull AggregationVisitor visitor) {
 		return visitor.transform(this);
 	}
 

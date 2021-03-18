@@ -2,6 +2,8 @@ package co.empathy.index.configuration;
 
 import co.empathy.engines.EEngine;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
 
 /**
@@ -14,21 +16,25 @@ public interface IndexConfiguration {
 	/**
 	 * @return	key of the index
 	 */
+	@NotEmpty
 	String getKey();
 
 	/**
 	 * @return	the path of the file to index
 	 */
+	@NotEmpty
 	String getFilePath();
 
 	/**
  	 * @return	size for the bulk requests
 	 */
+	@Positive
 	int getBulkSize();
 
 	/**
 	 * @return	number of bulks to index
 	 */
+	@Positive
 	int getTotalBulks();
 
 	/**
@@ -36,6 +42,7 @@ public interface IndexConfiguration {
 	 * @return				index configuration as a string
 	 * @throws IOException	if an error occurred reading the config file
 	 */
+	@NotEmpty
 	String getSource(EEngine requesterInfo) throws IOException;
 
 }

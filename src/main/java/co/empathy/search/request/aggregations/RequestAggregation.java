@@ -29,6 +29,6 @@ public interface RequestAggregation {
 	 * @return          parsed filter made by the visitor
 	 */
 	@NotNull
-	Object accept(AggregationVisitor visitor);
+	Object accept(@NotNull AggregationVisitor visitor);
 
 }

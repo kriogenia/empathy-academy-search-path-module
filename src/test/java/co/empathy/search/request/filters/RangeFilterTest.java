@@ -15,18 +15,18 @@ public class RangeFilterTest {
 	@Test
 	public void rangeFilterTest() {
 		// Valid filter
-		var filter = new RangeFilter("field", "2010/2020");
+		var filter = new DateRangesFilter("field", "2010/2020");
 		assertEquals("field", filter.getField());
 		assertEquals("2010", filter.getFrom());
 		assertEquals("2020", filter.getTo());
 		assertEquals("YYYY", filter.getFormat());
 		// Incomplete range
 		var exception = assertThrows(IllegalArgumentException.class,
-				() -> new RangeFilter("field", "2010"));
+				() -> new DateRangesFilter("field", "2010"));
 		assertEquals("Ranges of dates must have two edges", exception.getMessage());
 		// Range with excessive fields
 		exception = assertThrows(IllegalArgumentException.class,
-				() -> new RangeFilter("field", "2010/2020/2030"));
+				() -> new DateRangesFilter("field", "2010/2020/2030"));
 		assertEquals("Ranges of dates must have two edges", exception.getMessage());
 	}
 

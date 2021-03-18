@@ -1,6 +1,6 @@
 package co.empathy.engines;
 
-import co.empathy.search.request.filters.RangeFilter;
+import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.TermsFilter;
 
 /**
@@ -12,7 +12,7 @@ public interface FilterVisitor {
 	 * @param filter    range filter to transform
 	 * @return          engine specific range filter
 	 */
-	Object transform(RangeFilter filter);
+	Object transform(DateRangesFilter filter);
 
 	/**
 	 *

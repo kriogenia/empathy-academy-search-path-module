@@ -1,6 +1,5 @@
 package co.empathy.engines.elastic;
 
-import co.empathy.common.ImdbItem;
 import co.empathy.engines.AggregationVisitor;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
 import co.empathy.search.request.aggregations.RangeAggregation;
@@ -10,11 +9,15 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Visitor to transform common aggregations to Elastic Search specific ones
+ */
 @Singleton
 public class ElasticAggregationVisitor implements AggregationVisitor {
 
 	@Override
-	public @NotNull Object transform(DividedRangeAggregation range) {
+	@NotNull
+	public Object transform(DividedRangeAggregation range) {
 		var builder = AggregationBuilders.dateRange(range.getName());
 		builder.field(range.getField());
 		// One range for each decade
@@ -22,7 +25,7 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 		int to = range.getTo();
 		int gap = range.getGap();
 		for (from = range.getFrom(); from < to - gap; from += gap) {
-			builder.addRange(from, from + gap - 1);
+			builder.addRange(from, from + gap);
 		}
 		builder.addUnboundedFrom(from);
 		return builder;

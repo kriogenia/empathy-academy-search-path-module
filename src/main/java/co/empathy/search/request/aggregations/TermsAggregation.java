@@ -13,7 +13,7 @@ public class TermsAggregation extends BaseRequestAggregation {
 
 	@Override
 	@NotNull
-	public Object accept(AggregationVisitor visitor) {
+	public Object accept(@NotNull AggregationVisitor visitor) {
 		return visitor.transform(this);
 	}
 }

@@ -2,6 +2,7 @@ package co.empathy.search.request.aggregations;
 
 import co.empathy.engines.AggregationVisitor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -10,7 +11,6 @@ import javax.validation.constraints.Positive;
 public class DividedRangeAggregation extends BaseRequestAggregation {
 
 	private final int from;
-
 	private final int to;
 
 	@Positive
@@ -28,7 +28,7 @@ public class DividedRangeAggregation extends BaseRequestAggregation {
 	}
 
 	@Override
-	public @NotNull Object accept(AggregationVisitor visitor) {
+	public @NotNull Object accept(@NotNull AggregationVisitor visitor) {
 		return visitor.transform(this);
 	}
 
@@ -49,6 +49,7 @@ public class DividedRangeAggregation extends BaseRequestAggregation {
 	/**
 	 * @return  ranges length
 	 */
+	@Positive
 	public int getGap() {
 		return gap;
 	}

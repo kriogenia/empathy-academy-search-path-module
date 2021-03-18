@@ -2,16 +2,14 @@ package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
-import co.empathy.search.request.aggregations.RangeAggregation;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
-import co.empathy.search.request.filters.RangeFilter;
+import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.QueryValue;
-import io.reactivex.annotations.NonNull;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -30,7 +28,7 @@ public class MovieRequest implements MyRequest {
 
 	private final HttpRequest<?> httpRequest;
 
-	@NotNull
+	@NotNull(message = "Missing query to search. To not specify one, submit and empty query")
 	@QueryValue
 	private final String query;
 
@@ -39,7 +37,7 @@ public class MovieRequest implements MyRequest {
 	private final List<RequestFilter> filters;
 
 	public MovieRequest(HttpRequest<?> httpRequest,
-	                    @NonNull String query,
+	                    @NotNull String query,
 	                    @Nullable String genres,
 	                    @Nullable String type,
 	                    @Nullable String year) {
@@ -54,7 +52,7 @@ public class MovieRequest implements MyRequest {
 			this.filters.add(new TermsFilter(ImdbItem.TYPE, type));
 		}
 		if (year != null) {
-			this.filters.add(new RangeFilter(ImdbItem.START, year));
+			this.filters.add(new DateRangesFilter(ImdbItem.START, year));
 		}
 	}
 
