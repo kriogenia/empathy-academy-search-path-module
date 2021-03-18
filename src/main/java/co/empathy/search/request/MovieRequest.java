@@ -1,6 +1,8 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.aggregations.RequestAggregation;
+import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RangeFilter;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
@@ -32,6 +34,9 @@ public class MovieRequest implements MyRequest {
 	@QueryValue
 	private final List<RequestFilter> filters;
 
+	@Nullable
+	private final List<RequestAggregation> aggs;
+
 	public MovieRequest(HttpRequest<?> httpRequest,
 	                    @NonNull String query,
 	                    @Nullable String genres,
@@ -39,6 +44,7 @@ public class MovieRequest implements MyRequest {
 	                    @Nullable String year) {
 		this.httpRequest = httpRequest;
 		this.query = query;
+		// Filters
 		this.filters = new ArrayList<>();
 		if (genres != null) {
 			this.filters.add(new TermsFilter(ImdbItem.GENRES, genres));
@@ -49,6 +55,18 @@ public class MovieRequest implements MyRequest {
 		if (year != null) {
 			this.filters.add(new RangeFilter(ImdbItem.START, year));
 		}
+		aggs = setRequestAggregations();
+	}
+
+	@NonNull
+	private List<RequestAggregation> setRequestAggregations() {
+		final @Nullable List<RequestAggregation> aggs;
+		// Aggregations
+		aggs = new ArrayList<>();
+		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES));
+		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE));
+		//aggs.add(new )
+		return aggs;
 	}
 
 	@Override
@@ -66,10 +84,8 @@ public class MovieRequest implements MyRequest {
 
 	@Override
 	@NotNull
-	public Map<String, String> aggregationBuckets() {
-		Map<String, String> map = new HashMap<>();
-		map.put(GENRES_AGG, ImdbItem.GENRES);
-		map.put(TYPES_AGG, ImdbItem.TYPE);
-		return map;
+	public List<RequestAggregation> aggregations() {
+		return aggs;
 	}
+
 }

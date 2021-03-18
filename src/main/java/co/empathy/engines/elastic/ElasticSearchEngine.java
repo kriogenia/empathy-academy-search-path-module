@@ -23,6 +23,7 @@ import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -48,6 +49,9 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Inject
 	ElasticFilterVisitor filterParser;
+
+	@Inject
+	ElasticAggregationVisitor aggParser;
 
 	@Inject
 	SearchResultBuilder factory;
@@ -88,14 +92,8 @@ public class ElasticSearchEngine implements SearchEngine {
 		request.musts().forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
 		// Filters
 		request.filters().forEach((filter) -> queryBuilder.filter((QueryBuilder) filter.accept(filterParser)));
-		// Build and add the the aggregations
-		request.aggregationBuckets().forEach((name, type) -> builder.aggregation(
-				AggregationBuilders.terms(name).field(type)
-		));
-		var date = AggregationBuilders.dateRange("year");
-		date.field("start_year");
-		date.addRange("2010", "2020");
-		builder.aggregation(date);
+		// Aggregations
+		request.aggregations().forEach((agg) -> builder.aggregation((AggregationBuilder) agg.accept(aggParser)));
 		// Build and launch the request
 		builder.query(queryBuilder);
 		return launchSearch(builder, indices);

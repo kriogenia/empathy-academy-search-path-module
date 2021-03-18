@@ -54,7 +54,7 @@ public class MockMyRequest implements MyRequest {
 	}
 
 	@Override
-	public @NotNull Map<String, String> aggregationBuckets() {
+	public @NotNull Map<String, String> aggregations() {
 		return aggregationBuckets;
 	}
 

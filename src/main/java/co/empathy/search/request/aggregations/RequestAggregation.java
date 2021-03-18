@@ -1,17 +1,24 @@
-package co.empathy.search.request.filters;
+package co.empathy.search.request.aggregations;
 
+import co.empathy.engines.AggregationVisitor;
 import co.empathy.engines.FilterVisitor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * Filter received on the search requests
+ * Aggregation specified on the search request
  */
-public interface RequestFilter {
+public interface RequestAggregation {
 
 	/**
-	 * @return  name of the field to filter
+	 * @return  name of the aggregation
+	 */
+	@NotEmpty
+	String getName();
+
+	/**
+	 * @return  name of the field to aggregate
 	 */
 	@NotEmpty
 	String getField();
@@ -22,7 +29,6 @@ public interface RequestFilter {
 	 * @return          parsed filter made by the visitor
 	 */
 	@NotNull
-	Object accept(FilterVisitor visitor);
-
+	Object accept(AggregationVisitor visitor);
 
 }

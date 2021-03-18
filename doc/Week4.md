@@ -41,4 +41,10 @@ Back to test now, I'll leave the range aggregation for tomorrow.
 
 #2021-03-18
 The first thing in the morning was changing the error handling, that was a lot easier than I expected and really my code reading.
-I also tried to inject the ElasticSearch but the test started to take A LOT, so I reverted that.
+I also tried to inject the ElasticSearch, but the test started to take A LOT, so I reverted that.
+
+I jumped to the year aggregation, first fixing the response as I knew it would break.
+Thankfully I realized how I should handle that, so I was able to send that aggregation nicely.
+
+Next point, the same I did yesterday for range filter: extract a new aggregation class to handle different types.
+That also involved creating a visitor to be in charge of the transformations.

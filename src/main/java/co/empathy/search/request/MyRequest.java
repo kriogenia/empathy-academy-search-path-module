@@ -1,5 +1,6 @@
 package co.empathy.search.request;
 
+import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 
 import javax.validation.constraints.NotNull;
@@ -17,12 +18,13 @@ public interface MyRequest {
 	/**
 	 * @return  list of the requested filters
 	 */
-	@NotNull List<RequestFilter> filters();
+	@NotNull
+	List<RequestFilter> filters();
 
 	/**
 	 * @return  map with the aggregation requests
 	 */
 	@NotNull
-	Map<String, String> aggregationBuckets();
+	List<RequestAggregation> aggregations();
 
 }
