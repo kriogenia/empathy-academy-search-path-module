@@ -1,6 +1,8 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.aggregations.DividedRangeAggregation;
+import co.empathy.search.request.aggregations.RangeAggregation;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RangeFilter;
@@ -13,16 +15,18 @@ import io.reactivex.annotations.NonNull;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Introspected
 public class MovieRequest implements MyRequest {
 
 	public static final String GENRES_AGG = "genres";
 	public static final String TYPES_AGG = "types";
+	public static final String YEAR_AGG = "year";
+
+	private static final int START_YEAR = 1890;
+	private static final int LAST_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+	private static final int YEAR_GAP = 10;
 
 	private final HttpRequest<?> httpRequest;
 
@@ -33,9 +37,6 @@ public class MovieRequest implements MyRequest {
 	@Nullable
 	@QueryValue
 	private final List<RequestFilter> filters;
-
-	@Nullable
-	private final List<RequestAggregation> aggs;
 
 	public MovieRequest(HttpRequest<?> httpRequest,
 	                    @NonNull String query,
@@ -55,18 +56,6 @@ public class MovieRequest implements MyRequest {
 		if (year != null) {
 			this.filters.add(new RangeFilter(ImdbItem.START, year));
 		}
-		aggs = setRequestAggregations();
-	}
-
-	@NonNull
-	private List<RequestAggregation> setRequestAggregations() {
-		final @Nullable List<RequestAggregation> aggs;
-		// Aggregations
-		aggs = new ArrayList<>();
-		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES));
-		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE));
-		//aggs.add(new )
-		return aggs;
 	}
 
 	@Override
@@ -85,6 +74,11 @@ public class MovieRequest implements MyRequest {
 	@Override
 	@NotNull
 	public List<RequestAggregation> aggregations() {
+		final @NotNull List<RequestAggregation> aggs = new ArrayList<>();
+		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES));
+		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE));
+		aggs.add(new DividedRangeAggregation(YEAR_AGG, ImdbItem.START,
+				START_YEAR, LAST_YEAR, YEAR_GAP));
 		return aggs;
 	}
 

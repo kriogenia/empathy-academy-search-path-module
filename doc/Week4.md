@@ -48,3 +48,5 @@ Thankfully I realized how I should handle that, so I was able to send that aggre
 
 Next point, the same I did yesterday for range filter: extract a new aggregation class to handle different types.
 That also involved creating a visitor to be in charge of the transformations.
+
+This part was pretty easy. I finished fast and was able to move to more testing,

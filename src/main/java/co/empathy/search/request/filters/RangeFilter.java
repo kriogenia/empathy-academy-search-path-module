@@ -24,6 +24,9 @@ public class RangeFilter extends BaseRequestFilter {
 		}
 		this.from = segments[0];
 		this.to = segments[1];
+		if (Integer.parseInt(this.from) > Integer.parseInt(this.to)) {
+			throw new IllegalArgumentException("Start date can not be after the end date");
+		}
 		this.format = "YYYY";
 	}
 

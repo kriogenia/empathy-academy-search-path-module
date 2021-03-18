@@ -65,7 +65,7 @@ public class SearchResultBuilder {
 	 */
 	private Map<String, Long> flatAggregation(MultiBucketsAggregation agg) {
 		var buckets = agg.getBuckets();
-		return buckets.stream().collect(Collectors.toMap(
+		return buckets.stream().filter(x -> x.getDocCount() > 0).collect(Collectors.toMap(
 				MultiBucketsAggregation.Bucket::getKeyAsString,
 				MultiBucketsAggregation.Bucket::getDocCount));
 	}

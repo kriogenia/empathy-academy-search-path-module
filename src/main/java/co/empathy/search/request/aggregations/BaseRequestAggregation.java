@@ -5,10 +5,10 @@ import javax.validation.constraints.NotEmpty;
 public abstract class BaseRequestAggregation implements RequestAggregation {
 
 	@NotEmpty
-	protected String name;
+	protected final String name;
 
 	@NotEmpty
-	protected String field;
+	protected final String field;
 
 	public BaseRequestAggregation(@NotEmpty String name, @NotEmpty String field) {
 		this.name = name;
