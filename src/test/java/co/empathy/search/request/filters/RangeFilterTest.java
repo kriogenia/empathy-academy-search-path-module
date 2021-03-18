@@ -30,4 +30,6 @@ public class RangeFilterTest {
 		assertEquals("Ranges of dates must have two edges", exception.getMessage());
 	}
 
+	// accept test is on the respective filter
+
 }

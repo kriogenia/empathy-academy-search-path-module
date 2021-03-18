@@ -119,5 +119,15 @@ public class SearchControllerIntegrationTest {
 		assertEquals(400, exception.getStatus().getCode());
 	}
 
+	@Test
+	public void testSearchWithInvalidRange() {
+		var uri = baseUri.queryParam("query", "test");
+		uri.queryParam("year", "2000");
+		var request = HttpRequest.GET(uri.toString());
+		var exception = assertThrows(HttpClientResponseException.class,
+				() -> client.toBlocking().exchange(request));
+		assertEquals(400, exception.getStatus().getCode());
+	}
+
 
 }

@@ -24,6 +24,6 @@ public class TermsFilterTest {
 		assertArrayEquals(new String[]{"term1", "term2", "term3"}, filter.getTerms());
 	}
 
-	// TODO test accept ¿count calls to a mock filter?
+	// accept test is on the respective filter
 
 }

@@ -64,4 +64,5 @@ public class MockMyRequest implements MyRequest {
 	public void mockAggregationBuckets(Map<String, String> aggregationBuckets) {
 		this.aggregationBuckets = aggregationBuckets;
 	}
+
 }

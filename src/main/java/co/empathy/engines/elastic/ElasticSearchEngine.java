@@ -43,8 +43,8 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ElasticSearchEngine.class);
 
-	private final RestHighLevelClient esClient;
 	private final EEngine info = EEngine.ELASTIC_SEARCH;
+	private final RestHighLevelClient client;
 
 	@Inject
 	ElasticFilterVisitor filterParser;
@@ -58,7 +58,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	 */
 	public ElasticSearchEngine() {
 		// ElasticSearch client
-		esClient = new RestHighLevelClient(
+		client = new RestHighLevelClient(
 				RestClient.builder(
 						new HttpHost("localhost", 9200, "http"),
 						new HttpHost("localhost", 9201, "http")
@@ -70,14 +70,14 @@ public class ElasticSearchEngine implements SearchEngine {
 	public void close() throws Exception {
 		// Close client when the engine is destroyed
 		LOG.info("Closing ElasticSearch client");
-		esClient.close();
+		client.close();
 	}
 
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
 		// Index a single entry into the specified index
 		IndexRequest request = new IndexRequest(index).id(entry.getId()).source(entry.toJsonMap());
-		IndexResponse response = esClient.index(request, RequestOptions.DEFAULT);
+		IndexResponse response = client.index(request, RequestOptions.DEFAULT);
 		LOG.info("Indexed {} ({})", entry.getId(), response.getId());
 	}
 
@@ -90,7 +90,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		// Adds them to the bulk request
 		requests.forEach(bulk::add);
 		// Index the bulk request
-		esClient.bulk(bulk, RequestOptions.DEFAULT);
+		client.bulk(bulk, RequestOptions.DEFAULT);
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	@Override
 	public String getVersion() throws IOException {
 		// ElasticSearch server info request
-		MainResponse response = esClient.info(RequestOptions.DEFAULT);
+		MainResponse response = client.info(RequestOptions.DEFAULT);
 		return response.getVersion().getNumber();
 	}
 
@@ -135,7 +135,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	public boolean hasIndex(String key) throws IOException {
 		// Request and existence retrieval
 		GetIndexRequest request = new GetIndexRequest(key);
-		return esClient.indices().exists(request, RequestOptions.DEFAULT);
+		return client.indices().exists(request, RequestOptions.DEFAULT);
 	}
 
 	@Override
@@ -143,14 +143,14 @@ public class ElasticSearchEngine implements SearchEngine {
 		CreateIndexRequest create = new CreateIndexRequest(configuration.getKey());
 		String mapping = configuration.getSource(info);
 		create.source(mapping, XContentType.JSON);
-		esClient.indices().create(create, RequestOptions.DEFAULT);
+		client.indices().create(create, RequestOptions.DEFAULT);
 		LOG.info("New index {} created", configuration.getKey());
 	}
 
 	@Override
 	public void deleteIndex(String key) throws IOException {
 		DeleteIndexRequest request = new DeleteIndexRequest(key);
-		esClient.indices().delete(request, RequestOptions.DEFAULT);
+		client.indices().delete(request, RequestOptions.DEFAULT);
 		LOG.info("Index {} deleted", key);
 	}
 
@@ -167,7 +167,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		searchRequest.indices(indices);
 		searchRequest.source(builder);
 		// Invokes the search
-		SearchResponse response = esClient.search(searchRequest, RequestOptions.DEFAULT);
+		SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
 		return factory.build(response);
 	}
 

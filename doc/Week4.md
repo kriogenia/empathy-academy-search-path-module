@@ -38,3 +38,7 @@ I don't think the filters should know how to convert to each engine, the engine 
 It took me a while to complete the refactoring, but the positive effects were discernible from the first second.
 Once the range filter and its visitor were in line I only needed to a couple of things to the MovieRequest and everything worked.
 Back to test now, I'll leave the range aggregation for tomorrow.
+
+#2021-03-18
+The first thing in the morning was changing the error handling, that was a lot easier than I expected and really my code reading.
+I also tried to inject the ElasticSearch but the test started to take A LOT, so I reverted that.
