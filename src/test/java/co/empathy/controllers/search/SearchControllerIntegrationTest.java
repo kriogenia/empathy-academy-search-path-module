@@ -16,6 +16,8 @@ import javax.inject.Inject;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,7 +75,6 @@ public class SearchControllerIntegrationTest {
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).allMatch(x -> x.contains("Jumanji")));
 	}
 
-
 	@Test
 	public void testSearchTitleWithMultipleWords() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Shawshank Redemption").toString();
@@ -105,11 +106,70 @@ public class SearchControllerIntegrationTest {
 						&& Objects.requireNonNull(Arrays.toString(x.getGenres())).contains("Action")));
 	}
 
-	// TODO test search title with type
+	@Test
+	public void testSearchTitleWithType() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("type", "movie");
+		var request = HttpRequest.GET(uri.toString());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
-	// TODO test search title with range
+		assertNotNull(retrieved);
+		assertEquals(42, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
+		// Matching words test
+		assertTrue(retrieved.getItems().stream().allMatch(
+				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")
+						&& Objects.requireNonNull(x.getTitleType()).contains("movie")));
+	}
 
-	// TODO test search with all filters
+	@Test
+	public void testSearchTitleWithYear() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("year", "2000/2010");
+		var request = HttpRequest.GET(uri.toString());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+
+		assertNotNull(retrieved);
+		assertEquals(117, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
+		// Matching words test
+		assertTrue(retrieved.getItems().stream().allMatch(
+				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")));
+		var startYears = retrieved.getItems().stream().map(ImdbItem::getStartYear)
+				.filter(Objects::nonNull).map(Integer::parseInt);
+		assertTrue(startYears.allMatch(x -> x >= 2000 & x <= 2010));
+	}
+
+	@Test
+	public void testSearchTitleWithAllFilters() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("genres", "Action");
+		uri.queryParam("type", "movie");
+		uri.queryParam("year", "2000/2010");
+		var request = HttpRequest.GET(uri.toString());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+
+		assertNotNull(retrieved);
+		assertEquals(4, retrieved.getTotal());
+		assertEquals(4, retrieved.getItems().size());
+		// Matching title
+		assertTrue(retrieved.getItems().stream().allMatch(
+				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")));
+		// Matching genres
+		var genres = retrieved.getItems().stream().map(ImdbItem::getGenres)
+				.filter(Objects::nonNull).map(Arrays::toString);
+		assertTrue(genres.allMatch(x -> x.contains("Action")));
+		// Matching type
+		var types = retrieved.getItems().stream().map(ImdbItem::getTitleType);
+		assertTrue(types.allMatch(x -> x.equals("movie")));
+		// Matching years
+		var startYears = retrieved.getItems().stream().map(ImdbItem::getStartYear)
+				.filter(Objects::nonNull).map(Integer::parseInt);
+		assertTrue(startYears.allMatch(x -> x >= 2000 & x <= 2010));
+	}
 
 	@Test
 	public void testSearchWithoutQuery() {
