@@ -17,6 +17,9 @@ public class RangeAggregation extends BaseRequestAggregation {
 	public RangeAggregation(@NotEmpty String name, @NotEmpty String field,
 	                        @Nullable Integer from, @Nullable Integer to) {
 		super(name, field);
+		if (from == null && to == null) {
+			throw new IllegalArgumentException("Ranges must have two edges");
+		}
 		this.from = from;
 		this.to = to;
 	}

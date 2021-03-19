@@ -24,6 +24,9 @@ public class DividedRangeAggregation extends BaseRequestAggregation {
 		}
 		this.from = from;
 		this.to = to;
+		if (gap <= 0) {
+			throw new IllegalArgumentException("The gap between ranges can't be negative");
+		}
 		this.gap = gap;
 	}
 

@@ -11,7 +11,13 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 	protected final String field;
 
 	public BaseRequestAggregation(@NotEmpty String name, @NotEmpty String field) {
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("The aggregation name is required");
+		}
 		this.name = name;
+		if (field == null || field.isEmpty()) {
+			throw new IllegalArgumentException("The aggregation field is required");
+		}
 		this.field = field;
 	}
 

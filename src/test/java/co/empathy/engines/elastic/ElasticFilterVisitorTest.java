@@ -18,7 +18,7 @@ public class ElasticFilterVisitorTest {
 	ElasticFilterVisitor visitor;
 
 	@Test
-	public void transformRangeFilterTest() {
+	public void transformDateRangeFilterTest() {
 		var filter = new DateRangesFilter("test", "2010/2020");
 		var query = (RangeQueryBuilder) filter.accept(visitor);
 		assertEquals("test", query.fieldName());
