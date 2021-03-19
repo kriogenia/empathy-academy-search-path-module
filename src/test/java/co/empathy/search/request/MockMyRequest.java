@@ -1,5 +1,6 @@
 package co.empathy.search.request;
 
+import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import io.micronaut.context.annotation.Replaces;
 
@@ -21,12 +22,12 @@ public class MockMyRequest implements MyRequest {
 	private List<RequestFilter> filters;
 
 	@NotNull
-	private Map<String, String> aggregationBuckets;
+	private List<RequestAggregation> aggregations;
 
 	public MockMyRequest() {
 		this.musts = new HashMap<>();
 		this.filters = new ArrayList<>();
-		this.aggregationBuckets = new HashMap<>();
+		this.aggregations = new ArrayList<>();
 	}
 
 	@Override
@@ -54,15 +55,15 @@ public class MockMyRequest implements MyRequest {
 	}
 
 	@Override
-	public @NotNull Map<String, String> aggregations() {
-		return aggregationBuckets;
+	public @NotNull List<RequestAggregation> aggregations() {
+		return aggregations;
 	}
 
 	/**
 	 * @param aggregationBuckets    mock of the aggregationBuckets() call
 	 */
-	public void mockAggregationBuckets(Map<String, String> aggregationBuckets) {
-		this.aggregationBuckets = aggregationBuckets;
+	public void mockAggregationBuckets(List<RequestAggregation> aggregationBuckets) {
+		this.aggregations = aggregationBuckets;
 	}
 
 }

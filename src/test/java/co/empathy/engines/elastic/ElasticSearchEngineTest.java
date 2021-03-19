@@ -4,6 +4,8 @@ import co.empathy.common.ImdbItem;
 import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.search.request.MockMyRequest;
 import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.aggregations.RequestAggregation;
+import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.util.ElasticSearchTestHelper;
@@ -41,7 +43,7 @@ public class ElasticSearchEngineTest {
 	// Maps of the request
 	Map<String, String> must = new HashMap<>();
 	List<RequestFilter> filter = new ArrayList<>();
-	Map<String, String> aggs = new HashMap<>();
+	List<RequestAggregation> aggs = new ArrayList<>();
 
 	//TODO test close
 	//TODO test index
@@ -98,7 +100,7 @@ public class ElasticSearchEngineTest {
 		assertTrue(allContains("type", "movie", items));
 
 		// More than one result, one filter, one aggregation
-		aggs.put(MovieRequest.GENRES_AGG, ImdbItem.GENRES);
+		aggs.add(new TermsAggregation(MovieRequest.GENRES_AGG, ImdbItem.GENRES));
 		var result = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
 		assertNotNull(result.getAggregations().get(MovieRequest.GENRES_AGG));
 		var genres = result.getAggregations().get(MovieRequest.GENRES_AGG);

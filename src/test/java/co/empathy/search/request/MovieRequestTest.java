@@ -43,12 +43,11 @@ public class MovieRequestTest {
 	}
 
 	@Test
-	public void testAggregationBuckets() {
+	public void testAggregations() {
 		var request = new MovieRequest(null, "test",
 				null, null, null);
 		var aggs = request.aggregations();
-		assertEquals(ImdbItem.GENRES, aggs.get(MovieRequest.GENRES_AGG));
-		assertEquals(ImdbItem.TYPE, aggs.get(MovieRequest.TYPES_AGG));
+		assertEquals(3, aggs.size());
 	}
 
 }

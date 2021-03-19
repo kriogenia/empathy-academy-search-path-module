@@ -3,6 +3,7 @@ package co.empathy.engines.elastic;
 import co.empathy.common.ImdbItem;
 import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.search.request.MockMyRequest;
+import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.search.response.SearchResult;
@@ -42,7 +43,7 @@ public class ElasticSearchEngineImdbTest {
 	// Maps of the request
 	Map<String, String> must = new HashMap<>();
 	List<RequestFilter> filter = new ArrayList<>();
-	Map<String, String> aggs = new HashMap<>();
+	List<RequestAggregation> aggs = new ArrayList<>();
 
 	/**
 	 * Specifies the maps to use on the mocks
