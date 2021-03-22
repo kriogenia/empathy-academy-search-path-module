@@ -34,7 +34,7 @@ public class SearchController {
 	/**
 	 * Get the search result of the specified request
 	 * @param request	Parameters of the search:
-	 *                      ?query: specified query to search a movie based on the original title
+	 *                      ?query: specified query to search an entry based on the original title
 	 *                      [?genres]: comma separated list of genres to which titles must belong to
 	 *                      [?type]: comma separated list of types to which titles must belong to
 	 *                      [?year]: comma separated list of ranges, such as 2000/2010, to which
