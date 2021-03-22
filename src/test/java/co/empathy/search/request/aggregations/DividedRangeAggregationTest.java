@@ -20,11 +20,11 @@ public class DividedRangeAggregationTest {
 		assertEquals(5, agg.getGap());
 		// Invalid range
 		var exception = assertThrows(IllegalArgumentException.class,
-				() -> new DividedRangeAggregation("", "", 10, 0 , 2));
+				() -> new DividedRangeAggregation("name", "field", 10, 0 , 2));
 		assertEquals("Range start can't be after the end", exception.getMessage());
 		// Invalid gap
 		exception = assertThrows(IllegalArgumentException.class,
-				() -> new DividedRangeAggregation("", "", 0, 10, -2));
+				() -> new DividedRangeAggregation("name", "field", 0, 10, -2));
 		assertEquals("The gap between ranges can't be negative", exception.getMessage());
 	}
 }

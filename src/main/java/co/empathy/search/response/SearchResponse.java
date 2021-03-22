@@ -66,4 +66,11 @@ public class SearchResponse<T extends Serializable> implements Serializable {
 	public List<T> getItems() {
 		return items;
 	}
+
+	/**
+	 * @return  aggregations retrieved in the search
+	 */
+	public Map<String, Map<String, Long>> getAggregations() {
+		return aggregations;
+	}
 }

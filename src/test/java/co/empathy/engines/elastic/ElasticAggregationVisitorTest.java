@@ -24,7 +24,6 @@ public class ElasticAggregationVisitorTest {
 		var query = (DateRangeAggregationBuilder) range.accept(visitor);
 		assertEquals("name", query.getName());
 		assertEquals("field", query.field());
-		assertEquals("YYYY", query.format());
 	}
 
 	@Test
@@ -33,7 +32,6 @@ public class ElasticAggregationVisitorTest {
 		var query = (DateRangeAggregationBuilder) range.accept(visitor);
 		assertEquals("name", query.getName());
 		assertEquals("field", query.field());
-		assertEquals("YYYY", query.format());
 	}
 
 	@Test
