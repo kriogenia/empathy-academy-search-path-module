@@ -1,7 +1,6 @@
 package co.empathy.engines;
 
 import co.empathy.common.ImdbItem;
-import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import co.empathy.search.request.MyRequest;

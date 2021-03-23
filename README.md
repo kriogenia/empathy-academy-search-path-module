@@ -20,7 +20,6 @@ curl -s http://localhost:8080/hello
 ```
 
 If you got the Hello World response then jump to the next section.
-You don't need the API running for it, you should close it for now.
 
 ## ElasticSearch Deployment
 
@@ -28,7 +27,7 @@ We'll run our indices on a ElasticSearch docker.
 You can download Docker [here](https://www.docker.com/products/docker-desktop).
 Once it is installed, open a terminal and run the following commands 
 
-```shell
+```sh
 docker pull docker.elastic.co/elasticsearch/elasticsearch:7.11.1
 docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.11.1
 curl -XGET http://localhost:9200
@@ -43,13 +42,14 @@ It's the **title.basics.tsv.gz**.
 Download it and extract its content on [/src/main/java/resources/imdb](/src/main/java/resources/imdb) 
 with the name **title.basics.tsv**. 
 
-Now let's move to [/src/main/java/co/empathy/Application.java](/src/main/java/co/empathy/Application.java)
-and uncomment the *indexImdb()* call on the main method.
-This way, running the app will index the whole dataset in our ElasticSearch container.
-Once it's done, the API will be ready to use.
+Once you have the file on its place just use this command ,and it will build the whole index.
+(*NOTE, it will a while, several minutes at least. So, go make a coffee*)
 
-*(Note: With the whole dataset indexed I recommend you to comment that line again.
-Doing this, it won't index everything again each time you launch the API saving you a lot of time.)*
+```sh
+curl http://localhost:8080/index/imdb
+```
+
+The moment you get an OK response you can start using the search API.
 
 ## Usage
 
@@ -68,7 +68,7 @@ http://localhost:8080?search
 | type | `no` | \<string\>[,\<string\>]* |  \<empty\> | Comma separated list of types to which titles must belong to |
 | year | `no` | \<YYYY\>/\<YYYY\>[,\<YYYY\>/\<YYYY\>]* |  \<empty\> | Comma separated list of ranges, such as 2000/2010, to which titles have been released during such period
 
-For example, the following query searches the action or adventure movies titled Avengers release between 2010 and 2016.
+For example, the following query searches the action or adventure movies titled Avengers released between 2010 and 2016.
 
 ```
 http://localhost:8080/search?query=Avengers&genres=Action,Adventure&type=movie&year=2010/2016

@@ -3,3 +3,5 @@ micronaut:
     name: demo
 elasticsearch:
   httpHosts: http://localhost:9200
+imdb:
+  test: 1

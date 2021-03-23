@@ -45,6 +45,7 @@ public interface Indexer {
 
 	/**
 	 * Deletes the index specified by the current IndexConfiguration
+	 * @return true if the index exists and was successfully deleted
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */

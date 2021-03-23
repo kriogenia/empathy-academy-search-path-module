@@ -1,6 +1,7 @@
 package co.empathy.index.configuration;
 
 import co.empathy.engines.EEngine;
+import io.micronaut.context.annotation.ConfigurationProperties;
 
 import javax.inject.Singleton;
 import javax.validation.constraints.NotEmpty;
@@ -10,7 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Singleton
+@ConfigurationProperties("imdb")
 public class ImdbIndexConfiguration implements IndexConfiguration {
 
 	// TODO move configuration to resource files
@@ -20,6 +21,16 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 	public static final String FILE_PATH = BASE_PATH + "/title.basics.tsv";
 	public static final int BULK_SIZE = 5000;
 	public static final int TOTAL_BULKS = 7662622 / BULK_SIZE;
+
+	private int test;
+
+	public int getTest() {
+		return test;
+	}
+
+	public void setTest(int test) {
+		this.test = test;
+	}
 
 	@Override
 	@NotEmpty
