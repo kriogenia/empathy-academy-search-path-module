@@ -24,7 +24,7 @@ public class ImdbRating implements Indexable {
 	private String id;
 
 	@Min(value = 0, message = "The minimum rating is 0")
-	@Max(value = 5, message = "The maximum rating is 5")
+	@Max(value = 10, message = "The maximum rating is 10")
 	private float averageRating;
 
 	@PositiveOrZero(message = "The number of votes can't be negative")

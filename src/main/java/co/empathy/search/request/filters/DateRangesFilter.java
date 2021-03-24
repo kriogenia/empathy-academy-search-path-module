@@ -26,7 +26,7 @@ public class DateRangesFilter extends BaseRequestFilter {
 			}
 			this.ranges.add(new Range(segments[0], segments[1]));
 		}
-		this.format = "YYYY";
+		this.format = "year";
 	}
 
 	@NotEmpty

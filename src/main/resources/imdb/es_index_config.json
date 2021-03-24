@@ -115,11 +115,11 @@
       },
       "start_year": {
         "type": "date",
-        "format": "yyyy"
+        "format": "year"
       },
       "end_year": {
         "type": "date",
-        "format": "yyyy"
+        "format": "year"
       },
       "runtime_minutes": {
         "type": "text"

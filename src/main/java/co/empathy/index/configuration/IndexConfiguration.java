@@ -1,17 +1,19 @@
 package co.empathy.index.configuration;
 
 import co.empathy.engines.EEngine;
+import co.empathy.index.Indexable;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * Classes holding all the needed configuration to create an index
  */
 public interface IndexConfiguration {
-
-	// TODO all index configurations to factory
 
 	/**
 	 * @return	key of the index
@@ -24,6 +26,11 @@ public interface IndexConfiguration {
 	 */
 	@NotEmpty
 	String getFilePath();
+
+	/**
+	 * @return  function that builds the pojo of the read file
+	 */
+	Function<String, Indexable> getBuilder();
 
 	/**
  	 * @return	size for the bulk requests
@@ -44,5 +51,6 @@ public interface IndexConfiguration {
 	 */
 	@NotEmpty
 	String getSource(EEngine requesterInfo) throws IOException;
+
 
 }

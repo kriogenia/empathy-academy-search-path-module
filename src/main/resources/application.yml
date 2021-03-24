@@ -4,16 +4,32 @@ micronaut:
 elasticsearch:
   httpHosts: http://localhost:9200
 imdb:
-  key: imdb
-  basePath: src/main/resources/imdb/
-  fileName: title.basics.tsv
-  indexName: _index_config.json
-  bulk: 5000
-  total: 7662622
+  basics:
+    key: imdb
+    basePath: src/main/resources/imdb/
+    file: title.basics.tsv
+    indexConfig: _index_config.json
+    bulk: 5000
+    total: 7662622
+  ratings:
+    key: imdb
+    basePath: src/main/resources/imdb/
+    file: title.ratings.tsv
+    indexConfig: _index_config.json
+    bulk: 5000
+    total: 1132578
 reducedImdb:
-  key: test
-  basePath: src/test/resources/test/
-  fileName: test.basics.tsv
-  indexName: index.json
-  bulk: 5000
-  total: 5000
+  basics:
+    key: test
+    basePath: src/test/resources/test/
+    file: test.basics.tsv
+    indexConfig: index.json
+    bulk: 5000
+    total: 5000
+  ratings:
+    key: test
+    basePath: src/test/resources/test/
+    file: test.ratings.tsv
+    indexConfig: index.json
+    bulk: 5000
+    total: 5000

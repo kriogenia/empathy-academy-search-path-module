@@ -19,3 +19,8 @@ This week looks tough but pretty funny.
 First things first, will need to add the ratings to our current index.
 I was searching a couple of hours how to handle this. It looks like bulk updating is the way to go.
 So, finally I created a new common object, the ImdbRatings to manage the ratings with a different object.
+
+Next, I added an indexer function to those updates, extracting some functional logic in the process.
+I had to change some things in the index configurations. 
+To be fair, I don't like those changes, so it's possible that I change that approach.
+This was harder than I expected.

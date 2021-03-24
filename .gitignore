@@ -12,5 +12,5 @@ out/
 .settings
 .classpath
 .factorypath
-/src/main/resources/imdb/title.basics.tsv
+/src/main/resources/imdb/*
 /src/java/resources/test/*

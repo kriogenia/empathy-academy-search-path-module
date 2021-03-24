@@ -1,22 +1,38 @@
 {
   "query": {
-    "bool": {
-      "must": {
-        "match": {
-          "original_title": "the"
+    "function_score": {
+      "query": {
+        "boosting": {
+          "positive": {
+            "bool": {
+              "must": {
+                "match": {
+                  "original_title": "avengers"
+                }
+              }
+            }
+          },
+          "negative": {
+            "term": {
+              "type": "tvEpisode"
+            }
+          },
+          "negative_boost": 0.1
         }
       },
-      "filter": [
+      "functions": [
         {
-          "range": {
+          "gauss": {
             "start_year": {
-              "gte": "2005",
-              "lte": "2020",
-              "format": "YYYY"
+              "origin": "now",
+              "offset": "1825d",
+              "scale": "5475d",
+              "decay": 0.8
             }
           }
         }
-      ]
+      ],
+      "boost_mode": "sum"
     }
   },
   "aggs": {

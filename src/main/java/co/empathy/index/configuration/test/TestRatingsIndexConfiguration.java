@@ -1,19 +1,26 @@
-package co.empathy.index.configuration;
+package co.empathy.index.configuration.test;
 
+import co.empathy.common.ImdbItem;
+import co.empathy.common.ImdbRating;
 import co.empathy.engines.EEngine;
+import co.empathy.index.Indexable;
+import co.empathy.index.configuration.IndexConfiguration;
 import io.micronaut.context.annotation.ConfigurationProperties;
 
-import javax.inject.Singleton;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.function.Function;
 
 /**
- * Configuration to load the IMDB dataset
+ * Index configuration to load a portion of the dataset with
+ * a test configuration
  */
-@ConfigurationProperties("imdb")
-public class ImdbIndexConfiguration implements IndexConfiguration {
+@ConfigurationProperties("reducedImdb.ratings")
+public class TestRatingsIndexConfiguration implements IndexConfiguration {
 
 	@NotEmpty
 	private String key;
@@ -22,10 +29,10 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 	private String basePath;
 
 	@NotEmpty
-	private String fileName;
+	private String file;
 
 	@NotEmpty
-	private String indexName;
+	private String indexConfig;
 
 	@Min(100)
 	private int bulk;
@@ -51,20 +58,20 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 		this.basePath = basePath;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public String getFile() {
+		return file;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFile(String file) {
+		this.file = file;
 	}
 
-	public String getIndexName() {
-		return indexName;
+	public String getIndexConfig() {
+		return indexConfig;
 	}
 
-	public void setIndexName(String indexName) {
-		this.indexName = indexName;
+	public void setIndexConfig(String indexConfig) {
+		this.indexConfig = indexConfig;
 	}
 
 	public int getBulk() {
@@ -86,7 +93,12 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 	@Override
 	@NotEmpty
 	public String getFilePath() {
-		return basePath + fileName;
+		return basePath + file;
+	}
+
+	@Override
+	public Function<String, Indexable> getBuilder() {
+		return ImdbRating::buildFromString;
 	}
 
 	@Override
@@ -104,7 +116,8 @@ public class ImdbIndexConfiguration implements IndexConfiguration {
 	@Override
 	@NotEmpty
 	public String getSource(EEngine requesterInfo) throws IOException {
-		String path = basePath + requesterInfo.getKey() + indexName;
+		String path = basePath + indexConfig;
 		return new String(Files.readAllBytes(Paths.get(path)));
 	}
+
 }

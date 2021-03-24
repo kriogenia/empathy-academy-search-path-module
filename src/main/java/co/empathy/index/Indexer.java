@@ -6,6 +6,7 @@ import io.reactivex.annotations.NonNull;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Objects that can create an index in the Search Engines
@@ -29,6 +30,14 @@ public interface Indexer {
 	Indexer setConfiguration(@NonNull IndexConfiguration configuration);
 
 	/**
+	 * Changes the Indexer extensions
+	 * @param extensions    list of IndexConfigurations to extend
+	 * @return              modified indexer
+	 */
+	@NotNull
+	Indexer setExtensions(List<IndexConfiguration> extensions);
+
+	/**
 	 * Reads and indexes the content of the configuration file
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
@@ -45,11 +54,11 @@ public interface Indexer {
 
 	/**
 	 * Reads and updates the index with the content of the configuration
-	 * extra files through Bulk Requests
+	 * extension files through Bulk Requests
 	 * @throws IOException  if an I/O error occurs opening the file
 	 * 	 * 					or with the search engine
 	 */
-	void bulkUpdate() throws IOException;
+	void bulkExtend() throws IOException;
 
 	/**
 	 * Deletes the index specified by the current IndexConfiguration

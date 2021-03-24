@@ -13,6 +13,7 @@ import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
@@ -84,7 +85,14 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public void bulkUpdate(String index, List<Indexable> entries) throws IOException {
-		// TODO
+		BulkRequest bulk = new BulkRequest();
+		// Creates the index requests
+		var requests = entries.stream().map(
+				x -> new UpdateRequest().index(index).id(x.getId()).doc(x.toJsonMap()));
+		// Adds them to the bulk request
+		requests.forEach(bulk::add);
+		// Index the bulk request
+		client.bulk(bulk, RequestOptions.DEFAULT);
 	}
 
 	@Override

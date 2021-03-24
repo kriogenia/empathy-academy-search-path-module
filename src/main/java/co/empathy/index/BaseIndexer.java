@@ -34,6 +34,8 @@ public class BaseIndexer implements Indexer {
 	@NonNull
 	private IndexConfiguration config;
 
+	private List<IndexConfiguration> extensions;
+
 	/**
 	 * Constructor of the Indexer.
 	 * As injected automatically loads the ElasticSearchEngine with IMDB configuration by default.
@@ -42,9 +44,10 @@ public class BaseIndexer implements Indexer {
 	 */
 	public BaseIndexer(
 			@NonNull @Named("elastic") SearchEngine engine,
-			@NonNull @Named("imdb") IndexConfiguration configuration) {
+			@NonNull @Named("imdbbasics") IndexConfiguration configuration) {
 		this.engine = engine;
 		this.config = configuration;
+		this.extensions = new ArrayList<>();
 	}
 
 	@Override
@@ -56,6 +59,12 @@ public class BaseIndexer implements Indexer {
 	@Override
 	public Indexer setConfiguration(@NonNull IndexConfiguration configuration) {
 		this.config = configuration;
+		return this;
+	}
+
+	@Override
+	public Indexer setExtensions(List<IndexConfiguration> extensions) {
+		this.extensions = extensions;
 		return this;
 	}
 
@@ -83,21 +92,22 @@ public class BaseIndexer implements Indexer {
 		}
 		// Start the bulk index
 		LOG.info("Index ready, bulk indexing the files...");
-		processBulk(this::indexAccept);
+		processBulk(config, this::indexAccept);
 		LOG.info("Ending {} bulk indexing...", config.getFilePath());
 	}
 
 	@Override
-	public void bulkUpdate() throws IOException {
-		LOG.info("Starting {} bulk updating...", config.getFilePath());
-		// Create index in case it doesn't exists
+	public void bulkExtend() throws IOException {
+		// Check the index exists before starting the update
 		if (!existsIndex()) {
 			throw new IndexNotFoundException("The specified index does not exists, it can't be updated");
 		}
-		// Start the bulk index
-		LOG.info("Index ready, bulk updating the files...");
-		processBulk(this::updateAccept);
-		LOG.info("Ending {} bulk updating...", config.getFilePath());
+		for (var extension: extensions) {
+			LOG.info("Starting {} bulk updating...", extension.getFilePath());
+			processBulk(extension, this::updateAccept);
+			LOG.info("Ending {} bulk updating...", extension.getFilePath());
+		}
+		LOG.info("Finished the extension of the index {}", config.getKey());
 	}
 
 	@Override
@@ -142,8 +152,13 @@ public class BaseIndexer implements Indexer {
 		}
 	}
 
-
-	private void processBulk(BiConsumer<String, List<Indexable>> bulkingFunction) throws IOException {
+	/**
+	 * Creates bulks from the specified file and calls the bulking function
+	 * @param path              path of the file to read
+	 * @param bulkingFunction   function to invoke with the bulks
+	 * @throws IOException      if an I/O error occurs
+	 */
+	private void processBulk(IndexConfiguration config, BiConsumer<String, List<Indexable>> bulkingFunction) throws IOException {
 		List<Indexable> bulk = new ArrayList<>();		// Create the bulk list
 		BufferedReader reader = new BufferedReader(new FileReader(config.getFilePath()));
 		reader.readLine();								// Skip the tab header
@@ -159,7 +174,7 @@ public class BaseIndexer implements Indexer {
 				LOG.info("{}% completed - Filling new bulk", (++counter) * 100 / config.getTotalBulks());
 			}
 			// Add the entry to the bulk and advance one line
-			bulk.add(ImdbItem.buildFromString(line));
+			bulk.add(config.getBuilder().apply(line));
 			line = reader.readLine();
 		}
 		bulkingFunction.accept(config.getKey(), bulk);
