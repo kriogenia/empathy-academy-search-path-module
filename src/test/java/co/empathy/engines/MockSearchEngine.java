@@ -26,7 +26,12 @@ public class MockSearchEngine implements SearchEngine {
 
 	@Override
 	public void bulkIndex(String index, List<Indexable> entries) throws IOException {
-		LOG.info("Mock called to bulk index" + entries.size() + " entries on " + index);
+		LOG.info("Mock called to bulk index " + entries.size() + " entries on " + index);
+	}
+
+	@Override
+	public void bulkUpdate(String index, List<Indexable> entries) throws IOException {
+		LOG.info("Mock called to bulk update " + entries.size() + " entries on " + index);
 	}
 
 	@Override

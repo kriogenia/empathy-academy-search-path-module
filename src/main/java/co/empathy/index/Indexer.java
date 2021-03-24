@@ -29,19 +29,27 @@ public interface Indexer {
 	Indexer setConfiguration(@NonNull IndexConfiguration configuration);
 
 	/**
-	 * Reads and inserts the content of the file into an index
+	 * Reads and indexes the content of the configuration file
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */
-	void indexFile() throws IOException;
+	void index() throws IOException;
 
 	/**
-	 * Reads and inserts the content of the file into an index
+	 * Reads and indexes the content of the configuration file
 	 * through Bulk Requests
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */
 	void bulkIndex() throws IOException;
+
+	/**
+	 * Reads and updates the index with the content of the configuration
+	 * extra files through Bulk Requests
+	 * @throws IOException  if an I/O error occurs opening the file
+	 * 	 * 					or with the search engine
+	 */
+	void bulkUpdate() throws IOException;
 
 	/**
 	 * Deletes the index specified by the current IndexConfiguration

@@ -3,9 +3,9 @@ package co.empathy.index;
 import co.empathy.common.ImdbItem;
 import co.empathy.engines.SearchEngine;
 import co.empathy.index.configuration.IndexConfiguration;
-import io.micronaut.context.annotation.Prototype;
 import io.micronaut.runtime.http.scope.RequestScope;
 import io.reactivex.annotations.NonNull;
+import org.apache.lucene.index.IndexNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 /**
@@ -59,7 +60,7 @@ public class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public void indexFile() throws IOException {
+	public void index() throws IOException {
 		LOG.info("Starting {} indexing...", config.getFilePath());
 		// Create index in case it doesn't exist
 		if (!existsIndex()) {
@@ -82,26 +83,21 @@ public class BaseIndexer implements Indexer {
 		}
 		// Start the bulk index
 		LOG.info("Index ready, bulk indexing the files...");
-		List<Indexable> bulk = new ArrayList<>();		// Create the bulk list
-		BufferedReader reader = new BufferedReader(new FileReader(config.getFilePath()));
-		reader.readLine();								// Skip the tab header
-		String line = reader.readLine();
-		// For each line create a new entry
-		int counter = 0;
-		while (line != null) {
-			// When the bulk is full send it to index
-			if (bulk.size() >= config.getBulkSize()) {
-				engine.bulkIndex(config.getKey(), bulk);
-				bulk = new ArrayList<>();
-				// Log progress
-				LOG.info("{}% completed - Filling new bulk", (++counter) * 100 / config.getTotalBulks());
-			}
-			// Add the entry to the bulk and advance one line
-			bulk.add(ImdbItem.buildFromString(line));
-			line = reader.readLine();
-		}
-		engine.bulkIndex(config.getKey(), bulk);
+		processBulk(this::indexAccept);
 		LOG.info("Ending {} bulk indexing...", config.getFilePath());
+	}
+
+	@Override
+	public void bulkUpdate() throws IOException {
+		LOG.info("Starting {} bulk updating...", config.getFilePath());
+		// Create index in case it doesn't exists
+		if (!existsIndex()) {
+			throw new IndexNotFoundException("The specified index does not exists, it can't be updated");
+		}
+		// Start the bulk index
+		LOG.info("Index ready, bulk updating the files...");
+		processBulk(this::updateAccept);
+		LOG.info("Ending {} bulk updating...", config.getFilePath());
 	}
 
 	@Override
@@ -146,4 +142,56 @@ public class BaseIndexer implements Indexer {
 		}
 	}
 
+
+	private void processBulk(BiConsumer<String, List<Indexable>> bulkingFunction) throws IOException {
+		List<Indexable> bulk = new ArrayList<>();		// Create the bulk list
+		BufferedReader reader = new BufferedReader(new FileReader(config.getFilePath()));
+		reader.readLine();								// Skip the tab header
+		String line = reader.readLine();
+		// For each line create a new entry
+		int counter = 0;
+		while (line != null) {
+			// When the bulk is full send it to index
+			if (bulk.size() >= config.getBulkSize()) {
+				bulkingFunction.accept(config.getKey(), bulk);
+				bulk = new ArrayList<>();
+				// Log progress
+				LOG.info("{}% completed - Filling new bulk", (++counter) * 100 / config.getTotalBulks());
+			}
+			// Add the entry to the bulk and advance one line
+			bulk.add(ImdbItem.buildFromString(line));
+			line = reader.readLine();
+		}
+		bulkingFunction.accept(config.getKey(), bulk);
+	}
+
+	// TODO extract throwing consumer interface
+
+	/**
+	 * Lambda call for bulk indexing
+	 * @param key       Key of the index
+	 * @param bulk      Bulk to index
+	 */
+	private void indexAccept(String key, List<Indexable> bulk) {
+		try {
+			engine.bulkIndex(key, bulk);
+		} catch (IOException ioe) {
+			LOG.error("IOException {}", ioe.getMessage());
+			throw new RuntimeException(ioe.getMessage());
+		}
+	}
+
+	/**
+	 * Lambda call for bulk updating
+	 * @param key       Key of the index
+	 * @param bulk      Bulk to update
+	 */
+	private void updateAccept(String key, List<Indexable> bulk) {
+		try {
+			engine.bulkUpdate(key, bulk);
+		} catch (IOException ioe) {
+			LOG.error("IOException {}", ioe.getMessage());
+			throw new RuntimeException(ioe.getMessage());
+		}
+	}
 }

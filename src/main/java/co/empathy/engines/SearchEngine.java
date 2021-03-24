@@ -15,19 +15,27 @@ public interface SearchEngine extends AutoCloseable {
 
 	/**
 	 * Inserts an entry into the specified index
-	 * @param index	Where to insert the entry
-	 * @param entry	Document to insert
+	 * @param index	        Where to insert the entry
+	 * @param entry	        Document to insert
 	 * @throws IOException	when an error occurred with the Search Engine
 	 */
 	void index(String index, Indexable entry) throws IOException;
 
 	/**
 	 * Inserts a collection of entries into the specified index
-	 * @param index	Where to insert the collection
-	 * @param entries	Collection of documents to insert
+	 * @param index	        Where to insert the collection
+	 * @param entries	    Collection of documents to insert
 	 * @throws IOException	when an error occurred with the Search Engine
 	 */
 	void bulkIndex(String index, List<Indexable> entries) throws IOException;
+
+	/**
+	 * Updates an index with a collection of entries
+	 * @param index         Index to update
+	 * @param entries       Collection of updates
+	 * @throws IOException  when an error occurred with the Search Engine
+	 */
+	void bulkUpdate(String index, List<Indexable> entries) throws IOException;
 
 	/**
 	 * Retrieves the search of the specified request
@@ -50,14 +58,14 @@ public interface SearchEngine extends AutoCloseable {
 
 	/**
 	 * Retrieves the version of the cluster of the SearchEngine
-	 * @return	Version number of the SearchEngine in use
+	 * @return	            Version number of the SearchEngine in use
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
 	String getVersion() throws IOException;
 
 	/**
-	 * @param key	key of the index to check
-	 * @return		true if the index already exists in the engine, false if it doesn't
+	 * @param key	        key of the index to check
+	 * @return		        true if the index already exists in the engine, false if it doesn't
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
 	boolean hasIndex(String key) throws IOException;
@@ -71,7 +79,7 @@ public interface SearchEngine extends AutoCloseable {
 
 	/**
 	 * Deletes the requested index
-	 * @param key	key of the index to delete
+	 * @param key	        key of the index to delete
 	 * @throws IOException	if an error occurred with the search engine
 	 */
 	void deleteIndex(String key) throws IOException;

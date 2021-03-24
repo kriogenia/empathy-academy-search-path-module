@@ -32,7 +32,7 @@ public class IndexController {
 		indexer.setConfiguration(configs.getConfiguration(index));
 		indexer.delete();
 		indexer.bulkIndex();
-		return "Ok";
+		return "The indexing of " + index + " has been completed";
 	}
 
 	/**

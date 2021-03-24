@@ -83,6 +83,11 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	public void bulkUpdate(String index, List<Indexable> entries) throws IOException {
+		// TODO
+	}
+
+	@Override
 	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
 		// Build and add the boolean query with all the specified pairs
 		SearchSourceBuilder builder = new SearchSourceBuilder();
