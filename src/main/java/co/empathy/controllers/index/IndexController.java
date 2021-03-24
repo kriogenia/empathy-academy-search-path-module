@@ -1,8 +1,7 @@
 package co.empathy.controllers.index;
 
 import co.empathy.index.Indexer;
-import co.empathy.index.configuration.ImdbIndexConfiguration;
-import co.empathy.index.configuration.TestIndexConfiguration;
+import co.empathy.index.configuration.ConfigurationsManager;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -11,14 +10,9 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.annotation.Error;
 import io.micronaut.http.hateoas.JsonError;
 import io.micronaut.http.hateoas.Link;
-import io.micronaut.http.sse.Event;
-import io.reactivex.BackpressureStrategy;
-import io.reactivex.Flowable;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Controller of the API index calls
@@ -30,28 +24,15 @@ public class IndexController {
 	Indexer indexer;
 
 	@Inject
-	ImdbIndexConfiguration imdbConfig;
-
-	@Inject
-	TestIndexConfiguration testConfig;
+	ConfigurationsManager configs;
 
 	@Get("/{index}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String searchByQuery(@PathVariable String index) throws IOException {
-		// TODO improve this -> stream current percentage
-		if (index.equals("imdb")) {
-			indexer.setConfiguration(imdbConfig);
-		} else if (index.equals("test")) {
-			indexer.setConfiguration(testConfig);
-		} else {
-			throw new IllegalArgumentException("The specified index does not exists");
-		}
-		if (indexer.deleteIndex()) {
-			indexer.bulkIndexFile();
-			return "Ok";
-		} else {
-			throw new IllegalArgumentException("The specified index does not exists");
-		}
+		indexer.setConfiguration(configs.getConfiguration(index));
+		indexer.delete();
+		indexer.bulkIndex();
+		return "Ok";
 	}
 
 	/**

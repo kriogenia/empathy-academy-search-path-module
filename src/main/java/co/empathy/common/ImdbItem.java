@@ -70,10 +70,8 @@ public class ImdbItem implements Indexable {
 	 */
 	public ImdbItem() {}
 
-	/**i
-	 * @return	alphanumeric unique identifier of the title
-	 */
-	@Nullable
+	@Override
+	@NotEmpty
 	public String getId() {
 		return id;
 	}
@@ -91,7 +89,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @return	the type/format of the title (e.g. movie, short, tv series...)
 	 */
-	@Nullable
+	@NotNull
 	public String getTitleType() {
 		return titleType;
 	}
@@ -109,7 +107,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @return	the more popular title / title used on promotional materials
 	 */
-	@Nullable
+	@NotNull
 	public String getPrimaryTitle() {
 		return primaryTitle;
 	}
@@ -164,7 +162,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @return	release year of a title (YYYY)
 	 */
-	@Nullable
+	@NotNull
 	public String getStartYear() {
 		return startYear;
 	}
@@ -218,7 +216,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @return	up to three genres associated with the title
 	 */
-	@Nullable
+	@NotNull
 	public String[] getGenres() {
 		return genres;
 	}
@@ -240,7 +238,6 @@ public class ImdbItem implements Indexable {
 	@Override
 	@NotEmpty
 	public Map<String, Object> toJsonMap() {
-		//String endYear = this.endYear == null ? "\\N" : this.endYear;
 		Map<String, Object> jsonMap = new HashMap<>();
 		jsonMap.put(TYPE, titleType);
 		jsonMap.put(TITLE, primaryTitle);

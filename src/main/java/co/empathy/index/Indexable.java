@@ -11,7 +11,7 @@ import java.util.Map;
 public interface Indexable extends Serializable {
 
 	/**
-	 * @return	the ID
+	 * @return	alphanumeric unique identifier of the entry
 	 */
 	@NotEmpty
 	String getId();

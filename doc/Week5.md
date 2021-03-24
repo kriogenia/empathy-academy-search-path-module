@@ -14,3 +14,8 @@ So I decided to finally move the indexing to a controller, so it's easier to use
 We had our weekly meeting and strong part is coming, we are starting with the scores.
 That means thinking about all the fields, how to evaluate them, adding a new index...
 This week looks tough but pretty funny.
+
+##2021-03-24
+First things first, will need to add the ratings to our current index.
+I was searching a couple of hours how to handle this. It looks like bulk updating is the way to go.
+So, finally I created a new common object, the ImdbRatings to manage the ratings with a different object.

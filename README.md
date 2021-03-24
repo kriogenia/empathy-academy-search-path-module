@@ -5,17 +5,21 @@ This repository uses Micronaut to create a Search API against a docker image of 
 
 ## API Deployment
 
-Clone the repository and open a new terminal inside the empathy-micronaut-demo folder. Enter the following command:
+Clone the repository and open a new terminal inside the empathy-micronaut-demo folder.
+Then use gradle to run the application:
 
-```shell
+```sh
+git clone https://github.com/kriogenia/empathy-micronaut-demo.git
+git cd empathy-micronaut-demo
 .\gradlew run
 ```
 
 The first time this can take a while as the project installs all the dependencies.
 The terminal will tell you that the startup completed, and the server is running on http://localhost:8080 when it's ready.
-Use the following command on a new terminal or open http://localhost:8080/hello on your browser of choice to check everything is ok.
+Open http://localhost:8080/hello on your browser of choice to check everything is ok.
+You can also open a new terminal check it with the following command on a new terminal:
 
-```shell
+```sh
 curl -s http://localhost:8080/hello
 ```
 
@@ -42,8 +46,17 @@ It's the **title.basics.tsv.gz**.
 Download it and extract its content on [/src/main/java/resources/imdb](/src/main/java/resources/imdb) 
 with the name **title.basics.tsv**. 
 
+```sh
+cd src/main/java/resources/imdb
+curl -o title.basics.tsv.gz https://datasets.imdbws.com/title.ratings.tsv.gz
+gzip -d title.basics.tsv.gz
+```
+
+
 Once you have the file on its place just use this command ,and it will build the whole index.
-(*NOTE, it will a while, several minutes at least. So, go make a coffee*)
+
+(*NOTE, it will a while, several minutes at least. So, go make a coffee.
+You can see the progress in the terminal with the API running.*)
 
 ```sh
 curl http://localhost:8080/index/imdb

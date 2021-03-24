@@ -4,6 +4,7 @@ import co.empathy.common.ImdbItem;
 import co.empathy.engines.SearchEngine;
 import co.empathy.index.configuration.IndexConfiguration;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.runtime.http.scope.RequestScope;
 import io.reactivex.annotations.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 /**
  * Base implementation of the Indexer interface
  */
-@Prototype
+@RequestScope
 public class BaseIndexer implements Indexer {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BaseIndexer.class);
@@ -73,7 +74,7 @@ public class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public void bulkIndexFile() throws IOException {
+	public void bulkIndex() throws IOException {
 		LOG.info("Starting {} bulk indexing...", config.getFilePath());
 		// Create index in case it doesn't exists
 		if (!existsIndex()) {
@@ -104,7 +105,7 @@ public class BaseIndexer implements Indexer {
 	}
 
 	@Override
-	public boolean deleteIndex() throws IOException {
+	public boolean delete() throws IOException {
 		LOG.info("Deleting {} index...", config.getKey());
 		if (existsIndex()) {
 			engine.deleteIndex(config.getKey());

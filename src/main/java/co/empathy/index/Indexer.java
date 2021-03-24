@@ -41,7 +41,7 @@ public interface Indexer {
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */
-	void bulkIndexFile() throws IOException;
+	void bulkIndex() throws IOException;
 
 	/**
 	 * Deletes the index specified by the current IndexConfiguration
@@ -49,6 +49,6 @@ public interface Indexer {
 	 * @throws IOException	if an I/O error occurs opening the file
 	 * 						or with the search engine
 	 */
-	boolean deleteIndex() throws IOException;
+	boolean delete() throws IOException;
 
 }
