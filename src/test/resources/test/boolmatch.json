@@ -1,4 +1,5 @@
 {
+  "explain": true,
   "size": 25,
   "query": {
     "function_score": {
@@ -6,29 +7,43 @@
         "dis_max": {
           "queries": [
             {
-              "match": {
-                "original_title.partial": {
-                  "query": "iron mask",
-                  "minimum_should_match": "3<-60%"
-                }
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "original_title.partial": {
+                        "query": "parasite",
+                        "minimum_should_match": "3<-75%"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "original_title.perfect": "parasite"
+                    }
+                  }
+                ]
               }
             },
             {
-              "match": {
-                "title.partial": {
-                  "query": "iron mask",
-                  "minimum_should_match": "3<-60%"
-                }
-              }
-            },
-            {
-              "match_phrase": {
-                "original_title.perfect": "iron mask"
-              }
-            },
-            {
-              "match_phrase": {
-                "title.perfect": "iron mask"
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "title.partial": {
+                        "query": "parasite",
+                        "minimum_should_match": "3<-75%"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "title.perfect": "parasite"
+                    }
+                  }
+                ]
               }
             }
           ]

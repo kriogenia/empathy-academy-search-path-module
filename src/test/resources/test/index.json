@@ -66,6 +66,7 @@
             "lowercase",
             "number_synonyms_f",
             "title_word_delimiter_graph_f",
+            "stop",
             "flatten_graph"
           ]
         },

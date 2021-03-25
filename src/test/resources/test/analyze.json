@@ -1,4 +1,4 @@
 {
-  "analyzer": "type_analyzer",
-  "text": "tvEpisode"
+  "analyzer": "standard",
+  "text": "The Man In The Iron Mask"
 }
