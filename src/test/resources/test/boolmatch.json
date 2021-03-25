@@ -3,12 +3,35 @@
   "query": {
     "function_score": {
       "query": {
-        "bool": {
-          "must": {
-            "match": {
-              "original_title": "avengers"
+        "dis_max": {
+          "queries": [
+            {
+              "match": {
+                "original_title.partial": {
+                  "query": "iron mask",
+                  "minimum_should_match": "3<-60%"
+                }
+              }
+            },
+            {
+              "match": {
+                "title.partial": {
+                  "query": "iron mask",
+                  "minimum_should_match": "3<-60%"
+                }
+              }
+            },
+            {
+              "match_phrase": {
+                "original_title.perfect": "iron mask"
+              }
+            },
+            {
+              "match_phrase": {
+                "title.perfect": "iron mask"
+              }
             }
-          }
+          ]
         }
       },
       "functions": [
@@ -31,6 +54,7 @@
         {
           "field_value_factor": {
             "field": "num_votes",
+            "factor": 0.5,
             "modifier": "log1p",
             "missing": 0
           }
@@ -39,6 +63,7 @@
           "field_value_factor": {
             "field": "average_rating",
             "factor": 0.2,
+            "modifier": "square",
             "missing": 0
           }
         },
@@ -53,7 +78,7 @@
           }
         }
       ],
-      "boost_mode": "multiply"
+      "boost_mode": "avg"
     }
   },
   "aggs": {

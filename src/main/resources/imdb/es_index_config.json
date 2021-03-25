@@ -59,8 +59,6 @@
       "analyzer": {
         "title_analyzer": {
           "type": "custom",
-          "char_filter": [
-          ],
           "tokenizer": "whitespace",
           "filter": [
             "asciifolding",
@@ -100,15 +98,33 @@
     "properties": {
       "original_title": {
         "type": "text",
-        "search_analyzer": "title_search_analyzer",
-        "analyzer": "title_analyzer"
+        "fields": {
+          "perfect": {
+            "type": "text"
+          },
+          "partial": {
+            "type": "text",
+            "search_analyzer": "title_search_analyzer",
+            "analyzer": "title_analyzer"
+          }
+        }
       },
       "type": {
         "type": "keyword",
         "normalizer": "lowercase"
       },
       "title": {
-        "type": "text"
+        "type": "text",
+        "fields": {
+          "perfect": {
+            "type": "text"
+          },
+          "partial": {
+            "type": "text",
+            "search_analyzer": "title_search_analyzer",
+            "analyzer": "title_analyzer"
+          }
+        }
       },
       "is_adult": {
         "type": "keyword"
@@ -127,6 +143,13 @@
       "genres": {
         "type": "keyword",
         "normalizer": "lowercase"
+      },
+      "average_rating": {
+        "type": "scaled_float",
+        "scaling_factor": 10
+      },
+      "num_votes": {
+        "type": "integer"
       }
     }
   }

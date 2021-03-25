@@ -24,3 +24,11 @@ Next, I added an indexer function to those updates, extracting some functional l
 I had to change some things in the index configurations. 
 To be fair, I don't like those changes, so it's possible that I change that approach.
 This was harder than I expected.
+
+##2021-03-25
+Objective of the day: Design queries and functions, test them, measure them and select a winner.
+I'll need a reindexing to add the perfect match boost, and I'll add both titles also.
+
+That was my whole morning, refining queries and results.
+I think I have a candidate to be the definitive query.
+That means I can jump back to Java to break my head thinking about how to implement all this mess.

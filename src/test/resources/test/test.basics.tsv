@@ -2,7 +2,7 @@
 tconst	titleType	primaryTitle	originalTitle	isAdult	startYear	endYear	runtimeMinutes	genres
 tt0000001	short	Carmencita	Carmencita	0	1894	\N	0	Documentary,Short
 tt0000002	movie	The Avengers	The Avengers	0	2014	\N	143	Action
-tt0000003	tvEpisode	Dr. Who and the Daleks	Dr, Who and the Daleks	0	2019	\N	\N	News
+tt0000003	tvEpisode	Dr. Who and the Daleks	Dr. Who and the Daleks	0	2019	\N	\N	News
 tt0000004	video	People	People	0	2019	\N	\N	Music
 tt0000005	tvSeries	Super Mero	Super Mero	0	2019	2019	30	Comedy,Sci-Fi
 tt0000006	tvMovie	Mink Coat Mafia	Mink Coat Mafia	0	2019	\N	\N	Comedy
