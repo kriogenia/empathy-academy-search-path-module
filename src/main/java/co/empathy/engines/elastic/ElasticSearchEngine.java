@@ -19,11 +19,15 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -33,6 +37,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
+
+import static org.elasticsearch.index.query.QueryBuilders.functionScoreQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.*;
 
 /**
  * Search Engine adapter of Elastic Search
@@ -97,17 +105,42 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Override
 	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
-		// Build and add the boolean query with all the specified pairs
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		var queryBuilder = QueryBuilders.boolQuery();
-		// Musts
-		request.musts().forEach((field, text) -> queryBuilder.must(QueryBuilders.matchQuery(field, text)));
-		// Filters
-		request.filters().forEach((filter) -> queryBuilder.filter((QueryBuilder) filter.accept(filterParser)));
 		// Aggregations
 		request.aggregations().forEach((agg) -> builder.aggregation((AggregationBuilder) agg.accept(aggParser)));
-		// Build and launch the request
-		builder.query(queryBuilder);
+		// Build the boolean query for the title search
+		var boolQuery = QueryBuilders.boolQuery();
+		// Musts
+		request.musts().forEach((field, text) -> boolQuery.must(matchQuery(field, text)));
+		// Filters
+		request.filters().forEach((filter) -> boolQuery.filter((QueryBuilder) filter.accept(filterParser)));
+		// Build the function score request
+		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = {
+				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						matchQuery("type", "movie"),
+						weightFactorFunction(1.5f)
+				),
+				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						matchQuery("type", "tvEpisode"),
+						weightFactorFunction(0.1f)
+				),
+				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						fieldValueFactorFunction("num_votes")
+								.factor(0.5f)
+								.modifier(FieldValueFactorFunction.Modifier.LOG1P)
+								.missing(0)
+				),
+				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						fieldValueFactorFunction("average_rating")
+								.factor(0.2f)
+								.modifier(FieldValueFactorFunction.Modifier.SQUARE)
+								.missing(0)
+				),
+				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+						gaussDecayFunction("start_year", "now", "10950d", "1825d", 0.8)
+				)
+		};
+		builder.query(functionScoreQuery(boolQuery, functions));
 		return launchSearch(builder, indices);
 	}
 

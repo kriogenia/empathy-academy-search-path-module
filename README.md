@@ -41,26 +41,26 @@ If you've got an OK response with the correct version number, you can start inde
 
 ## Indexing IMDB
 
-This API uses one of the IMDB datasets available [here](https://datasets.imdbws.com).
-It's the **title.basics.tsv.gz**. 
-Download it and extract its content on [/src/main/java/resources/imdb](/src/main/java/resources/imdb) 
-with the name **title.basics.tsv**. 
+This API uses two of the IMDB datasets available [here](https://datasets.imdbws.com).
+Those are the **title.basics.tsv.gz** and **title.ratings.tsv.gz**. 
+Download it and extract its content on [/src/main/resources/imdb](/src/main/resources/imdb) 
+with the names **title.basics.tsv** and **title.ratings.tsv**. 
+Or just run the following commands.
 
 ```sh
-cd src/main/java/resources/imdb
-curl -o title.basics.tsv.gz https://datasets.imdbws.com/title.ratings.tsv.gz
-gzip -d title.basics.tsv.gz
+cd src/main/resources/imdb
+curl -o title.basics.tsv.gz https://datasets.imdbws.com/title.basics.tsv.gz && gzip -d title.basics.tsv.gz
+curl -o title.ratings.tsv.gz https://datasets.imdbws.com/title.ratings.tsv.gz && gzip -d title.ratings.tsv.gz
 ```
 
-
-Once you have the file on its place just use this command ,and it will build the whole index.
-
-(*NOTE, it will a while, several minutes at least. So, go make a coffee.
-You can see the progress in the terminal with the API running.*)
+Once you have the files on the correct place, use this command, it will build the whole index.
 
 ```sh
 curl http://localhost:8080/index/imdb
 ```
+
+(*NOTE, it will a while, one hour at least. Yeah, I know, sorry. 
+So, go make a coffee. You can see the progress in the terminal with the API running.*)
 
 The moment you get an OK response you can start using the search API.
 
@@ -90,7 +90,7 @@ http://localhost:8080/search?query=Avengers&genres=Action,Adventure&type=movie&y
 
 ### Interface
 
-Each API query will return a JSON, it will the following fields:
+Each API query will return a JSON, it contains the following fields:
 
 * `total` Total number of hit entries
 * `items` List of retrieved entries (max. 10). Each of those items have the following fields:

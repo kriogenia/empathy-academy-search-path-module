@@ -12,14 +12,14 @@
                   {
                     "match": {
                       "original_title.partial": {
-                        "query": "iron man",
+                        "query": "parasite",
                         "minimum_should_match": "2<-75%"
                       }
                     }
                   },
                   {
                     "match_phrase": {
-                      "original_title.perfect": "iron man"
+                      "original_title.perfect": "parasite"
                     }
                   }
                 ]
@@ -32,14 +32,14 @@
                   {
                     "match": {
                       "title.partial": {
-                        "query": "iron man",
+                        "query": "parasite",
                         "minimum_should_match": "2<-75%"
                       }
                     }
                   },
                   {
                     "match_phrase": {
-                      "title.perfect": "iron man"
+                      "title.perfect": "parasite"
                     }
                   }
                 ]
