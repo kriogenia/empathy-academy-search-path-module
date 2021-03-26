@@ -9,6 +9,7 @@ import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.search.request.functions.FieldValueFunction;
+import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 import io.micronaut.core.annotation.Introspected;
@@ -85,10 +86,10 @@ public class MovieRequest implements MyRequest {
 		final @NotNull List<RequestFunction> functions = new ArrayList<>();
 		functions.add(new TermWeightingFunction(ImdbItem.TYPE, ImdbItem.Types.MOVIE.getText(), 1.5f));
 		functions.add(new TermWeightingFunction(ImdbItem.TYPE, ImdbItem.Types.TVEPISODE.getText(), 0.1f));
-		functions.add(new FieldValueFunction(ImdbRating.VOTES).setFactor(0.5f).setMissing(0f)
-				.setModifer(FieldValueFunction.Modifier.LOG1P));
-		functions.add(new FieldValueFunction(ImdbRating.AVERAGE).setFactor(0.2f).setMissing(0f)
-				.setModifer(FieldValueFunction.Modifier.SQUARE));
+		functions.add(new FieldValueFunction(ImdbRating.VOTES, 0.5f, FieldValueFunction.Modifier.LOG1P, 0f));
+		functions.add(new FieldValueFunction(ImdbRating.AVERAGE, 0.2f, FieldValueFunction.Modifier.SQUARE, 0f));
+		functions.add(new GaussDecayFunction(ImdbItem.START, "now", "10950d", 0.8)
+				.setOffset("1825d"));
 		return functions;
 	}
 

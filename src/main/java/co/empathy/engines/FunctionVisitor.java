@@ -1,6 +1,7 @@
 package co.empathy.engines;
 
 import co.empathy.search.request.functions.FieldValueFunction;
+import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 
 import javax.validation.constraints.NotNull;
@@ -20,5 +21,12 @@ public interface FunctionVisitor {
 	 */
 	@NotNull
 	Object transform(FieldValueFunction function);
+
+	/**
+	 * @param function      gauss decay function to transform
+	 * @return              engine specific gauss decay function
+	 */
+	@NotNull
+	Object transform(GaussDecayFunction function);
 
 }

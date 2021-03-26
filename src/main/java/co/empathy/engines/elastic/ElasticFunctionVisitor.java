@@ -2,6 +2,7 @@ package co.empathy.engines.elastic;
 
 import co.empathy.engines.FunctionVisitor;
 import co.empathy.search.request.functions.FieldValueFunction;
+import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 
@@ -9,8 +10,7 @@ import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.fieldValueFactorFunction;
-import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.weightFactorFunction;
+import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.*;
 
 @Singleton
 public class ElasticFunctionVisitor implements FunctionVisitor {
@@ -39,4 +39,12 @@ public class ElasticFunctionVisitor implements FunctionVisitor {
 		}
 		return new FunctionScoreQueryBuilder.FilterFunctionBuilder(builder);
 	}
+
+	@Override
+	public @NotNull Object transform(GaussDecayFunction function) {
+		return new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+				gaussDecayFunction(function.getField(), function.getOrigin(),
+						function.getScale(), function.getOffset(), function.getDecay()));
+	}
+
 }

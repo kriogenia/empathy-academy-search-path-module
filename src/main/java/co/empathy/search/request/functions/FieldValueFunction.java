@@ -28,6 +28,14 @@ public class FieldValueFunction extends BaseRequestFunction {
 		super(field);
 	}
 
+	public FieldValueFunction(@NotEmpty String field, @Nullable Float factor,
+	                          @Nullable Modifier modifier, @Nullable Float missing) {
+		this(field);
+		this.factor = factor;
+		this.modifier = modifier;
+		this.missing = missing;
+	}
+
 	/**
 	 * @return  factor to multiply the score
 	 */
@@ -38,6 +46,7 @@ public class FieldValueFunction extends BaseRequestFunction {
 
 	/**
 	 * @param factor    value to multiply the score
+	 * @return          modified object
 	 */
 	@NotNull
 	public FieldValueFunction setFactor(@PositiveOrZero Float factor) {
@@ -55,9 +64,10 @@ public class FieldValueFunction extends BaseRequestFunction {
 
 	/**
 	 * @param modifier   new function to modify the result
+	 * @return          modified object
 	 */
 	@NotNull
-	public FieldValueFunction setModifer(@NotNull Modifier modifier) {
+	public FieldValueFunction setModifier(@NotNull Modifier modifier) {
 		this.modifier = modifier;
 		return this;
 	}
@@ -72,6 +82,7 @@ public class FieldValueFunction extends BaseRequestFunction {
 
 	/**
 	 * @param missing   new value to apply to documents with the field missing
+	 * @return          modified object
 	 */
 	@NotNull
 	public FieldValueFunction setMissing(@PositiveOrZero Float missing) {

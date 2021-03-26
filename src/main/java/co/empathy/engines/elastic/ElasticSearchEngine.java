@@ -119,13 +119,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = request.functions().stream().map(
 				(function) -> (FunctionScoreQueryBuilder.FilterFunctionBuilder) function.accept(functionParser))
 				.toArray(FunctionScoreQueryBuilder.FilterFunctionBuilder[]::new);
-		/*
-		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functionss = {
-				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-						gaussDecayFunction("start_year", "now", "10950d", "1825d", 0.8)
-				)
-		};
-		*/
+		// Build and launch the complete query
 		builder.query(functionScoreQuery(boolQuery, functions));
 		return launchSearch(builder, indices);
 	}
