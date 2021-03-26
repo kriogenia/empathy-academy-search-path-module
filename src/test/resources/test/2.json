@@ -1,0 +1,34 @@
+{
+  "size": 25,
+  "query": {
+    "function_score": {
+      "query": {
+        "match": {
+          "original_title.partial": {
+            "query": "man iron",
+            "minimum_should_match": "3<-75%"
+          }
+        }
+      },
+      "functions": [
+        {
+          "filter": {
+            "term": {
+              "type": "movie"
+            }
+          },
+          "weight": 1.5
+        },
+        {
+          "filter": {
+            "term": {
+              "type": "tvEpisode"
+            }
+          },
+          "weight": 0.1
+        }
+      ],
+      "boost_mode": "multiply"
+    }
+  }
+}

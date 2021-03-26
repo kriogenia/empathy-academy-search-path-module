@@ -1,5 +1,4 @@
 {
-  "explain": true,
   "size": 25,
   "query": {
     "function_score": {
@@ -13,14 +12,14 @@
                   {
                     "match": {
                       "original_title.partial": {
-                        "query": "parasite",
-                        "minimum_should_match": "3<-75%"
+                        "query": "iron man",
+                        "minimum_should_match": "2<-75%"
                       }
                     }
                   },
                   {
                     "match_phrase": {
-                      "original_title.perfect": "parasite"
+                      "original_title.perfect": "iron man"
                     }
                   }
                 ]
@@ -33,14 +32,14 @@
                   {
                     "match": {
                       "title.partial": {
-                        "query": "parasite",
-                        "minimum_should_match": "3<-75%"
+                        "query": "iron man",
+                        "minimum_should_match": "2<-75%"
                       }
                     }
                   },
                   {
                     "match_phrase": {
-                      "title.perfect": "parasite"
+                      "title.perfect": "iron man"
                     }
                   }
                 ]
@@ -64,7 +63,7 @@
               "type": "tvEpisode"
             }
           },
-          "weight": 0.1
+          "weight": 0.01
         },
         {
           "field_value_factor": {
@@ -93,7 +92,7 @@
           }
         }
       ],
-      "boost_mode": "avg"
+      "boost_mode": "multiply"
     }
   },
   "aggs": {
