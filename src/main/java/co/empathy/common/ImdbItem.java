@@ -288,4 +288,34 @@ public class ImdbItem implements Indexable {
 		return this.setGenres(genres);
 	}
 
+	/**
+	 * Enumeration of types of movies
+	 */
+	public enum Types {
+		MOVIE("movie"),
+		TVMOVIE("tvMovie"),
+		TVSERIES("tvSeries"),
+		TVEPISODE("tvEpisode"),
+		TVSPECIAL("tvSpecial"),
+		MINISERIES("miniSeries"),
+		DOCUMENTARY("documentary"),
+		VIDEOGAME("videoGame"),
+		SHORT("short"),
+		VIDEO("video"),
+		TVSHORT("tvShort");
+
+		private final String text;
+
+		Types(String text) {
+			this.text = text;
+		}
+
+		/**
+		 * @return	string of the item
+		 */
+		public String getText() {
+			return text;
+		}
+	}
+
 }
