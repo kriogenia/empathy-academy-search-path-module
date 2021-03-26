@@ -1,12 +1,14 @@
 package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.common.ImdbRating;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
+import co.empathy.search.request.functions.FieldValueFunction;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 import io.micronaut.core.annotation.Introspected;
@@ -83,6 +85,10 @@ public class MovieRequest implements MyRequest {
 		final @NotNull List<RequestFunction> functions = new ArrayList<>();
 		functions.add(new TermWeightingFunction(ImdbItem.TYPE, ImdbItem.Types.MOVIE.getText(), 1.5f));
 		functions.add(new TermWeightingFunction(ImdbItem.TYPE, ImdbItem.Types.TVEPISODE.getText(), 0.1f));
+		functions.add(new FieldValueFunction(ImdbRating.VOTES).setFactor(0.5f).setMissing(0f)
+				.setModifer(FieldValueFunction.Modifier.LOG1P));
+		functions.add(new FieldValueFunction(ImdbRating.AVERAGE).setFactor(0.2f).setMissing(0f)
+				.setModifer(FieldValueFunction.Modifier.SQUARE));
 		return functions;
 	}
 

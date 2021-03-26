@@ -1,5 +1,6 @@
 package co.empathy.engines;
 
+import co.empathy.search.request.functions.FieldValueFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 
 import javax.validation.constraints.NotNull;
@@ -7,10 +8,17 @@ import javax.validation.constraints.NotNull;
 public interface FunctionVisitor {
 
 	/**
-	 * @param range     term weighting function to transform
+	 * @param function     term weighting function to transform
 	 * @return          engine specific term weighting function
 	 */
 	@NotNull
-	Object transform(TermWeightingFunction range);
+	Object transform(TermWeightingFunction function);
+
+	/**
+	 * @param function      field value factor function to transform
+	 * @return              engine specific field value factor function
+	 */
+	@NotNull
+	Object transform(FieldValueFunction function);
 
 }

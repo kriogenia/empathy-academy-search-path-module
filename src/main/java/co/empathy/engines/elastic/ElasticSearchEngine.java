@@ -19,6 +19,7 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
@@ -34,7 +35,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.functionScoreQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
@@ -120,19 +120,7 @@ public class ElasticSearchEngine implements SearchEngine {
 				(function) -> (FunctionScoreQueryBuilder.FilterFunctionBuilder) function.accept(functionParser))
 				.toArray(FunctionScoreQueryBuilder.FilterFunctionBuilder[]::new);
 		/*
-		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = {
-				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-						fieldValueFactorFunction("num_votes")
-								.factor(0.5f)
-								.modifier(FieldValueFactorFunction.Modifier.LOG1P)
-								.missing(0)
-				),
-				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-						fieldValueFactorFunction("average_rating")
-								.factor(0.2f)
-								.modifier(FieldValueFactorFunction.Modifier.SQUARE)
-								.missing(0)
-				),
+		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functionss = {
 				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
 						gaussDecayFunction("start_year", "now", "10950d", "1825d", 0.8)
 				)
