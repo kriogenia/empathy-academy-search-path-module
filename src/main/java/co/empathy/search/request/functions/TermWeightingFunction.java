@@ -1,6 +1,7 @@
 package co.empathy.search.request.functions;
 
 import co.empathy.engines.AggregationVisitor;
+import co.empathy.engines.FunctionVisitor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -31,9 +32,16 @@ public class TermWeightingFunction extends BaseRequestFunction {
 		return text;
 	}
 
+	/**
+	 * @return  weight applied to the matching documents
+	 */
+	public float getWeight() {
+		return weight;
+	}
+
 	@Override
 	@NotNull
-	public @NotNull Object accept(@NotEmpty AggregationVisitor visitor) {
-		return null;
+	public @NotNull Object accept(@NotEmpty FunctionVisitor visitor) {
+		return visitor.transform(this);
 	}
 }

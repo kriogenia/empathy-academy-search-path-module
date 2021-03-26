@@ -2,6 +2,7 @@ package co.empathy.search.request;
 
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
+import co.empathy.search.request.functions.RequestFunction;
 import io.micronaut.context.annotation.Replaces;
 
 import javax.inject.Singleton;
@@ -23,6 +24,9 @@ public class MockMyRequest implements MyRequest {
 
 	@NotNull
 	private List<RequestAggregation> aggregations;
+
+	@NotNull
+	private List<RequestFunction> functions;
 
 	public MockMyRequest() {
 		this.musts = new HashMap<>();
@@ -60,10 +64,22 @@ public class MockMyRequest implements MyRequest {
 	}
 
 	/**
-	 * @param aggregationBuckets    mock of the aggregationBuckets() call
+	 * @param aggregations    mock of the aggregation() call
 	 */
-	public void mockAggregationBuckets(List<RequestAggregation> aggregationBuckets) {
-		this.aggregations = aggregationBuckets;
+	public void mockAggregations(List<RequestAggregation> aggregations) {
+		this.aggregations = aggregations;
+	}
+
+	@Override
+	public @NotNull List<RequestFunction> functions() {
+		return functions;
+	}
+
+	/**
+	 * @param functions mock of the functions() call
+	 */
+	public void mockScoringFunctions(List<RequestFunction> functions) {
+		this.functions = functions;
 	}
 
 }

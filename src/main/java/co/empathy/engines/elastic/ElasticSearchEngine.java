@@ -19,15 +19,12 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.functionscore.FieldValueFactorFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
-import org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.slf4j.Logger;
@@ -37,6 +34,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.elasticsearch.index.query.QueryBuilders.functionScoreQuery;
 import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
@@ -60,6 +58,9 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Inject
 	ElasticAggregationVisitor aggParser;
+
+	@Inject
+	ElasticFunctionVisitor functionParser;
 
 	@Inject
 	SearchResultBuilder factory;
@@ -115,15 +116,11 @@ public class ElasticSearchEngine implements SearchEngine {
 		// Filters
 		request.filters().forEach((filter) -> boolQuery.filter((QueryBuilder) filter.accept(filterParser)));
 		// Build the function score request
+		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = request.functions().stream().map(
+				(function) -> (FunctionScoreQueryBuilder.FilterFunctionBuilder) function.accept(functionParser))
+				.toArray(FunctionScoreQueryBuilder.FilterFunctionBuilder[]::new);
+		/*
 		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = {
-				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-						matchQuery("type", "movie"),
-						weightFactorFunction(1.5f)
-				),
-				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-						matchQuery("type", "tvEpisode"),
-						weightFactorFunction(0.1f)
-				),
 				new FunctionScoreQueryBuilder.FilterFunctionBuilder(
 						fieldValueFactorFunction("num_votes")
 								.factor(0.5f)
@@ -140,6 +137,7 @@ public class ElasticSearchEngine implements SearchEngine {
 						gaussDecayFunction("start_year", "now", "10950d", "1825d", 0.8)
 				)
 		};
+		*/
 		builder.query(functionScoreQuery(boolQuery, functions));
 		return launchSearch(builder, indices);
 	}

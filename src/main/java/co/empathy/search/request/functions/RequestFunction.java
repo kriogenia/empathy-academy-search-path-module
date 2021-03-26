@@ -1,6 +1,7 @@
 package co.empathy.search.request.functions;
 
 import co.empathy.engines.AggregationVisitor;
+import co.empathy.engines.FunctionVisitor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,6 @@ public interface RequestFunction {
 	 * @return          parsed filter made by the visitor
 	 */
 	@NotNull
-	Object accept(@NotNull AggregationVisitor visitor);
+	Object accept(@NotNull FunctionVisitor visitor);
 
 }

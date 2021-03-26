@@ -1,7 +1,6 @@
 package co.empathy.engines.elastic;
 
 import co.empathy.common.ImdbItem;
-import co.empathy.engines.elastic.ElasticSearchEngine;
 import co.empathy.search.request.MockMyRequest;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
@@ -52,7 +51,7 @@ public class ElasticSearchEngineImdbTest {
 	public void createRequest() {
 		request.mockMusts(must);
 		request.mockFilters(filter);
-		request.mockAggregationBuckets(aggs);
+		request.mockAggregations(aggs);
 	}
 
 	/**
