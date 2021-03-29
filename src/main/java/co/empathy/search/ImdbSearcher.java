@@ -1,5 +1,6 @@
 package co.empathy.search;
 
+import co.empathy.common.ImdbRating;
 import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.engines.SearchEngine;
@@ -92,6 +93,8 @@ public class ImdbSearcher implements Searcher {
 				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString())
 				.setStartYear(properties.get(ImdbItem.START).toString())
 				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
+				.setAverageRating((Double) properties.get(ImdbRating.AVERAGE))
+				.setVotes((Integer) properties.get(ImdbRating.VOTES))
 				.setGenres(genresList.toArray(new String[0]));
 		if (properties.get(ImdbItem.END) != null) {
 			item.setEndYear(properties.get(ImdbItem.END).toString());

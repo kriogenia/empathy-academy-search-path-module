@@ -28,6 +28,8 @@ public class ImdbItem implements Indexable {
 	public static final String END = "end_year";
 	public static final String RUNTIME_MINUTES = "runtime_minutes";
 	public static final String GENRES = "genres";
+	public static final String AVERAGE_RATING = "averageRating";
+	public static final String VOTES = "votes";
 
 	@NotNull(message = "ID cannot be null")
 	@JsonProperty(ID)
@@ -64,6 +66,14 @@ public class ImdbItem implements Indexable {
 	@NotEmpty(message = "The item must have at least one genre")
 	@JsonProperty(GENRES)
 	private String[] genres;
+
+	@Nullable
+	@JsonProperty(AVERAGE_RATING)
+	private Double averageRating;
+
+	@Nullable
+	@JsonProperty(VOTES)
+	private Integer votes;
 
 	/**
 	 * Empty constructor of the JavaBean
@@ -232,6 +242,43 @@ public class ImdbItem implements Indexable {
 			throw new IllegalArgumentException("Invalid number of genres");
 		}
 		this.genres = genres;
+		return this;
+	}
+
+	/**
+	 * @return  if it exists, returns the weighted average of all the individual user ratings
+	 *          otherwise, it returns null
+	 */
+	@Nullable
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	/**
+	 * @param averageRating     average rating of the item
+	 * @return                  modified item
+	 */
+	@NotNull
+	public ImdbItem setAverageRating(@Nullable Double averageRating) {
+		this.averageRating = averageRating;
+		return this;
+	}
+
+	/**
+	 * @return  if it exists, number of votes the title has received
+	 *          otherwise it returns null
+	 */
+	@Nullable
+	public Integer getVotes() {
+		return votes;
+	}
+
+	/**
+	 * @param votes     votes the item has received
+	 * @return          modified item
+	 */
+	public ImdbItem setVotes(@Nullable Integer votes) {
+		this.votes = votes;
 		return this;
 	}
 

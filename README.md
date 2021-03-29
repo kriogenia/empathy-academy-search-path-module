@@ -113,6 +113,8 @@ Each API query will return a JSON, it contains the following fields:
     * `start_year` (*YYYY*) Represents the release year of a title. 
       In the case of TV Series, it is the series start year.
     * *\<optional\>* `end_year` (*YYYY*) TV Series end year 
+    * *\<optional\>* `averageRating` (*double*) weighted average of all the individual user ratings
+    * *\<optional\>* `votes` (*integer*) number of votes the title has received
 * `aggregations` Different aggregations and the number of hits on each one. Omitting buckets with 0 results.
     * `types` Total hits on each type
     * `year` Total hits of the start_year on each decade
