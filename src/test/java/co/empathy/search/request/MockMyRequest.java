@@ -3,21 +3,20 @@ package co.empathy.search.request;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.functions.RequestFunction;
+import co.empathy.search.request.queries.RequestQuery;
 import io.micronaut.context.annotation.Replaces;
 
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Replaces(MyRequest.class)
 @Singleton
 public class MockMyRequest implements MyRequest {
 
 	@NotNull
-	private Map<String, String> musts;
+	private List<RequestQuery> musts;
 
 	@NotNull
 	private List<RequestFilter> filters;
@@ -29,20 +28,20 @@ public class MockMyRequest implements MyRequest {
 	private List<RequestFunction> functions;
 
 	public MockMyRequest() {
-		this.musts = new HashMap<>();
+		this.musts = new ArrayList<>();
 		this.filters = new ArrayList<>();
 		this.aggregations = new ArrayList<>();
 	}
 
 	@Override
-	public @NotNull Map<String, String> musts() {
+	public @NotNull List<RequestQuery> musts() {
 		return musts;
 	}
 
 	/**
 	 * @param musts mock of the musts() call
 	 */
-	public void mockMusts(Map<String, String> musts) {
+	public void mockMusts(List<RequestQuery> musts) {
 		this.musts = musts;
 	}
 

@@ -4,6 +4,7 @@ import co.empathy.engines.FilterVisitor;
 import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import io.reactivex.annotations.NonNull;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 
@@ -16,7 +17,7 @@ import javax.inject.Singleton;
 public class ElasticFilterVisitor implements FilterVisitor {
 
 	@Override
-	public Object transform(DateRangesFilter filter) {
+	public QueryBuilder transform(DateRangesFilter filter) {
 		var ranges = filter.getRanges();
 		if (ranges.size() == 1) {
 			return getRangeQueryBuilder(filter, ranges.get(0));
@@ -28,7 +29,7 @@ public class ElasticFilterVisitor implements FilterVisitor {
 	}
 
 	@Override
-	public Object transform(TermsFilter filter) {
+	public QueryBuilder transform(TermsFilter filter) {
 		return QueryBuilders.termsQuery(filter.getField(), filter.getTerms());
 	}
 

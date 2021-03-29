@@ -12,6 +12,8 @@ import co.empathy.search.request.functions.FieldValueFunction;
 import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
+import co.empathy.search.request.queries.PartialPlusPerfectQuery;
+import co.empathy.search.request.queries.RequestQuery;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.annotation.QueryValue;
@@ -58,10 +60,13 @@ public class MovieRequest implements MyRequest {
 
 	@Override
 	@NotNull
-	public Map<String, String> musts(){
-		Map<String, String> map = new HashMap<>();
-		map.put(ImdbItem.ORIGINAL_TITLE, query);
-		return map;
+	public List<RequestQuery> musts(){
+		List<RequestQuery> queries = new ArrayList<>();
+		var original = new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, query);
+		var primary = new PartialPlusPerfectQuery(ImdbItem.TITLE, query);
+		queries.add(original);
+		queries.add(primary);
+		return queries;
 	}
 
 	@Override

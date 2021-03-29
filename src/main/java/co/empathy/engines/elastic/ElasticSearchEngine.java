@@ -19,7 +19,6 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.MainResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.GetIndexRequest;
-import org.elasticsearch.common.lucene.search.function.FieldValueFactorFunction;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MultiMatchQueryBuilder;
 import org.elasticsearch.index.query.Operator;
@@ -37,8 +36,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static org.elasticsearch.index.query.QueryBuilders.functionScoreQuery;
-import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
-import static org.elasticsearch.index.query.functionscore.ScoreFunctionBuilders.*;
 
 /**
  * Search Engine adapter of Elastic Search
@@ -52,6 +49,9 @@ public class ElasticSearchEngine implements SearchEngine {
 
 	@Inject
 	RestHighLevelClient client;
+
+	@Inject
+	ElasticQueryVisitor queryParser;
 
 	@Inject
 	ElasticFilterVisitor filterParser;
@@ -112,7 +112,7 @@ public class ElasticSearchEngine implements SearchEngine {
 		// Build the boolean query for the title search
 		var boolQuery = QueryBuilders.boolQuery();
 		// Musts
-		request.musts().forEach((field, text) -> boolQuery.must(matchQuery(field, text)));
+		request.musts().forEach((query) -> boolQuery.must((QueryBuilder) query.accept(queryParser)));
 		// Filters
 		request.filters().forEach((filter) -> boolQuery.filter((QueryBuilder) filter.accept(filterParser)));
 		// Build the function score request
