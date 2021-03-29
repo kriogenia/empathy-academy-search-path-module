@@ -12,6 +12,7 @@ import co.empathy.search.request.functions.FieldValueFunction;
 import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
+import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import co.empathy.search.request.queries.PartialPlusPerfectQuery;
 import co.empathy.search.request.queries.RequestQuery;
 import io.micronaut.core.annotation.Introspected;
@@ -64,8 +65,10 @@ public class MovieRequest implements MyRequest {
 		List<RequestQuery> queries = new ArrayList<>();
 		var original = new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, query);
 		var primary = new PartialPlusPerfectQuery(ImdbItem.TITLE, query);
-		queries.add(original);
-		queries.add(primary);
+		var titlesQuery = new DisjunctionMaxQuery();
+		titlesQuery.add(original);
+		titlesQuery.add(primary);
+		queries.add(titlesQuery);
 		return queries;
 	}
 

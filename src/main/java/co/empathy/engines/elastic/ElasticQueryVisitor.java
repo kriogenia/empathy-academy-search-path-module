@@ -3,6 +3,7 @@ package co.empathy.engines.elastic;
 import co.empathy.engines.QueryVisitor;
 import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import co.empathy.search.request.queries.PartialPlusPerfectQuery;
+import co.empathy.search.request.queries.RequestQuery;
 import io.micronaut.context.annotation.Prototype;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -17,8 +18,9 @@ public class ElasticQueryVisitor implements QueryVisitor {
 
 	@Override
 	public @NotNull QueryBuilder transform(DisjunctionMaxQuery query) {
-ga
-		return null;
+		var dmQuery = QueryBuilders.disMaxQuery();
+		query.getQueries().forEach((q) -> dmQuery.add((QueryBuilder) q.accept(this)));
+		return dmQuery;
 	}
 
 	@Override
