@@ -37,7 +37,19 @@ docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=
 curl -XGET http://localhost:9200
 ```
 
-If you've got an OK response with the correct version number, you can start indexing IMDB.
+If you've got an OK response with the correct version number, you can jump to start indexing IMDB.
+You also can, and we suggest you to, saving the docker state to have it as a backup just in case.
+To do so run the following command to commit the image with the name you want (version 1 in this case):
+
+```sh
+docker commit `docker ps -q elasticsearch:version1
+```
+
+To restore and run that saved image run the following command:
+
+```sh
+docker run --rm 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:version1
+```
 
 ## Indexing IMDB
 

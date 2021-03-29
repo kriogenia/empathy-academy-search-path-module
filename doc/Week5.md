@@ -32,3 +32,12 @@ I'll need a reindexing to add the perfect match boost, and I'll add both titles 
 That was my whole morning, refining queries and results.
 I think I have a candidate to be the definitive query.
 That means I can jump back to Java to break my head thinking about how to implement all this mess.
+
+##2021-03-26
+So I wake up today, and the first thing in the morning I saw was a petition to make a presentation today in front of everyone.
+At first, we didn't like the idea but half and hour before the meeting we decided to jump and make it.
+I made some queries to show my improvements this week at max speed, even leading with changing PCs.
+And we didn't show our demo at the end, it was a fun ride tho. 
+Will show our progress soon.
+
+Jumping from that I was able to make the java conversion of the functions but I'm still lacking the query part.

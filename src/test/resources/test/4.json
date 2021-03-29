@@ -9,7 +9,8 @@
             {
               "match": {
                 "original_title.partial": {
-                  "query": "iron man"
+                  "query": "iron man",
+                  "minimum_should_match": "3<-75%"
                 }
               }
             },

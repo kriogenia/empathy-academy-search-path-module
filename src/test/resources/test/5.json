@@ -6,29 +6,41 @@
         "dis_max": {
           "queries": [
             {
-              "match": {
-                "original_title.partial": {
-                  "query": "iron man",
-                  "minimum_should_match": "3<-60%"
-                }
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "original_title.partial": {
+                        "query": "iron man"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "original_title.perfect": "iron man"
+                    }
+                  }
+                ]
               }
             },
             {
-              "match": {
-                "title.partial": {
-                  "query": "iron man",
-                  "minimum_should_match": "3<-60%"
-                }
-              }
-            },
-            {
-              "match_phrase": {
-                "original_title.perfect": "iron man"
-              }
-            },
-            {
-              "match_phrase": {
-                "title.perfect": "iron man"
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "title.partial": {
+                        "query": "iron man"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "title.perfect": "iron man"
+                    }
+                  }
+                ]
               }
             }
           ]
