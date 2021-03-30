@@ -1,48 +1,13 @@
 {
-  "size": 25,
+  "size": 10,
   "query": {
     "function_score": {
       "query": {
-        "dis_max": {
-          "queries": [
+        "bool": {
+          "filter": [
             {
-              "bool": {
-                "minimum_should_match": 1,
-                "should": [
-                  {
-                    "match": {
-                      "original_title.partial": {
-                        "query": "parasite",
-                        "minimum_should_match": "2<-75%"
-                      }
-                    }
-                  },
-                  {
-                    "match_phrase": {
-                      "original_title.perfect": "parasite"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "bool": {
-                "minimum_should_match": 1,
-                "should": [
-                  {
-                    "match": {
-                      "title.partial": {
-                        "query": "parasite",
-                        "minimum_should_match": "2<-75%"
-                      }
-                    }
-                  },
-                  {
-                    "match_phrase": {
-                      "title.perfect": "parasite"
-                    }
-                  }
-                ]
+              "terms": {
+                "genres": ["action", "drama", "comedy"]
               }
             }
           ]
@@ -63,7 +28,7 @@
               "type": "tvEpisode"
             }
           },
-          "weight": 0.01
+          "weight": 0.00001
         },
         {
           "field_value_factor": {
@@ -92,7 +57,7 @@
           }
         }
       ],
-      "boost_mode": "multiply"
+      "boost_mode": "avg"
     }
   },
   "aggs": {
