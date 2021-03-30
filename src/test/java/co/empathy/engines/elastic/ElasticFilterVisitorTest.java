@@ -24,7 +24,7 @@ public class ElasticFilterVisitorTest {
 		assertEquals("test", query.fieldName());
 		assertEquals("2010", query.from());
 		assertEquals("2020", query.to());
-		assertEquals("YYYY", query.format());
+		assertEquals("year", query.format());
 	}
 
 	@Test

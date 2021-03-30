@@ -31,6 +31,7 @@ public class MockMyRequest implements MyRequest {
 		this.musts = new ArrayList<>();
 		this.filters = new ArrayList<>();
 		this.aggregations = new ArrayList<>();
+		this.functions = new ArrayList<>();
 	}
 
 	@Override
