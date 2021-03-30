@@ -66,14 +66,15 @@ public class Week2SearchIntegrationTest {
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
-		// Check we didn't get the 2012 movie
 		assertNotNull(retrieved);
 		assertNotNull(retrieved.getItems());
 		var theAvengers = retrieved.getItems().stream().filter(
 				x -> Objects.requireNonNull(x.getTitleType()).equals("movie")
 						&& Objects.requireNonNull(x.getStartYear()).equals("2012"));
-		assertFalse(theAvengers.count() > 0);
-		LOG.info("Movie The Avengers (2012) not found");
+		//assertFalse(theAvengers.count() > 0);
+		// Check we now get the 2012 movie
+		assertTrue(theAvengers.count() > 0);
+		LOG.info("Movie The Avengers (2012) found");
 	}
 
 	@Test
@@ -101,14 +102,14 @@ public class Week2SearchIntegrationTest {
 		var request = HttpRequest.GET(uri);
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
-		// Check we got the movie
 		assertNotNull(retrieved);
 		assertNotNull(retrieved.getItems());
 		var spidermanTobey = retrieved.getItems().stream().filter(
 				x -> Objects.requireNonNull(x.getTitleType()).equals("movie")
 						&& Objects.requireNonNull(x.getStartYear()).equals("2002"));
-		assertFalse(spidermanTobey.count() > 0);
-		LOG.info("Movie Spiderman (2002) not found");
+		// Check we now get the movie
+		assertTrue(spidermanTobey.count() > 0);
+		LOG.info("Movie Spiderman (2002) found");
 	}
 
 	@Test
@@ -126,7 +127,7 @@ public class Week2SearchIntegrationTest {
 				x -> Objects.requireNonNull(x.getTitleType()).equals("movie")
 						&& Objects.requireNonNull(x.getStartYear()).equals("2002"));
 		assertTrue(spidermanTobey.count() > 0);
-		LOG.info("Movie Spiderman (2002) found (yeah, this search really improved)");
+		LOG.info("Movie Spiderman (2002) found");
 	}
 
 }
