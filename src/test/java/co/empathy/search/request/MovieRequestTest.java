@@ -2,7 +2,9 @@ package co.empathy.search.request;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.search.request.filters.TermsFilter;
+import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,8 +16,16 @@ public class MovieRequestTest {
 	public void testMusts() {
 		MovieRequest request = new MovieRequest(null, "test",
 				null, null, null);
-		assertTrue(request.musts().containsKey(ImdbItem.ORIGINAL_TITLE));
-		assertEquals("test", request.musts().get(ImdbItem.ORIGINAL_TITLE));
+		var musts = request.musts();
+		assertEquals(1, musts.size());
+		assertTrue(musts.get(0) instanceof DisjunctionMaxQuery);
+		var queries = ((DisjunctionMaxQuery) musts.get(0)).getQueries();
+		for (var query : queries) {
+			assertTrue(query instanceof BoolQueryBuilder);
+			var builder = (BoolQueryBuilder) query;
+			System.out.println(builder.toString());
+			assertEquals(1, builder.must().size());
+		}
 	}
 
 	@Test

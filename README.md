@@ -88,7 +88,7 @@ http://localhost:8080?search
 
 | Parameter | Required | Format | Default Value | Description |
 |---|:---:|---|---|---|
-| query | `yes` | \<string\> | | Original title of the entries |
+| query | `no` | \<string\> | \<empty\> | Original title of the entries |
 | genres | `no` | \<string\>[,\<string\>]* | \<empty\> | Comma separated list of genres to which titles must belong to |
 | type | `no` | \<string\>[,\<string\>]* |  \<empty\> | Comma separated list of types to which titles must belong to |
 | year | `no` | \<YYYY\>/\<YYYY\>[,\<YYYY\>/\<YYYY\>]* |  \<empty\> | Comma separated list of ranges, such as 2000/2010, to which titles have been released during such period
@@ -124,7 +124,7 @@ Each API query will return a JSON, it contains the following fields:
 
 * **Genres**: Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film Noir, 
   Game Show, History, Horror, Music, Musical, Mystery, News, Reality-TV, Romance, Sci-Fi, Sport, Talk Show, Thriller, 
-  War, Western
+  War, Western, \\N
   
 * **Types**: movie, tvMovie, tvSeries, tvEpisode, tvSpecial, miniSeries, documentary, videoGame, short, video, tvShort
 

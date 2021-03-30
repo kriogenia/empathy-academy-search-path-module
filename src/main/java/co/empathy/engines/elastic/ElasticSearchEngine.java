@@ -105,7 +105,7 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
+	public SearchResult scoredSearch(MyRequest request, String... indices) throws IOException {
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		// Aggregations
 		request.aggregations().forEach((agg) -> builder.aggregation((AggregationBuilder) agg.accept(aggParser)));

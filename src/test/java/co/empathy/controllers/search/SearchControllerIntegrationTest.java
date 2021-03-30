@@ -83,7 +83,7 @@ public class SearchControllerIntegrationTest {
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(1137, retrieved.getTotal());
+		assertEquals(28, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).filter(Objects::nonNull)
 				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));
@@ -98,7 +98,7 @@ public class SearchControllerIntegrationTest {
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(206, retrieved.getTotal());
+		assertEquals(207, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		// Matching words test
 		assertTrue(retrieved.getItems().stream().allMatch(
@@ -132,7 +132,7 @@ public class SearchControllerIntegrationTest {
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(117, retrieved.getTotal());
+		assertEquals(119, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		// Matching words test
 		assertTrue(retrieved.getItems().stream().allMatch(
@@ -172,11 +172,14 @@ public class SearchControllerIntegrationTest {
 	}
 
 	@Test
-	public void testSearchWithoutQuery() {
+	public void testSearchWithoutQuery() throws JsonProcessingException {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());
-		HttpClientResponseException exception = assertThrows(HttpClientResponseException.class,
-				() -> client.toBlocking().exchange(request));
-		assertEquals(400, exception.getStatus().getCode());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+		// Result check
+		assertNotNull(retrieved);
+		assertEquals(10000, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
 	}
 
 	@Test

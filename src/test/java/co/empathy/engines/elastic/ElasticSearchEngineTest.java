@@ -7,6 +7,7 @@ import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
+import co.empathy.search.request.queries.RequestQuery;
 import co.empathy.util.ElasticSearchTestHelper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +41,7 @@ public class ElasticSearchEngineTest {
 	MockMyRequest request;
 
 	// Maps of the request
-	Map<String, String> must = new HashMap<>();
+	List<RequestQuery> must = new ArrayList<>();
 	List<RequestFilter> filter = new ArrayList<>();
 	List<RequestAggregation> aggs = new ArrayList<>();
 
@@ -77,7 +78,7 @@ public class ElasticSearchEngineTest {
 	@Test
 	public void searchSingleMatchTest() throws IOException {
 		// One result query, no filter, no aggregations
-		must.put(ImdbItem.ORIGINAL_TITLE, "Carmencita");
+
 		var items = helper.performSingleMatch(engine, request, 1, 1);
 		var item = items.get(0);
 		assertEquals("tt0000001", item.get("id"));
@@ -88,7 +89,7 @@ public class ElasticSearchEngineTest {
 
 		// More than one result, no filter, no aggregations
 		must.clear();
-		must.put(ImdbItem.ORIGINAL_TITLE, "the");
+
 		items = helper.performSingleMatch(engine, request, 5, 5);
 		assertTrue(items.stream().map(x -> x.get("title").toString()).allMatch(
 				x -> x.matches(".*[Tt]he.*")));
@@ -100,7 +101,7 @@ public class ElasticSearchEngineTest {
 
 		// More than one result, one filter, one aggregation
 		aggs.add(new TermsAggregation(MovieRequest.GENRES_AGG, ImdbItem.GENRES));
-		var result = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		var result = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		assertNotNull(result.getAggregations().get(MovieRequest.GENRES_AGG));
 		var genres = result.getAggregations().get(MovieRequest.GENRES_AGG);
 		assertEquals(2, genres.get("adventure"));

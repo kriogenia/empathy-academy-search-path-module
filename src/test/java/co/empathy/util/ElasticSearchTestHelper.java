@@ -28,7 +28,7 @@ public class ElasticSearchTestHelper {
 	public List<Map<String, Object>> performSingleMatch(
 			SearchEngine engine, MyRequest request, int total, int size)
 			throws IOException {
-		var result = engine.searchSingleMatch(request, INDEX);
+		var result = engine.scoredSearch(request, INDEX);
 		assertEquals(total, result.getTotal());
 		var items = result.getItems();
 		assertEquals(size, items.size());

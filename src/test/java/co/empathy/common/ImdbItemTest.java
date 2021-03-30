@@ -26,6 +26,7 @@ public class ImdbItemTest {
 		item = new ImdbItem().setId("tt0000001").setTitleType("short")
 				.setPrimaryTitle("Carmencita").setOriginalTitle("Carmencita")
 				.setIsAdult("0").setStartYear("1894").setEndYear("\\N")
+				.setAverageRating(5.0).setVotes(2000)
 				.setRuntime("0").setGenres(new String[]{"Documentary", "Short"});
 	}
 
@@ -54,6 +55,10 @@ public class ImdbItemTest {
 		assertEquals("short", jsonMap.get(ImdbItem.TYPE));
 		// Start year
 		assertEquals("1894", jsonMap.get(ImdbItem.START));
+		// Average rating
+		assertEquals(5.0, jsonMap.get(ImdbItem.AVERAGE_RATING));
+		// Number of votes
+		assertEquals(2000, jsonMap.get(ImdbItem.VOTES));
 		// End year empty
 		assertNull(jsonMap.get(ImdbItem.END));
 		// End year fulfilled
@@ -76,11 +81,15 @@ public class ImdbItemTest {
 				"\"" + ImdbItem.IS_ADULT + "\": \"0\"," +
 				"\"" + ImdbItem.START + "\": \"1894\"," +
 				"\"" + ImdbItem.RUNTIME_MINUTES + "\": \"0\"," +
+				"\"" + ImdbItem.AVERAGE_RATING + "\": 5.0," +
+				"\"" + ImdbItem.VOTES + "\": 2000," +
 				"\"" + ImdbItem.GENRES + "\": [\"Documentary\", \"Short\"]}";
 		var fromJson = mapper.readValue(json, ImdbItem.class);
 		assertEquals(item.getId(), fromJson.getId());
 		assertEquals(item.getPrimaryTitle(), fromJson.getPrimaryTitle());
 		assertEquals(item.getTitleType(), fromJson.getTitleType());
+		assertEquals(item.getAverageRating(), fromJson.getAverageRating());
+		assertEquals(item.getVotes(), fromJson.getVotes());
 		assertEquals(item.getStartYear(), fromJson.getStartYear());
 		assertEquals(item.getEndYear(), fromJson.getEndYear());
 		assertArrayEquals(item.getGenres(), fromJson.getGenres());

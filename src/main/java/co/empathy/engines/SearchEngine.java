@@ -44,7 +44,7 @@ public interface SearchEngine extends AutoCloseable {
 	 * @return				result of the search
 	 * @throws IOException	if an error occurred with the Search Engine
 	 */
-	SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException;
+	SearchResult scoredSearch(MyRequest request, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the search using match against multiple fields
