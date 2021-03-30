@@ -85,15 +85,15 @@ public class ElasticSearchEngineImdbTest {
 		List<SearchResult> results = new ArrayList<>();
 		// All lowercase
 		must.put(ImdbItem.ORIGINAL_TITLE, "carmencita");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// All uppercase
 		must.put(ImdbItem.ORIGINAL_TITLE, "CARMENCITA");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Combined
 		must.put(ImdbItem.ORIGINAL_TITLE, "CarMeNCiTA");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());
@@ -109,10 +109,10 @@ public class ElasticSearchEngineImdbTest {
 	public void testNumberExtensionFilter() throws IOException {
 		// Text and roman to arabic
 		must.put(ImdbItem.ORIGINAL_TITLE, "two");
-		var result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		var result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "ii");
-		var result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		var result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -122,10 +122,10 @@ public class ElasticSearchEngineImdbTest {
 		// Roman and arabic to text
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "iv");
-		result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "4");
-		result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -135,10 +135,10 @@ public class ElasticSearchEngineImdbTest {
 		// Arabic and text to roman
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "5");
-		result1 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
 		must.put(ImdbItem.ORIGINAL_TITLE, "five");
-		result2 = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
 		assertEquals(1, result2.getTotal());
@@ -155,15 +155,15 @@ public class ElasticSearchEngineImdbTest {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
 		must.put(ImdbItem.ORIGINAL_TITLE, "spiderman");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Split
 		must.put(ImdbItem.ORIGINAL_TITLE, "spider man");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// With hyphen
 		must.put(ImdbItem.ORIGINAL_TITLE, "spider-man");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());
@@ -180,15 +180,15 @@ public class ElasticSearchEngineImdbTest {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
 		must.put(ImdbItem.ORIGINAL_TITLE, "youre");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Split
 		must.put(ImdbItem.ORIGINAL_TITLE, "you re");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// With hyphen
 		must.put(ImdbItem.ORIGINAL_TITLE, "you're");
-		results.add(engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX));
+		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
 			assertEquals(1, result.getTotal());

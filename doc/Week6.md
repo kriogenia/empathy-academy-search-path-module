@@ -11,3 +11,9 @@ This week our work will be to have the same outcome of the searches and work wit
 So we exchanged some info and repos and then I went to finish my queries implementation.
 
 I also did add the ratings and votes to the request to follow closely their implementation.
+
+##2021-03-10
+First in the morning I gave a look to my partner front page to found some discrepancies.
+We'll be dealing with them later once he deploys my API, until then I'll be making tests.
+I have a lot to fix and even more to create. 
+I made a branch to develop without forcing him to keep making pulls.

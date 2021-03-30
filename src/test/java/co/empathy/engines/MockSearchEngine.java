@@ -35,7 +35,7 @@ public class MockSearchEngine implements SearchEngine {
 	}
 
 	@Override
-	public SearchResult searchSingleMatch(MyRequest request, String... indices) throws IOException {
+	public SearchResult scoredSearch(MyRequest request, String... indices) throws IOException {
 		List<Map<String, Object>> items = new ArrayList<>();
 		if (Arrays.toString(indices).contains("imdb")) {
 			items.add(mockImdbItem());

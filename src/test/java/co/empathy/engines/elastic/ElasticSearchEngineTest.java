@@ -100,7 +100,7 @@ public class ElasticSearchEngineTest {
 
 		// More than one result, one filter, one aggregation
 		aggs.add(new TermsAggregation(MovieRequest.GENRES_AGG, ImdbItem.GENRES));
-		var result = engine.searchSingleMatch(request, ElasticSearchTestHelper.INDEX);
+		var result = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		assertNotNull(result.getAggregations().get(MovieRequest.GENRES_AGG));
 		var genres = result.getAggregations().get(MovieRequest.GENRES_AGG);
 		assertEquals(2, genres.get("adventure"));

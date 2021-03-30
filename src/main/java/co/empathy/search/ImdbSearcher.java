@@ -47,7 +47,7 @@ public class ImdbSearcher implements Searcher {
 
 	@Override
 	public Serializable searchByQuery(MyRequest request) throws IOException {
-		var result = engine.searchSingleMatch(request, INDEX);
+		var result = engine.scoredSearch(request, INDEX);
 		return buildResponse(result);
 	}
 

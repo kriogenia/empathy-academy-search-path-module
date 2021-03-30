@@ -32,14 +32,14 @@ public class MovieRequest implements MyRequest {
 
 	private final HttpRequest<?> httpRequest;
 
-	@NotNull(message = "Missing query to search. To not specify one, submit and empty query")
+	@Nullable
 	private final String query;
 
 	@NotNull(message = "The list of filters must exists. If there's no filters, it should be empty")
 	private final List<RequestFilter> filters;
 
 	public MovieRequest(HttpRequest<?> httpRequest,
-	                    @NotNull String query,
+	                    @Nullable String query,
 	                    @Nullable String genres,
 	                    @Nullable String type,
 	                    @Nullable String year) {
@@ -63,6 +63,11 @@ public class MovieRequest implements MyRequest {
 	@NotNull
 	public List<RequestQuery> musts(){
 		List<RequestQuery> queries = new ArrayList<>();
+		// If no query was specified return an empty list
+		if (query == null || query.isEmpty()) {
+			return queries;
+		}
+		// In the other case generate the titles query
 		var original = new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, query);
 		var primary = new PartialPlusPerfectQuery(ImdbItem.TITLE, query);
 		var titlesQuery = new DisjunctionMaxQuery();
