@@ -1,6 +1,9 @@
 micronaut:
   application:
     name: demo
+  server:
+    cors:
+      enabled: true
 elasticsearch:
   httpHosts: http://localhost:9200
 imdb:
@@ -16,7 +19,7 @@ imdb:
     basePath: src/main/resources/imdb/
     file: title.ratings.tsv
     indexConfig: _index_config.json
-    bulk: 5000
+    bulk: 7500
     total: 1132578
 reducedImdb:
   basics:

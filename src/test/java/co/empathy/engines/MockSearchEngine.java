@@ -13,7 +13,6 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.*;
 
-@Replaces(SearchEngine.class)
 @Singleton
 public class MockSearchEngine implements SearchEngine {
 
