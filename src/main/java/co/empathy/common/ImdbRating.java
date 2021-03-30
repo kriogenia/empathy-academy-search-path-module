@@ -27,7 +27,7 @@ public class ImdbRating implements Indexable {
 	@Max(value = 10, message = "The maximum rating is 10")
 	private float averageRating;
 
-	@PositiveOrZero(message = "The number of votes can't be negative")
+	@Positive(message = "The number of votes can't be negative")
 	private int numVotes;
 
 	/**
@@ -47,6 +47,9 @@ public class ImdbRating implements Indexable {
 	 */
 	@NotNull
 	public ImdbRating setId(@NotNull String id) {
+		if (id == null) {
+			throw new IllegalArgumentException("A rating needs an ID to be associated with");
+		}
 		this.id = id;
 		return this;
 	}
@@ -63,6 +66,9 @@ public class ImdbRating implements Indexable {
 	 * @return              the item modified
 	 */
 	public ImdbRating setAverageRating(float averageRating) {
+		if (averageRating < 0 || averageRating > 10) {
+			throw new IllegalArgumentException("The average rating must be between 0 and 10");
+		}
 		this.averageRating = averageRating;
 		return this;
 	}
@@ -79,6 +85,9 @@ public class ImdbRating implements Indexable {
 	 * @return          the item modified
 	 */
 	public ImdbRating setNumVotes(int numVotes) {
+		if (numVotes < 1) {
+			throw new IllegalArgumentException("Ratings must have at least one vote to exist");
+		}
 		this.numVotes = numVotes;
 		return this;
 	}

@@ -1,6 +1,7 @@
 package co.empathy.search;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.engines.MockSearchEngine;
 import co.empathy.engines.SearchEngine;
 import co.empathy.search.request.MovieRequest;
 import co.empathy.search.response.SearchResponse;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ImdbSearcherTest {
 
 	@Inject
-	SearchEngine mockSearchEngine;
+	MockSearchEngine mockSearchEngine;
 
 	ImdbSearcher searcher;
 

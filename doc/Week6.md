@@ -17,3 +17,6 @@ First in the morning I gave a look to my partner front page to found some discre
 We'll be dealing with them later once he deploys my API, until then I'll be making tests.
 I have a lot to fix and even more to create. 
 I made a branch to develop without forcing him to keep making pulls.
+
+I implemented a way to search the top results with an empty query.
+This way the opening page of Raúl will be able to show that top 10.
