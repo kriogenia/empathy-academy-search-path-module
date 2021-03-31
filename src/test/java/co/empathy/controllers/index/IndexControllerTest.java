@@ -31,7 +31,7 @@ public class IndexControllerTest {
 		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
-		assertEquals("Invalid request: The specified index does not exists", exception.getMessage());
+		assertEquals("Invalid request: The specified index does not exist", exception.getMessage());
 	}
 
 }

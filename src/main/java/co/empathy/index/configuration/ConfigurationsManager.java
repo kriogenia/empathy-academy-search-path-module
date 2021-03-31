@@ -39,7 +39,7 @@ public class ConfigurationsManager {
 	public IndexConfiguration getConfiguration(String key) {
 		IndexConfiguration configuration = configurations.get(key);
 		if (configuration == null) {
-			throw new IllegalArgumentException("The specified index does not exists");
+			throw new IllegalArgumentException("The specified index does not exist");
 		}
 		return configuration;
 	}
