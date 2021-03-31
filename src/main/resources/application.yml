@@ -2,6 +2,7 @@ micronaut:
   application:
     name: demo
   server:
+    port: 8081
     cors:
       enabled: true
 elasticsearch:

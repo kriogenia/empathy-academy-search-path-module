@@ -20,7 +20,7 @@ Open http://localhost:8080/hello on your browser of choice to check everything i
 You can also open a new terminal check it with the following command on a new terminal:
 
 ```sh
-curl -s http://localhost:8080/hello
+curl -s http://localhost:8081/hello
 ```
 
 If you got the Hello World response then jump to the next section.
@@ -68,10 +68,10 @@ curl -o title.ratings.tsv.gz https://datasets.imdbws.com/title.ratings.tsv.gz &&
 Once you have the files on the correct place, use this command, it will build the whole index.
 
 ```sh
-curl http://localhost:8080/index/imdb
+curl http://localhost:8081/index/imdb
 ```
 
-(*NOTE, it will a while, one hour at least. Yeah, I know, sorry. 
+(*NOTE, it will a while, maybe even one whole hour. Yeah, I know, sorry. 
 So, go make a coffee. You can see the progress in the terminal with the API running.*)
 
 The moment you get an OK response you can start using the search API.
@@ -81,8 +81,10 @@ The moment you get an OK response you can start using the search API.
 Send all data requests to:
 
 ```
-http://localhost:8080?search
+http://localhost:8081?search
 ```
+
+An empty query will retrieve the top 10 items of the datasets.
 
 ### Queries
 

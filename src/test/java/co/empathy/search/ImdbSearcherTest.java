@@ -2,7 +2,6 @@ package co.empathy.search;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.engines.MockSearchEngine;
-import co.empathy.engines.SearchEngine;
 import co.empathy.search.request.MovieRequest;
 import co.empathy.search.response.SearchResponse;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;

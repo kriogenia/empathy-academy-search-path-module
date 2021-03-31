@@ -34,4 +34,5 @@ public class DisjunctionMaxQuery implements RequestQuery {
 	public @NotNull Object accept(@NotNull QueryVisitor visitor) {
 		return visitor.transform(this);
 	}
+
 }
