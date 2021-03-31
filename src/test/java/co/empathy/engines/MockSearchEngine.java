@@ -18,6 +18,8 @@ public class MockSearchEngine implements SearchEngine {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MockSearchEngine.class);
 
+	public List<String> index = new ArrayList<>();
+
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
 		LOG.info("Mock called to index " + entry + " on " + index);
@@ -58,17 +60,19 @@ public class MockSearchEngine implements SearchEngine {
 
 	@Override
 	public boolean hasIndex(String key) throws IOException {
-		return key.equals("valid_index");
+		return index.contains(key);
 	}
 
 	@Override
 	public void createIndex(IndexConfiguration configuration) throws IOException {
 		LOG.info("Mock called to create index " + configuration.getKey());
+		index.add(configuration.getKey());
 	}
 
 	@Override
 	public void deleteIndex(String key) throws IOException {
 		LOG.info("Mock called to delete index " + key);
+		index.remove(key);
 	}
 
 	@Override
