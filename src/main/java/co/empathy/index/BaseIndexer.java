@@ -154,7 +154,7 @@ public class BaseIndexer implements Indexer {
 
 	/**
 	 * Creates bulks from the specified file and calls the bulking function
-	 * @param path              path of the file to read
+	 * @param config            configuration of the bulk to process
 	 * @param bulkingFunction   function to invoke with the bulks
 	 * @throws IOException      if an I/O error occurs
 	 */

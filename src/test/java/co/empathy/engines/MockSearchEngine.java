@@ -5,7 +5,6 @@ import co.empathy.index.Indexable;
 import co.empathy.index.configuration.IndexConfiguration;
 import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
-import io.micronaut.context.annotation.Replaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,8 @@ public class MockSearchEngine implements SearchEngine {
 
 	private static final Logger LOG = LoggerFactory.getLogger(MockSearchEngine.class);
 
-	public List<String> index = new ArrayList<>();
+	public Map<String, Integer> inserts = new HashMap<>();
+	public Map<String, Integer> updates = new HashMap<>();
 
 	@Override
 	public void index(String index, Indexable entry) throws IOException {
@@ -28,11 +28,13 @@ public class MockSearchEngine implements SearchEngine {
 	@Override
 	public void bulkIndex(String index, List<Indexable> entries) throws IOException {
 		LOG.info("Mock called to bulk index " + entries.size() + " entries on " + index);
+		inserts.put(index, inserts.get(index) + entries.size());
 	}
 
 	@Override
 	public void bulkUpdate(String index, List<Indexable> entries) throws IOException {
 		LOG.info("Mock called to bulk update " + entries.size() + " entries on " + index);
+		updates.put(index, updates.get(index) + entries.size());
 	}
 
 	@Override
@@ -60,24 +62,50 @@ public class MockSearchEngine implements SearchEngine {
 
 	@Override
 	public boolean hasIndex(String key) throws IOException {
-		return index.contains(key);
+		return inserts.get(key) != null;
 	}
 
 	@Override
 	public void createIndex(IndexConfiguration configuration) throws IOException {
 		LOG.info("Mock called to create index " + configuration.getKey());
-		index.add(configuration.getKey());
+		inserts.put(configuration.getKey(), 0);
+		updates.put(configuration.getKey(), 0);
 	}
 
 	@Override
 	public void deleteIndex(String key) throws IOException {
 		LOG.info("Mock called to delete index " + key);
-		index.remove(key);
+		inserts.remove(key);
+		updates.remove(key);
 	}
 
 	@Override
 	public void close() throws Exception {
 		LOG.info("MockSearchEngine close call invoked");
+	}
+
+	/**
+	 * Resets the search engine state
+	 */
+	public void reset() {
+		inserts.clear();
+		updates.clear();
+	}
+
+	/**
+	 * @param key   index to consult
+	 * @return      inserts made in the specified index
+	 */
+	public Integer getInserts(String key) {
+		return inserts.get(key);
+	}
+
+	/**
+	 * @param key   index to consult
+	 * @return      updates made in the specified index
+	 */
+	public Integer getUpdates(String key) {
+		return updates.get(key);
 	}
 
 	/**
