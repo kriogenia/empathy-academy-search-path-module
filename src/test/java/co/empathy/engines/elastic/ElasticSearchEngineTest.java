@@ -7,6 +7,7 @@ import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
+import co.empathy.search.request.queries.PartialPlusPerfectQuery;
 import co.empathy.search.request.queries.RequestQuery;
 import co.empathy.util.ElasticSearchTestHelper;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -76,9 +77,9 @@ public class ElasticSearchEngineTest {
 	 * @throws IOException	produced in the tested function
 	 */
 	@Test
-	public void searchSingleMatchTest() throws IOException {
+	public void scoredSearchTest() throws IOException {
 		// One result query, no filter, no aggregations
-
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "Carmencita"));
 		var items = helper.performSingleMatch(engine, request, 1, 1);
 		var item = items.get(0);
 		assertEquals("tt0000001", item.get("id"));
@@ -89,7 +90,7 @@ public class ElasticSearchEngineTest {
 
 		// More than one result, no filter, no aggregations
 		must.clear();
-
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "the"));
 		items = helper.performSingleMatch(engine, request, 5, 5);
 		assertTrue(items.stream().map(x -> x.get("title").toString()).allMatch(
 				x -> x.matches(".*[Tt]he.*")));

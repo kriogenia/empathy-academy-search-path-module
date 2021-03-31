@@ -29,7 +29,7 @@ public class ElasticQueryVisitor implements QueryVisitor {
 		var text = query.getText();
 		var boolQuery = QueryBuilders.boolQuery();
 		var partial = matchQuery(field + ".partial", text);
-		partial.minimumShouldMatch("3<-75%");
+		partial.minimumShouldMatch("0<-50% 3<-75%");
 		boolQuery.should(partial);
 		boolQuery.should(matchPhraseQuery(field + ".perfect", text));
 		return boolQuery;

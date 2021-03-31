@@ -20,7 +20,7 @@ public class RangeFilterTest {
 		var range = filter.getRanges().get(0);
 		assertEquals("2010", range.from);
 		assertEquals("2020", range.to);
-		assertEquals("YYYY", filter.getFormat());
+		assertEquals("year", filter.getFormat());
 		// Incomplete range
 		var exception = assertThrows(IllegalArgumentException.class,
 				() -> new DateRangesFilter("field", "2010"));

@@ -71,7 +71,7 @@ Once you have the files on the correct place, use this command, it will build th
 curl http://localhost:8080/index/imdb
 ```
 
-(*NOTE, it will a while, one hour at least. Yeah, I know, sorry. 
+(*NOTE, it will a while, maybe even one whole hour. Yeah, I know, sorry. 
 So, go make a coffee. You can see the progress in the terminal with the API running.*)
 
 The moment you get an OK response you can start using the search API.
@@ -83,6 +83,8 @@ Send all data requests to:
 ```
 http://localhost:8080?search
 ```
+
+An empty query will retrieve the top 10 items of the datasets.
 
 ### Queries
 

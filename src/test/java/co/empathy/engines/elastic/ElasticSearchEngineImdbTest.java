@@ -5,6 +5,8 @@ import co.empathy.search.request.MockMyRequest;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.filters.TermsFilter;
+import co.empathy.search.request.queries.DisjunctionMaxQuery;
+import co.empathy.search.request.queries.PartialPlusPerfectQuery;
 import co.empathy.search.request.queries.RequestQuery;
 import co.empathy.search.response.SearchResult;
 import co.empathy.util.ElasticSearchTestHelper;
@@ -72,7 +74,7 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testAsciiFoldingFilter() throws IOException {
 		// Ñ
-		//must.put(ImdbItem.ORIGINAL_TITLE, "Ocana");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "Ocana"));
 		var items = helper.performSingleMatch(engine, request, 1, 1);
 		assertTrue(allContains("title", "Ocaña", items));
 	}
@@ -85,15 +87,15 @@ public class ElasticSearchEngineImdbTest {
 	public void testLowercaseFilter() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// All lowercase
-		//must.put(ImdbItem.ORIGINAL_TITLE, "carmencita");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "carmencita"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// All uppercase
-		//must.put(ImdbItem.ORIGINAL_TITLE, "CARMENCITA");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "CARMENCITA"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Combined
-		//must.put(ImdbItem.ORIGINAL_TITLE, "CarMeNCiTA");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "CarMeNCiTA"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
@@ -109,10 +111,10 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testNumberExtensionFilter() throws IOException {
 		// Text and roman to arabic
-		//must.put(ImdbItem.ORIGINAL_TITLE, "two");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "two"));
 		var result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
-		//must.put(ImdbItem.ORIGINAL_TITLE, "ii");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "ii"));
 		var result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
@@ -122,10 +124,10 @@ public class ElasticSearchEngineImdbTest {
 
 		// Roman and arabic to text
 		must.clear();
-		//must.put(ImdbItem.ORIGINAL_TITLE, "iv");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "iv"));
 		result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
-		//must.put(ImdbItem.ORIGINAL_TITLE, "4");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "4"));
 		result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
@@ -135,10 +137,10 @@ public class ElasticSearchEngineImdbTest {
 
 		// Arabic and text to roman
 		must.clear();
-		//must.put(ImdbItem.ORIGINAL_TITLE, "5");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "5"));
 		result1 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 		must.clear();
-		//must.put(ImdbItem.ORIGINAL_TITLE, "five");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "five"));
 		result2 = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
 
 		assertEquals(1, result1.getTotal());
@@ -155,15 +157,15 @@ public class ElasticSearchEngineImdbTest {
 	public void testDelimiterWithHyphen() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
-		//must.put(ImdbItem.ORIGINAL_TITLE, "spiderman");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "spiderman"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Split
-		//must.put(ImdbItem.ORIGINAL_TITLE, "spider man");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "spider man"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// With hyphen
-		//must.put(ImdbItem.ORIGINAL_TITLE, "spider-man");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "spider-man"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
@@ -180,15 +182,15 @@ public class ElasticSearchEngineImdbTest {
 	public void testDelimiterWithApostrophes() throws IOException {
 		List<SearchResult> results = new ArrayList<>();
 		// Concatenated
-		//must.put(ImdbItem.ORIGINAL_TITLE, "youre");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "youre"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// Split
-		//must.put(ImdbItem.ORIGINAL_TITLE, "you re");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "you re"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 		must.clear();
 		// With hyphen
-		//must.put(ImdbItem.ORIGINAL_TITLE, "you're");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "you're"));
 		results.add(engine.scoredSearch(request, ElasticSearchTestHelper.INDEX));
 
 		for (var result: results) {
@@ -204,7 +206,7 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testDelimiterWithOtherSymbols() throws IOException {
 		//dr who to Dr. Who and Dr. Who?
-		//must.put(ImdbItem.ORIGINAL_TITLE, "dr who");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "dr who"));
 		var items = helper.performSingleMatch(engine, request, 2, 2);
 		assertTrue(allContains("title", "Dr. Who", items));
 	}
@@ -216,14 +218,24 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testDifferentTitles() throws IOException {
 		// Original title
-		//must.put(ImdbItem.ORIGINAL_TITLE, "Gisaengchung");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "Gisaengchung"));
 		var items = helper.performSingleMatch(engine, request, 1,1);
 		assertTrue(allContains(ImdbItem.TITLE,"Parasite", items));
 		must.clear();
 		// Primary title
-		//must.put(ImdbItem.ORIGINAL_TITLE, "Parasite");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "Parasite"));
 		items = helper.performSingleMatch(engine, request, 0, 0);
 		assertEquals(0, items.size());
+	}
+
+	@Test
+	public void testDisjunctionTitles() throws IOException {
+		var query = new DisjunctionMaxQuery();
+		query.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "Parasite"));
+		query.add(new PartialPlusPerfectQuery(ImdbItem.TITLE, "Parasite"));
+		must.add(query);
+		var items = helper.performSingleMatch(engine, request, 1, 1);
+		assertTrue(allContains(ImdbItem.TITLE, "Parasite", items));
 	}
 
 	/**
@@ -232,7 +244,7 @@ public class ElasticSearchEngineImdbTest {
 	 */
 	@Test
 	public void testStopWords() throws IOException {
-		//must.put(ImdbItem.ORIGINAL_TITLE, "It");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "It"));
 		var items = helper.performSingleMatch(engine, request, 1, 1);
 		assertTrue(allContains(ImdbItem.TITLE, "It", items));
 	}
@@ -244,7 +256,7 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testTypeFilter() throws IOException {
 		// No types
-		//must.put(ImdbItem.ORIGINAL_TITLE, "the");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "the"));
 		var items = helper.performSingleMatch(engine, request, 5, 5);
 		// One type
 		filter.add(new TermsFilter(ImdbItem.TYPE, "movie"));
@@ -266,7 +278,7 @@ public class ElasticSearchEngineImdbTest {
 	@Test
 	public void testGenresFilter() throws IOException {
 		// No genres
-		//must.put(ImdbItem.ORIGINAL_TITLE, "the");
+		must.add(new PartialPlusPerfectQuery(ImdbItem.ORIGINAL_TITLE, "the"));
 		var items = helper.performSingleMatch(engine, request, 5, 5);
 		// One type
 		filter.add(new TermsFilter(ImdbItem.GENRES, "action"));
