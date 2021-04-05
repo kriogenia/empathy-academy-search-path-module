@@ -1,6 +1,6 @@
 package co.empathy.engines.elastic;
 
-public class ElasticqueryVisitorTest {
+public class ElasticQueryVisitorTest {
 
 	//TODO
 }

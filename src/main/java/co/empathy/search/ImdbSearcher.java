@@ -79,7 +79,7 @@ public class ImdbSearcher implements Searcher {
 		Object retrieved = properties.get(ImdbItem.GENRES);
 		if (retrieved instanceof List<?>) {
 			for (Object o: (List<?>) retrieved) {
-				if (o instanceof String) {
+				if (o instanceof String && !o.equals("\\N")) {
 					genresList.add((String) o);
 				}
 			}

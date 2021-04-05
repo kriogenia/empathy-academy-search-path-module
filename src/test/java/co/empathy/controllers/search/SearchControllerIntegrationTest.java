@@ -83,7 +83,7 @@ public class SearchControllerIntegrationTest {
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 
 		assertNotNull(retrieved);
-		assertEquals(28, retrieved.getTotal());
+		assertEquals(1162, retrieved.getTotal());
 		assertEquals(10, retrieved.getItems().size());
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).filter(Objects::nonNull)
 				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));

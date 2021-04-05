@@ -234,11 +234,11 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @param genres	up to three genres associated with the title
 	 * @return 			the item modified
-	 * @throws IllegalArgumentException	if there's less than one genre or more than 3
+	 * @throws IllegalArgumentException	if there's more than 3 genres
 	 */
 	@NotNull
 	public ImdbItem setGenres(@NotNull String[] genres) {
-		if (genres.length < 1 || genres.length > 3) {
+		if (genres.length > 3) {
 			throw new IllegalArgumentException("Invalid number of genres");
 		}
 		this.genres = genres;
@@ -324,7 +324,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @param line		string with up to three genres associated with the title
 	 * @return 			the item modified
-	 * @throws IllegalArgumentException	if there's less than one gender or more than three
+	 * @throws IllegalArgumentException	if there's less than three genres
 	 */
 	@NotNull
 	public ImdbItem parseGenres(@NotNull String line) {

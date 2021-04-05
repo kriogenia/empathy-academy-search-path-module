@@ -22,7 +22,7 @@ I implemented a way to search the top results with an empty query.
 This way the opening page of Raúl will be able to show that top 10.
 
 ##2021-03-11
-We got, the front page is working with my search and damn, it feels good.
+We got it, the front page is working with my search and damn, it feels good.
 Now I can even test everything easier.
 
 I found a mistake on my queries thanks to these tries, and I kinda fixed it.

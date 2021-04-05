@@ -55,7 +55,9 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 	@Override
 	@NotNull
 	public Object transform(TermsAggregation terms) {
-		return AggregationBuilders.terms(terms.getName()).field(terms.getField());
+		var builder = AggregationBuilders.terms(terms.getName()).field(terms.getField());
+		builder.size(terms.getSize());
+		return builder;
 	}
 
 }

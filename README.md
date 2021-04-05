@@ -42,7 +42,7 @@ You also can, and we suggest you to, saving the docker state to have it as a bac
 To do so run the following command to commit the image with the name you want (version 1 in this case):
 
 ```sh
-docker commit `docker ps -q elasticsearch:version1
+docker commit `docker ps -q` elasticsearch:version1
 ```
 
 To restore and run that saved image run the following command:

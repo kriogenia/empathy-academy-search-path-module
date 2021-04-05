@@ -30,6 +30,8 @@ public class MovieRequest implements MyRequest {
 	public static final String TYPES_AGG = "types";
 	public static final String YEAR_AGG = "year";
 
+	public static final int NUMBER_OF_GENRES = 27;
+
 	private final HttpRequest<?> httpRequest;
 
 	@Nullable
@@ -86,8 +88,10 @@ public class MovieRequest implements MyRequest {
 	@NotNull
 	public List<RequestAggregation> aggregations() {
 		final @NotNull List<RequestAggregation> aggs = new ArrayList<>();
-		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES));
-		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE));
+		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES)
+				.setSize(NUMBER_OF_GENRES));
+		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE)
+				.setSize(ImdbItem.Types.values().length));
 		aggs.add(new DividedRangeAggregation(YEAR_AGG, ImdbItem.START,
 				1890, Calendar.getInstance().get(Calendar.YEAR), 10));
 		return aggs;

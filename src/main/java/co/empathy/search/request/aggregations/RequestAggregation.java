@@ -5,6 +5,7 @@ import co.empathy.engines.FilterVisitor;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 /**
  * Aggregation specified on the search request
