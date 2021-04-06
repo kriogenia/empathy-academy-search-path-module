@@ -107,18 +107,20 @@ public class ElasticSearchEngine implements SearchEngine {
 	@Override
 	public SearchResult scoredSearch(MyRequest request, String... indices) throws IOException {
 		SearchSourceBuilder builder = new SearchSourceBuilder();
-		// Aggregations
-		request.aggregations().forEach((agg) -> builder.aggregation((AggregationBuilder) agg.accept(aggParser)));
 		// Build the boolean query for the title search
 		var boolQuery = QueryBuilders.boolQuery();
 		// Musts
 		request.musts().forEach((query) -> boolQuery.must((QueryBuilder) query.accept(queryParser)));
-		// Filters
-		request.filters().forEach((filter) -> builder.postFilter((QueryBuilder) filter.accept(filterParser)));
 		// Build the function score request
 		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = request.functions().stream().map(
 				(function) -> (FunctionScoreQueryBuilder.FilterFunctionBuilder) function.accept(functionParser))
 				.toArray(FunctionScoreQueryBuilder.FilterFunctionBuilder[]::new);
+		// Add the aggregations
+		request.aggregations().forEach((agg) -> builder.aggregation((AggregationBuilder) agg.accept(aggParser)));
+		// Add the post-filters
+		var filterQuery = QueryBuilders.boolQuery();
+		request.filters().forEach((filter) -> filterQuery.filter((QueryBuilder) filter.accept(filterParser)));
+		builder.postFilter(filterQuery);
 		// Build and launch the complete query
 		builder.query(functionScoreQuery(boolQuery, functions));
 		return launchSearch(builder, indices);

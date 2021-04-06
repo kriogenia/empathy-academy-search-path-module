@@ -3,9 +3,12 @@ package co.empathy.engines.elastic;
 import co.empathy.engines.AggregationVisitor;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
 import co.empathy.search.request.aggregations.RangeAggregation;
+import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,17 +27,19 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 	@Override
 	@NotNull
 	public Object transform(DividedRangeAggregation range) {
-		var builder = AggregationBuilders.dateRange(range.getName());
-		builder.field(range.getField());
+		var aggregation = AggregationBuilders.dateRange(range.getName());
+		aggregation.field(range.getField());
 		// One range for each decade
 		int from;
 		int to = range.getTo();
 		int gap = range.getGap();
 		for (from = range.getFrom(); from < to - gap; from += gap) {
-			builder.addRange(from, from + gap);
+			aggregation.addRange(from, from + gap);
 		}
-		builder.addUnboundedFrom(from);
-		return builder;
+		aggregation.addUnboundedFrom(from);
+		return (range.getFilters().isEmpty())
+				? aggregation
+				:  makeAggregationFiltered(range, aggregation);
 	}
 
 	@Override
@@ -65,16 +70,25 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 				.terms(terms.getName())
 				.field(terms.getField())
 				.size(terms.getSize());
-		if (terms.getFilters().isEmpty()) {
-			return aggregation;
-		}
-		else {
-			var filters = new ArrayList<QueryBuilder>();
-			terms.getFilters().forEach((filter) -> filters.add((QueryBuilder) filter.accept(filterVisitor)));
-			return AggregationBuilders
-					.filters(terms.getName() + "_filtered", filters.toArray(new QueryBuilder[0]))
-					.subAggregation(aggregation);
-		}
+		return (terms.getFilters().isEmpty())
+				? aggregation
+				:  makeAggregationFiltered(terms, aggregation);
 	}
+
+	/**
+	 * Builds a filtered aggregation with the filters and the sub aggregation
+	 * @param requested         requested aggregation with the filters and name
+	 * @param aggregation       sub aggregation to filter
+	 * @return                  filter aggregation with the wanted sub aggregation
+	 */
+	private FiltersAggregationBuilder makeAggregationFiltered(RequestAggregation requested, AggregationBuilder aggregation) {
+		var filters = new ArrayList<QueryBuilder>();
+		requested.getFilters().forEach((filter) -> filters.add((QueryBuilder) filter.accept(filterVisitor)));
+		return AggregationBuilders
+				.filters(requested.getName() + "_filtered", filters.toArray(new QueryBuilder[0]))
+				.subAggregation(aggregation);
+	}
+
+
 
 }

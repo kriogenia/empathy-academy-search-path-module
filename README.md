@@ -124,11 +124,11 @@ Each API query will return a JSON, it contains the following fields:
 
 #### Enumerations
 
-* **Genres**: Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film Noir, 
+* **Genres** (27): Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film Noir, 
   Game Show, History, Horror, Music, Musical, Mystery, News, Reality-TV, Romance, Sci-Fi, Sport, Talk Show, Thriller, 
   War, Western
   
-* **Types**: movie, tvMovie, tvSeries, tvEpisode, tvSpecial, miniSeries, documentary, videoGame, short, video, tvShort
+* **Types** (11): movie, tvMovie, tvSeries, tvEpisode, tvSpecial, miniSeries, documentary, videoGame, short, video, tvShort
 
 ## Documentation of interest
 

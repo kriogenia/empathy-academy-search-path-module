@@ -22,3 +22,6 @@ Then I had to add filters to the aggregations, this was tricky at first, and I h
 Thank god, my approach was enough, and I was able to make that filtered aggregation, but that needed something more.
 My biggest nightmare in this API was working with the retrieved maps so having to deal with nested results looked bad.
 I was able to handle it nicely tho. As of now is not scalable, but it really works.
+
+And thank god I have tests. 
+I overlooked my filters, they are not working properly and must be fixed.
