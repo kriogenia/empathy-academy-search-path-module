@@ -110,7 +110,7 @@ Each API query will return a JSON, it contains the following fields:
 * `items` List of retrieved entries (max. 10). Each of those items have the following fields:
     * `id` (*string*) Alphanumeric unique identifier of the title
     * `title` (*string*) The more popular title / the title used by the filmmakers on promotional materials at the time of release
-    * `genres` (*string array*) Up to three genres associated with the title (see Enumerations - Genres)
+    * *\<optional\>* `genres` (*string array*) Up to three genres associated with the title (see Enumerations - Genres)
     * `type` (*string*) The type/format of the title (see Enumerations - Types)
     * `start_year` (*YYYY*) Represents the release year of a title. 
       In the case of TV Series, it is the series start year.
@@ -126,7 +126,7 @@ Each API query will return a JSON, it contains the following fields:
 
 * **Genres**: Action, Adventure, Animation, Biography, Comedy, Crime, Documentary, Drama, Family, Fantasy, Film Noir, 
   Game Show, History, Horror, Music, Musical, Mystery, News, Reality-TV, Romance, Sci-Fi, Sport, Talk Show, Thriller, 
-  War, Western, \\N
+  War, Western
   
 * **Types**: movie, tvMovie, tvSeries, tvEpisode, tvSpecial, miniSeries, documentary, videoGame, short, video, tvShort
 

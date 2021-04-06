@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +64,7 @@ public class ImdbItem implements Indexable {
 	@JsonProperty(RUNTIME_MINUTES)
 	private String runtime;
 
-	@NotEmpty(message = "The item must have at least one genre")
+	@Nullable
 	@JsonProperty(GENRES)
 	private String[] genres;
 
@@ -226,7 +227,7 @@ public class ImdbItem implements Indexable {
 	/**
 	 * @return	up to three genres associated with the title
 	 */
-	@NotNull
+	@Nullable
 	public String[] getGenres() {
 		return genres;
 	}
@@ -331,8 +332,11 @@ public class ImdbItem implements Indexable {
 		if (line.length() == 0) {
 			throw new IllegalArgumentException("Invalid number of genres");
 		}
-		String[] genres = line.split(",");
-		return this.setGenres(genres);
+		else if (line.equals("\\N")) {
+			// Omit lists without genres
+			return this;
+		}
+		return this.setGenres(line.split(","));
 	}
 
 	/**

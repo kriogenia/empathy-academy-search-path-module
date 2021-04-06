@@ -1,18 +1,7 @@
 {
-  "size": 10,
+  "size": 25,
   "query": {
     "function_score": {
-      "query": {
-        "bool": {
-          "filter": [
-            {
-              "terms": {
-                "genres": ["action", "drama", "comedy"]
-              }
-            }
-          ]
-        }
-      },
       "functions": [
         {
           "filter": {

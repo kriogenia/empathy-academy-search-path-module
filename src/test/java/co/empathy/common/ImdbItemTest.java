@@ -120,14 +120,9 @@ public class ImdbItemTest {
 	 */
 	@Test
 	public void setGenresTest() {
-		// Less than one genre - INVALID
-		String[] no_genres = new String[0];
-		var exception = assertThrows(IllegalArgumentException.class,
-				() -> item.setGenres(no_genres));
-		assertEquals("Invalid number of genres", exception.getMessage());
 		// More than three genres - INVALID
 		String[] more_than_3 = new String[4];
-		exception = assertThrows(IllegalArgumentException.class, () -> item.setGenres(more_than_3));
+		var exception = assertThrows(IllegalArgumentException.class, () -> item.setGenres(more_than_3));
 		assertEquals("Invalid number of genres", exception.getMessage());
 		// Between one and three genres
 		String[] valid = new String[]{"Documentary", "Short"};

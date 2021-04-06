@@ -30,7 +30,7 @@ public class MovieRequest implements MyRequest {
 	public static final String TYPES_AGG = "types";
 	public static final String YEAR_AGG = "year";
 
-	public static final int NUMBER_OF_GENRES = 27;
+	public static final int NUMBER_OF_GENRES = 26;
 
 	private final HttpRequest<?> httpRequest;
 
