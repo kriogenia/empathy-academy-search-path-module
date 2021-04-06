@@ -10,4 +10,15 @@ I've half of them already done so first all be returning the whole number of buc
 
 #2021-04-06
 We agreed on how to handle the missing genres, we'll not even return them on the aggregation. 
-I'll be jumping on the definitive change to the genres omitting the \N on the index.
+So I did jump on the definitive change to the genres omitting the \N on the index.
+
+Finished that I went to the extra task of this week (as I already had all the others ready).
+It was kinda difficult as it involved some problematic nesting.
+We have to make filtered and unfiltered aggregations based on the filters.
+
+The filter change was easy, just moving them to the last point, that made the aggregations return based on the whole query.
+Then I had to add filters to the aggregations, this was tricky at first, and I had to think carefully how to handle it.
+
+Thank god, my approach was enough, and I was able to make that filtered aggregation, but that needed something more.
+My biggest nightmare in this API was working with the retrieved maps so having to deal with nested results looked bad.
+I was able to handle it nicely tho. As of now is not scalable, but it really works.

@@ -56,8 +56,17 @@
       }
     },
     "type": {
-      "terms": {
-        "field": "type"
+      "filter": {
+        "term": {
+          "genres": "adventure"
+        }
+      },
+      "aggs": {
+        "type": {
+          "terms": {
+            "field": "type"
+          }
+        }
       }
     },
     "year": {

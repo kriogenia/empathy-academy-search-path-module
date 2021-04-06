@@ -39,9 +39,16 @@ public class SearchResultBuilder {
 	 */
 	private Map<String, Map<String, Long>> buildAggregations(SearchResponse esResponse) {
 		var aggregations = new HashMap<String, Map<String, Long>>();
-		if (esResponse.getAggregations() != null ) {
-			for (var key : esResponse.getAggregations().getAsMap().keySet()) {
-				aggregations.put(key, flatAggregation(esResponse.getAggregations().get(key)));
+		var responseAggregations = esResponse.getAggregations();
+		if (responseAggregations != null ) {
+			for (var key : responseAggregations.getAsMap().keySet()) {
+				if (!key.contains("_filtered")) {
+					aggregations.put(key, flatAggregation(responseAggregations.get(key)));
+				}
+				else {
+					var name = key.replace("_filtered", "");
+					aggregations.put(name, flatNestedAggregation(name, responseAggregations.get(key)));
+				}
 			}
 		}
 		return aggregations;
@@ -68,6 +75,17 @@ public class SearchResultBuilder {
 		return buckets.stream().filter(x -> x.getDocCount() > 0).collect(Collectors.toMap(
 				MultiBucketsAggregation.Bucket::getKeyAsString,
 				MultiBucketsAggregation.Bucket::getDocCount));
+	}
+
+	/**
+	 * Converts a nested Elastic Search Aggregation into a flat map
+	 * @param name  name of the aggregation to return
+	 * @param agg   ElasticSearch Terms Aggregation
+	 * @return      Flat map with the retrieved aggregations
+	 */
+	private Map<String, Long> flatNestedAggregation(String name, MultiBucketsAggregation agg) {
+		var buckets = agg.getBuckets();
+		return flatAggregation(buckets.get(0).getAggregations().get(name));
 	}
 
 

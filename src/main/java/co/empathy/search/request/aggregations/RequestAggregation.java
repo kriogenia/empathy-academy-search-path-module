@@ -37,7 +37,7 @@ public interface RequestAggregation {
 	/**
 	 * @return  the list of filters to apply to the aggregation
 	 */
-	@Nullable
+	@NotNull
 	List<RequestFilter> getFilters();
 
 	/**

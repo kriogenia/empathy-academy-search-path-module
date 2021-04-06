@@ -4,16 +4,22 @@ import co.empathy.engines.AggregationVisitor;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
 import co.empathy.search.request.aggregations.RangeAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 
 /**
  * Visitor to transform common aggregations to Elastic Search specific ones
  */
 @Singleton
 public class ElasticAggregationVisitor implements AggregationVisitor {
+
+	@Inject
+	ElasticFilterVisitor filterVisitor;
 
 	@Override
 	@NotNull
@@ -55,9 +61,20 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 	@Override
 	@NotNull
 	public Object transform(TermsAggregation terms) {
-		var builder = AggregationBuilders.terms(terms.getName()).field(terms.getField());
-		builder.size(terms.getSize());
-		return builder;
+		var aggregation = AggregationBuilders
+				.terms(terms.getName())
+				.field(terms.getField())
+				.size(terms.getSize());
+		if (terms.getFilters().isEmpty()) {
+			return aggregation;
+		}
+		else {
+			var filters = new ArrayList<QueryBuilder>();
+			terms.getFilters().forEach((filter) -> filters.add((QueryBuilder) filter.accept(filterVisitor)));
+			return AggregationBuilders
+					.filters(terms.getName() + "_filtered", filters.toArray(new QueryBuilder[0]))
+					.subAggregation(aggregation);
+		}
 	}
 
 }

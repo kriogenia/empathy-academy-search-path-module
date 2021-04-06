@@ -5,6 +5,7 @@ import co.empathy.search.request.filters.RequestFilter;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseRequestAggregation implements RequestAggregation {
@@ -15,7 +16,7 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 	@NotEmpty
 	protected final String field;
 
-	@Nullable
+	@NotNull
 	protected List<RequestFilter> filters;
 
 	public BaseRequestAggregation(@NotEmpty String name, @NotEmpty String field) {
@@ -27,6 +28,7 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 			throw new IllegalArgumentException("The aggregation field is required");
 		}
 		this.field = field;
+		this.filters = new ArrayList<>();
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 	}
 
 	@Override
-	@Nullable
+	@NotNull
 	public List<RequestFilter> getFilters() {
 		return filters;
 	}
