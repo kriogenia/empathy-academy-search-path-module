@@ -114,7 +114,8 @@ public class ElasticSearchEngine implements SearchEngine {
 		// Musts
 		request.musts().forEach((query) -> boolQuery.must((QueryBuilder) query.accept(queryParser)));
 		// Filters
-		request.filters().forEach((filter) -> boolQuery.filter((QueryBuilder) filter.accept(filterParser)));
+		//request.filters().forEach((filter) -> boolQuery.filter((QueryBuilder) filter.accept(filterParser)));
+		request.filters().forEach((filter) -> builder.postFilter((QueryBuilder) filter.accept(filterParser)));
 		// Build the function score request
 		FunctionScoreQueryBuilder.FilterFunctionBuilder[] functions = request.functions().stream().map(
 				(function) -> (FunctionScoreQueryBuilder.FilterFunctionBuilder) function.accept(functionParser))
