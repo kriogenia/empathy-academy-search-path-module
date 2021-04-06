@@ -1,6 +1,11 @@
 package co.empathy.search.request.aggregations;
 
+import co.empathy.search.request.filters.RequestFilter;
+
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public abstract class BaseRequestAggregation implements RequestAggregation {
 
@@ -9,6 +14,9 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 
 	@NotEmpty
 	protected final String field;
+
+	@Nullable
+	protected List<RequestFilter> filters;
 
 	public BaseRequestAggregation(@NotEmpty String name, @NotEmpty String field) {
 		if (name == null || name.isEmpty()) {
@@ -21,13 +29,26 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 		this.field = field;
 	}
 
-	@NotEmpty
 	@Override
+	@NotEmpty
 	public String getName() { return this.name; }
 
-	@NotEmpty
 	@Override
+	@NotEmpty
 	public String getField() {
 		return this.field;
+	}
+
+	@Override
+	@NotNull
+	public RequestAggregation setFilters(List<RequestFilter> filters) {
+		this.filters = filters;
+		return this;
+	}
+
+	@Override
+	@Nullable
+	public List<RequestFilter> getFilters() {
+		return filters;
 	}
 }
