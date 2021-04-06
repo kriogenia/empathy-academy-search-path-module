@@ -30,7 +30,7 @@ public class MovieRequest implements MyRequest {
 	public static final String TYPES_AGG = "types";
 	public static final String YEAR_AGG = "year";
 
-	public static final int NUMBER_OF_GENRES = 26;
+	public static final int NUMBER_OF_GENRES = 27;
 
 	private final HttpRequest<?> httpRequest;
 
@@ -40,6 +40,9 @@ public class MovieRequest implements MyRequest {
 	@NotNull(message = "The list of filters must exists. If there's no filters, it should be empty")
 	private final List<RequestFilter> filters;
 
+	@NotNull(message = "The list of aggregations must exists. If there's no aggregations, it should be empty")
+	private final List<RequestAggregation> aggs;
+
 	public MovieRequest(HttpRequest<?> httpRequest,
 	                    @Nullable String query,
 	                    @Nullable String genres,
@@ -47,23 +50,62 @@ public class MovieRequest implements MyRequest {
 	                    @Nullable String year) {
 		this.httpRequest = httpRequest;
 		this.query = query;
-		// Filters
+		// Adds filters and its unfiltered aggregations
 		this.filters = new ArrayList<>();
+		this.aggs = new ArrayList<>();
+		filterGenres(genres);
+		filterTypes(type);
+		filterYear(year);
+	}
+
+	/**
+	 * Creates the filter and aggregation of genres based on the query
+	 * @param genres    query to filter genres, null if not applied
+	 */
+	private void filterGenres(@Nullable String genres) {
+		var agg = new TermsAggregation(GENRES_AGG, ImdbItem.GENRES)
+				.setSize(NUMBER_OF_GENRES);
 		if (genres != null) {
 			this.filters.add(new TermsFilter(ImdbItem.GENRES, genres));
+		} else {
+			agg.setFilters(this.filters);
 		}
-		if (type != null) {
-			this.filters.add(new TermsFilter(ImdbItem.TYPE, type));
+		this.aggs.add(agg);
+	}
+
+	/**
+	 * Creates the filter and aggregation of types based on the query
+	 * @param types    query to filter types, null if not applied
+	 */
+	private void filterTypes(@Nullable String types) {
+		var agg = new TermsAggregation(TYPES_AGG, ImdbItem.TYPE)
+				.setSize(ImdbItem.Types.values().length);
+		if (types != null) {
+			this.filters.add(new TermsFilter(ImdbItem.TYPE, types));
+		} else {
+			agg.setFilters(this.filters);
 		}
+		this.aggs.add(agg);
+	}
+
+	/**
+	 * Creates the filter and aggregation of the year based on the query
+	 * @param year    query to filter year, null if not applied
+	 */
+	private void filterYear(@Nullable String year) {
+		var agg = new DividedRangeAggregation(YEAR_AGG, ImdbItem.START,
+				1890, Calendar.getInstance().get(Calendar.YEAR), 10);
 		if (year != null) {
 			this.filters.add(new DateRangesFilter(ImdbItem.START, year));
+		} else {
+			agg.setFilters(this.filters);
 		}
-
+		this.aggs.add(agg);
 	}
 
 	@Override
 	@NotNull
-	public List<RequestQuery> musts(){
+	public List<RequestQuery> musts() {
 		List<RequestQuery> queries = new ArrayList<>();
 		// If no query was specified return an empty list
 		if (query == null || query.isEmpty()) {
@@ -80,20 +122,14 @@ public class MovieRequest implements MyRequest {
 	}
 
 	@Override
-	public @NotNull List<RequestFilter> filters() {
+	@NotNull
+	public List<RequestFilter> filters() {
 		return filters;
 	}
 
 	@Override
 	@NotNull
 	public List<RequestAggregation> aggregations() {
-		final @NotNull List<RequestAggregation> aggs = new ArrayList<>();
-		aggs.add(new TermsAggregation(GENRES_AGG, ImdbItem.GENRES)
-				.setSize(NUMBER_OF_GENRES));
-		aggs.add(new TermsAggregation(TYPES_AGG, ImdbItem.TYPE)
-				.setSize(ImdbItem.Types.values().length));
-		aggs.add(new DividedRangeAggregation(YEAR_AGG, ImdbItem.START,
-				1890, Calendar.getInstance().get(Calendar.YEAR), 10));
 		return aggs;
 	}
 
@@ -109,5 +145,7 @@ public class MovieRequest implements MyRequest {
 				.setOffset("1825d"));
 		return functions;
 	}
+
+
 
 }
