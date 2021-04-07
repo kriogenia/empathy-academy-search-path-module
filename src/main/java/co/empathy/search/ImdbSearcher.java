@@ -53,11 +53,10 @@ public class ImdbSearcher implements Searcher {
 
 	@Override
 	public Serializable searchById(String id) throws IOException {
-		var item = new ImdbItem();
-		item.setId(id);
-		item.setVotes(100);
-		item.setEndYear("1900");
-		return item;
+		var result = engine.idSearch(id, INDEX);
+		var item = result.getItems().stream().map(this::itemBuilder).findFirst();
+		// TODO change to exception to throw when no match
+		return item.orElse(null);
 	}
 
 	/**
