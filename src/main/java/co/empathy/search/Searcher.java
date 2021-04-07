@@ -1,5 +1,6 @@
 package co.empathy.search;
 
+import co.empathy.exceptions.NoResultException;
 import co.empathy.search.request.MyRequest;
 import io.micronaut.context.annotation.DefaultImplementation;
 
@@ -25,6 +26,7 @@ public interface Searcher {
 	 * Returns the object in the index related to the specified ID
 	 * @param id    unique identified of the entry
 	 * @return      indexed entry with that id
+	 * @throws NoResultException    if there's no results for the specified id
 	 * @throws IOException  if the search engine fails
 	 */
 	Serializable searchById(String id) throws IOException;
