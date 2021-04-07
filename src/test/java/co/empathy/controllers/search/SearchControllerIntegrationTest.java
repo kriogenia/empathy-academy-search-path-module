@@ -1,6 +1,7 @@
 package co.empathy.controllers.search;
 
 import co.empathy.common.ImdbItem;
+import co.empathy.search.request.MovieRequest;
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,6 +37,11 @@ public class SearchControllerIntegrationTest {
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 
+	/**
+	 * Test the search with a single or few results and the correct
+	 * format of the response
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithSingleWordAndFewResults() throws JsonProcessingException {
 		// Less than 10 results
@@ -61,6 +67,10 @@ public class SearchControllerIntegrationTest {
 		assertEquals(carmencita.getEndYear(), first.getEndYear());
 	}
 
+	/**
+	 * Tests the search with a single word and more than 10 results
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithSingleWordAndManyResults() throws JsonProcessingException {
 		// More than 10 results
@@ -75,6 +85,10 @@ public class SearchControllerIntegrationTest {
 		assertTrue(retrieved.getItems().stream().map(ImdbItem::getPrimaryTitle).allMatch(x -> x.contains("Jumanji")));
 	}
 
+	/**
+	 * Tests de search with multiple words
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithMultipleWords() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Shawshank Redemption").toString();
@@ -89,6 +103,11 @@ public class SearchControllerIntegrationTest {
 				.allMatch(x -> x.contains("Shawshank") || x.contains("Redemption")));
 	}
 
+	/**
+	 * Test the search applying the genre filter.
+	 * Asserting that all the items have that genre and aggregations change correctly.
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithGenre() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Spiderman");
@@ -104,8 +123,21 @@ public class SearchControllerIntegrationTest {
 		assertTrue(retrieved.getItems().stream().allMatch(
 				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")
 						&& Objects.requireNonNull(Arrays.toString(x.getGenres())).contains("Action")));
+
+		// Test faceting
+		var aggs = retrieved.getAggregations();
+		// Genres still showing the results the whole set
+		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		// Types and year only showing the results of the filtered set
+		assertEquals(122, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(20, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
 	}
 
+	/**
+	 * Test the search applying the type filter.
+	 * Asserting that all the items belong to that type and aggregations change correctly.
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithType() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Spiderman");
@@ -121,8 +153,21 @@ public class SearchControllerIntegrationTest {
 		assertTrue(retrieved.getItems().stream().allMatch(
 				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")
 						&& Objects.requireNonNull(x.getTitleType()).contains("movie")));
+
+		// Test faceting
+		var aggs = retrieved.getAggregations();
+		// Type still showing the results the whole set
+		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		// Genres and year only showing the results of the filtered set
+		assertEquals(24, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(13, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
 	}
 
+	/**
+	 * Test the search applying the year filter.
+	 * Asserting that all the items belong to that span and aggregations change correctly.
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithYear() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Spiderman");
@@ -140,8 +185,58 @@ public class SearchControllerIntegrationTest {
 		var startYears = retrieved.getItems().stream().map(ImdbItem::getStartYear)
 				.filter(Objects::nonNull).map(Integer::parseInt);
 		assertTrue(startYears.allMatch(x -> x >= 2000 & x <= 2010));
+
+		// Test faceting
+		var aggs = retrieved.getAggregations();
+		// Year still showing the results the whole set
+		assertEquals(1097, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		// Type and genres only showing the results of the filtered set
+		assertEquals(26, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(2, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
 	}
 
+	/**
+	 * Test the search applying two filters.
+	 * Asserting that all the items matches them and aggregations are what they should.
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
+	@Test
+	public void testSearchTitleWithMultipleFilters() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		uri.queryParam("genres", "Action");
+		uri.queryParam("type", "movie");
+		var request = HttpRequest.GET(uri.toString());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+
+		assertNotNull(retrieved);
+		assertEquals(27, retrieved.getTotal());
+		assertEquals(10, retrieved.getItems().size());
+		// Matching title
+		assertTrue(retrieved.getItems().stream().allMatch(
+				x -> 	Objects.requireNonNull(x.getPrimaryTitle()).matches(".*[Ss]pider.*[Mm]an.*")));
+		// Matching genres
+		var genres = retrieved.getItems().stream().map(ImdbItem::getGenres)
+				.filter(Objects::nonNull).map(Arrays::toString);
+		assertTrue(genres.allMatch(x -> x.contains("Action")));
+		// Matching type
+		var types = retrieved.getItems().stream().map(ImdbItem::getTitleType);
+		assertTrue(types.allMatch(x -> x.equals("movie")));
+
+		// Test faceting
+		var aggs = retrieved.getAggregations();
+		// Applied filters keep the global set
+		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		// Year test the filtered set
+		assertEquals(13, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+	}
+
+	/**
+	 * Test the search applying all the filters.
+	 * Asserting that all the items matches them and aggregations are still global.
+	 * @throws JsonProcessingException  if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchTitleWithAllFilters() throws JsonProcessingException {
 		var uri = baseUri.queryParam("query", "Spiderman");
@@ -169,6 +264,12 @@ public class SearchControllerIntegrationTest {
 		var startYears = retrieved.getItems().stream().map(ImdbItem::getStartYear)
 				.filter(Objects::nonNull).map(Integer::parseInt);
 		assertTrue(startYears.allMatch(x -> x >= 2000 & x <= 2010));
+
+		// Test faceting
+		var aggs = retrieved.getAggregations();
+		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(1097, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
 	}
 
 	@Test

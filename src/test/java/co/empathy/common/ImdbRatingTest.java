@@ -14,6 +14,9 @@ public class ImdbRatingTest {
 		item = new ImdbRating();
 	}
 
+	/**
+	 * Tests the setId
+	 */
 	@Test
 	public void setIdTest() {
 		// Valid id
@@ -25,6 +28,9 @@ public class ImdbRatingTest {
 		assertEquals("A rating needs an ID to be associated with", exception.getMessage());
 	}
 
+	/**
+	 * Test the setAverageRating
+	 */
 	@Test
 	public void setAverageRatingTest() {
 		// Valid rating
@@ -39,6 +45,9 @@ public class ImdbRatingTest {
 		assertEquals("The average rating must be between 0 and 10", exception.getMessage());
 	}
 
+	/**
+	 * Test the setVotes
+	 */
 	@Test
 	public void setVotesTest() {
 		// Valid rating
@@ -62,6 +71,9 @@ public class ImdbRatingTest {
 		assertEquals(10, jsonMap.get(ImdbRating.VOTES));
 	}
 
+	/**
+	 * Test the buildFromString builds the object correctly
+	 */
 	@Test
 	public void buildFromString() {
 		item.setId("test").setAverageRating(5.0f).setNumVotes(10);

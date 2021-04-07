@@ -121,7 +121,22 @@ public class ImdbItemTest {
 		assertNull(item.getEndYear());
 	}
 
-	// TODO test the set runtime minutes
+	/**
+	 * Tests the setRuntime
+	 */
+	@Test
+	public void setRuntimeTest() {
+		assertNull(item.getRuntime());
+		// Valid runtime
+		item.setRuntime("190");
+		assertEquals("190", item.getRuntime());
+		// No runtime
+		item.setRuntime("\\N");
+		assertNull(item.getRuntime());
+		// Null runtime
+		item.setRuntime(null);
+		assertNull(item.getRuntime());
+	}
 
 	/**
 	 * Tests the setGenres of ImdbItem and its exceptions

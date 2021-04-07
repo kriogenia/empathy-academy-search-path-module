@@ -2,6 +2,50 @@
   "size": 25,
   "query": {
     "function_score": {
+      "query": {
+        "dis_max": {
+          "queries": [
+            {
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "original_title.partial": {
+                        "query": "Spiderman"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "original_title.perfect": "Spiderman"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "bool": {
+                "minimum_should_match": 1,
+                "should": [
+                  {
+                    "match": {
+                      "title.partial": {
+                        "query": "Spiderman"
+                      }
+                    }
+                  },
+                  {
+                    "match_phrase": {
+                      "title.perfect": "Spiderman"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
       "functions": [
         {
           "filter": {
@@ -70,14 +114,27 @@
       }
     },
     "year": {
-      "date_range": {
-        "field": "start_year",
-        "ranges": [
-          {
-            "from": "2010",
-            "to": "2020"
+      "filter": {
+        "term": {
+          "genres": "action"
+        }
+      },
+      "aggs": {
+        "year": {
+          "date_range": {
+            "field": "start_year",
+            "ranges": [
+              {
+                "from": "2000",
+                "to": "2010"
+              },
+              {
+                "from": "2010",
+                "to": "2020"
+              }
+            ]
           }
-        ]
+        }
       }
     }
   }
