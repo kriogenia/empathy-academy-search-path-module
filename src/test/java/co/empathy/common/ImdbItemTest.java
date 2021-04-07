@@ -25,9 +25,8 @@ public class ImdbItemTest {
 	public void resetItem() {
 		item = new ImdbItem().setId("tt0000001").setTitleType("short")
 				.setPrimaryTitle("Carmencita").setOriginalTitle("Carmencita")
-				.setIsAdult("0").setStartYear("1894").setEndYear("\\N")
-				.setAverageRating(5.0).setVotes(2000)
-				.setRuntime("0").setGenres(new String[]{"Documentary", "Short"});
+				.setIsAdult(false).setStartYear("1894").setEndYear("\\N")
+				.setAverageRating(5.0).setVotes(2000).setGenres(new String[]{"Documentary", "Short"});
 	}
 
 	/**
@@ -42,6 +41,8 @@ public class ImdbItemTest {
 		assertEquals("tt0000001", jsonMap.get(ImdbItem.ID));
 		// Title
 		assertEquals("Carmencita", jsonMap.get(ImdbItem.TITLE));
+		// Original title
+		assertEquals("Carmencita", jsonMap.get(ImdbItem.ORIGINAL_TITLE));
 		// Genres
 		assertTrue(jsonMap.get(ImdbItem.GENRES) instanceof List<?>);
 		var genres = jsonMap.get(ImdbItem.GENRES);
@@ -59,13 +60,19 @@ public class ImdbItemTest {
 		assertEquals(5.0, jsonMap.get(ImdbItem.AVERAGE_RATING));
 		// Number of votes
 		assertEquals(2000, jsonMap.get(ImdbItem.VOTES));
+		// Is adult
+		assertEquals(false, jsonMap.get(ImdbItem.IS_ADULT));
 		// End year empty
 		assertNull(jsonMap.get(ImdbItem.END));
-		// End year fulfilled
+		// Runtime minutes empty
+		assertNull(jsonMap.get(ImdbItem.RUNTIME_MINUTES));
+		// End year and runtime minutes fulfilled
 		item.setEndYear("1895");
+		item.setRuntime("100");
 		json = mapper.writeValueAsString(item);
 		jsonMap = mapper.readValue(json, Map.class);
 		assertEquals("1895", jsonMap.get(ImdbItem.END));
+		assertEquals("100", jsonMap.get(ImdbItem.RUNTIME_MINUTES));
 	}
 
 	/**
@@ -78,24 +85,23 @@ public class ImdbItemTest {
 				"\"" + ImdbItem.TYPE + "\": \"short\"," +
 				"\"" + ImdbItem.TITLE + "\": \"Carmencita\"," +
 				"\"" + ImdbItem.ORIGINAL_TITLE + "\": \"Carmencita\"," +
-				"\"" + ImdbItem.IS_ADULT + "\": \"0\"," +
+				"\"" + ImdbItem.IS_ADULT + "\": \"false\"," +
 				"\"" + ImdbItem.START + "\": \"1894\"," +
-				"\"" + ImdbItem.RUNTIME_MINUTES + "\": \"0\"," +
 				"\"" + ImdbItem.AVERAGE_RATING + "\": 5.0," +
 				"\"" + ImdbItem.VOTES + "\": 2000," +
 				"\"" + ImdbItem.GENRES + "\": [\"Documentary\", \"Short\"]}";
 		var fromJson = mapper.readValue(json, ImdbItem.class);
 		assertEquals(item.getId(), fromJson.getId());
 		assertEquals(item.getPrimaryTitle(), fromJson.getPrimaryTitle());
+		assertEquals(item.getOriginalTitle(), fromJson.getOriginalTitle());
 		assertEquals(item.getTitleType(), fromJson.getTitleType());
+		assertEquals(item.getRuntime(), fromJson.getRuntime());
+		assertEquals(item.getIsAdult(), fromJson.getIsAdult());
 		assertEquals(item.getAverageRating(), fromJson.getAverageRating());
 		assertEquals(item.getVotes(), fromJson.getVotes());
 		assertEquals(item.getStartYear(), fromJson.getStartYear());
 		assertEquals(item.getEndYear(), fromJson.getEndYear());
 		assertArrayEquals(item.getGenres(), fromJson.getGenres());
-		assertNull(fromJson.getOriginalTitle());
-		assertNull(fromJson.getIsAdult());
-		assertNull(fromJson.getRuntime());
 	}
 
 	/**
@@ -114,6 +120,8 @@ public class ImdbItemTest {
 		item.setEndYear(null);
 		assertNull(item.getEndYear());
 	}
+
+	// TODO test the set runtime minutes
 
 	/**
 	 * Tests the setGenres of ImdbItem and its exceptions
@@ -145,20 +153,22 @@ public class ImdbItemTest {
 		// Original title
 		assertEquals("Carmencita", map.get(ImdbItem.ORIGINAL_TITLE));
 		// Is adult
-		assertEquals("0", map.get(ImdbItem.IS_ADULT));
+		assertEquals(false, map.get(ImdbItem.IS_ADULT));
 		// Start year
 		assertEquals("1894", map.get(ImdbItem.START));
-		// Runtime minutes
-		assertEquals("0", map.get(ImdbItem.RUNTIME_MINUTES));
+		// No runtime minutes
+		assertNull(map.get(ImdbItem.RUNTIME_MINUTES));
 		// Genres
 		assertTrue(map.get(ImdbItem.GENRES) instanceof String[]);
 		var genres = (String[]) map.get(ImdbItem.GENRES);
 		assertArrayEquals(new String[]{"Documentary", "Short"}, genres);
 		// No end year
 		assertNull(map.get(ImdbItem.END));
-		item.setEndYear("1900");
+		// With end year and runtime minutes
+		item.setEndYear("1900").setRuntime("0");
 		map = item.toJsonMap();
 		assertEquals("1900", map.get(ImdbItem.END));
+		assertEquals("0", map.get(ImdbItem.RUNTIME_MINUTES));
 	}
 
 	/**
@@ -190,14 +200,14 @@ public class ImdbItemTest {
 		String less_than_9 = "a\tb\tc\td\te\tf\tg\th";
 		var exception = assertThrows(IllegalArgumentException.class,
 				() -> ImdbItem.buildFromString(less_than_9));
-		assertEquals("IMDB items must have nine fields", exception.getMessage());
+		assertEquals("Basic IMDB items must have nine fields", exception.getMessage());
 		// More than 9 arguments
 		String more_than_9 = "a\tb\tc\td\te\tf\tg\th\ti\tj";
 		exception = assertThrows(IllegalArgumentException.class,
 				() -> ImdbItem.buildFromString(more_than_9));
-		assertEquals("IMDB items must have nine fields", exception.getMessage());
+		assertEquals("Basic IMDB items must have nine fields", exception.getMessage());
 		// Valid fields
-		String valid = "tt0000001\tshort\tCarmencita\tCarmencita\t0\t1894\t\\N\t0\tDocumentary,Short";
+		String valid = "tt0000001\tshort\tCarmencita\tCarmencita\t0\t1894\t\\N\t\\N\tDocumentary,Short";
 		var newItem = ImdbItem.buildFromString(valid);
 		assertEquals(item.getId(), newItem.getId());
 		assertEquals(item.getPrimaryTitle(), newItem.getPrimaryTitle());

@@ -33,4 +33,4 @@ I also have a medical appointment that will take half of my morning.
 I will recover at afternoon tho.
 
 Thanks to partner advice I was able to think of a good way to handle the deserialization of the item.
-So, I was able to make the new endpoint.
+So, I was able to make the new endpoint and started to improve the error handling.

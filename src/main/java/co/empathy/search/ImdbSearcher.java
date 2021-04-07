@@ -58,10 +58,7 @@ public class ImdbSearcher implements Searcher {
 	public Serializable searchById(String id) throws IOException {
 		var result = engine.idSearch(id, INDEX);
 		var item = result.getItems().stream().map(this::extendedItemBuilder).findFirst();
-		if (item.isEmpty()) {
-			throw new NoResultException("There's no results with the id " + id);
-		}
-		return item.get();
+		return item.orElse(new ImdbItem());
 	}
 
 	/**

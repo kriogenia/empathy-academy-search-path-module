@@ -108,7 +108,7 @@ http://localhost:8080/search?query=Avengers&genres=Action,Adventure&type=movie&y
 To get the complete details of an entry perform the following request with the id of the entry:
 
 ```
-http://localhost:8080/title/{id}
+http://localhost:8080/titles/{id}
 ```
 
 ### Interface
@@ -139,7 +139,7 @@ The items recovered in the searches and detail request will be like this:
 The details request will also feature the following fields:
 
   * `original_title` (*string*) original title, in the original language
-  * `is_adult` (*string*) (boolean WIP) if it's an adult title
+  * `is_adult` (*boolean*) if it's an adult title
   * *\<optional\>* `runtime_minutes` (*string*) primary runtime of the title, in minutes
 
 #### Enumerations

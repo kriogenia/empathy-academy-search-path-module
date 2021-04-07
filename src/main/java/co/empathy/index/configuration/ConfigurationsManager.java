@@ -1,5 +1,6 @@
 package co.empathy.index.configuration;
 
+import co.empathy.exceptions.InvalidIndexException;
 import co.empathy.index.configuration.imdb.ImdbBasicsIndexConfiguration;
 import co.empathy.index.configuration.test.TestBasicsIndexConfiguration;
 import io.micronaut.context.annotation.Factory;
@@ -39,7 +40,7 @@ public class ConfigurationsManager {
 	public IndexConfiguration getConfiguration(String key) {
 		IndexConfiguration configuration = configurations.get(key);
 		if (configuration == null) {
-			throw new IllegalArgumentException("The specified index does not exist");
+			throw new InvalidIndexException("The index " + key + " does not exist");
 		}
 		return configuration;
 	}

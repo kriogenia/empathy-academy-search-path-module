@@ -1,4 +1,4 @@
-package co.empathy.controllers.hello;
+package co.empathy.controllers;
 
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @MicronautTest
-public class HelloControllerTest {
+public class ErrorsControllerTest {
 
     @Inject
     @Client("/")
