@@ -21,4 +21,12 @@ public interface Searcher {
 	 */
 	Serializable searchByQuery(MyRequest request) throws IOException;
 
+	/**
+	 * Returns the object in the index related to the specified ID
+	 * @param id    unique identified of the entry
+	 * @return      indexed entry with that id
+	 * @throws IOException  if the search engine fails
+	 */
+	Serializable searchById(String id) throws IOException;
+
 }

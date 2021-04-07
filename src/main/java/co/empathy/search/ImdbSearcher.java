@@ -51,6 +51,15 @@ public class ImdbSearcher implements Searcher {
 		return buildResponse(result);
 	}
 
+	@Override
+	public Serializable searchById(String id) throws IOException {
+		var item = new ImdbItem();
+		item.setId(id);
+		item.setVotes(100);
+		item.setEndYear("1900");
+		return item;
+	}
+
 	/**
 	 * Converts a SearchResult into a SearchResponse
 	 * @param result	result of the search given by the engine

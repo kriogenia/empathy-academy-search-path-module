@@ -25,3 +25,9 @@ I was able to handle it nicely tho. As of now is not scalable, but it really wor
 
 And thank god I have tests. 
 I overlooked my filters, they are not working properly and must be fixed.
+
+#2021-04-07
+With all the weekly tasks done I'll jump on the new endpoint.
+It should be fairly easy, but I want to make it clean using Jackson and that could be a problem.
+I also have a medical appointment that will take half of my morning.
+I will recover at afternoon tho.
