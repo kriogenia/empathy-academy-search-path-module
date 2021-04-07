@@ -17,7 +17,6 @@ import java.util.Map;
  */
 @JsonPropertyOrder({ImdbItem.ID, ImdbItem.TITLE, ImdbItem.GENRES,
 		ImdbItem.TYPE, ImdbItem.START, ImdbItem.END})
-@JsonIgnoreProperties({ImdbItem.ORIGINAL_TITLE, ImdbItem.IS_ADULT, ImdbItem.RUNTIME_MINUTES})
 public class ImdbItem implements Indexable {
 
 	public static final String ID = "id";
@@ -308,7 +307,7 @@ public class ImdbItem implements Indexable {
 	public static ImdbItem buildFromString(@NotNull String line) {
 		String[] params =  line.split("\t");
 		if (params.length != 9) {
-			throw new IllegalArgumentException("IMDB items must have nine fields");
+			throw new IllegalArgumentException("Basic IMDB items must have nine fields");
 		}
 		return new ImdbItem()
 				.setId(params[0])

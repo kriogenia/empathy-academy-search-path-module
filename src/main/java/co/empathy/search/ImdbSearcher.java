@@ -54,7 +54,7 @@ public class ImdbSearcher implements Searcher {
 	@Override
 	public Serializable searchById(String id) throws IOException {
 		var result = engine.idSearch(id, INDEX);
-		var item = result.getItems().stream().map(this::itemBuilder).findFirst();
+		var item = result.getItems().stream().map(this::extendedItemBuilder).findFirst();
 		// TODO change to exception to throw when no match
 		return item.orElse(null);
 	}
@@ -77,7 +77,7 @@ public class ImdbSearcher implements Searcher {
 	}
 
 	/**
-	 * Builds an ImdbItem from the properties map
+	 * Builds a basic ImdbItem from the properties map
 	 * @param properties	Retrieved properties of the search
 	 * @return				Imdb Item with the specified properties
 	 */
@@ -92,15 +92,12 @@ public class ImdbSearcher implements Searcher {
 				}
 			}
 		}
-		// Build and return the item
+		// Build the item
 		ImdbItem item = new ImdbItem()
 				.setId(properties.get(ImdbItem.ID).toString())
 				.setTitleType(properties.get(ImdbItem.TYPE).toString())
 				.setPrimaryTitle(properties.get(ImdbItem.TITLE).toString())
-				.setOriginalTitle(properties.get(ImdbItem.ORIGINAL_TITLE).toString())
-				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString())
 				.setStartYear(properties.get(ImdbItem.START).toString())
-				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
 				.setAverageRating((Double) properties.get(ImdbRating.AVERAGE))
 				.setVotes((Integer) properties.get(ImdbRating.VOTES))
 				.setGenres(genresList.toArray(new String[0]));
@@ -108,6 +105,18 @@ public class ImdbSearcher implements Searcher {
 			item.setEndYear(properties.get(ImdbItem.END).toString());
 		}
 		return item;
+	}
+
+	/**
+	 * Builds a complete ImdbItem from the properties map
+	 * @param properties	Retrieved properties of the search
+	 * @return				Imdb Item with the specified properties
+	 */
+	private ImdbItem extendedItemBuilder(Map<String, Object> properties) {
+		var item = itemBuilder(properties);
+		return item.setOriginalTitle(properties.get(ImdbItem.ORIGINAL_TITLE).toString())
+				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
+				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString());
 	}
 
 }

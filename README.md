@@ -78,6 +78,8 @@ The moment you get an OK response you can start using the search API.
 
 ## Usage
 
+### Search
+
 Send all data requests to:
 
 ```
@@ -86,7 +88,7 @@ http://localhost:8080?search
 
 An empty query will retrieve the top 10 items of the datasets.
 
-### Queries
+#### Queries
 
 | Parameter | Required | Format | Default Value | Description |
 |---|:---:|---|---|---|
@@ -101,26 +103,44 @@ For example, the following query searches the action or adventure movies titled 
 http://localhost:8080/search?query=Avengers&genres=Action,Adventure&type=movie&year=2010/2016
 ```
 
+### Detail
+
+To get the complete details of an entry perform the following request with the id of the entry:
+
+```
+http://localhost:8080/title/{id}
+```
 
 ### Interface
 
-Each API query will return a JSON, it contains the following fields:
+Each search query will return a JSON, it contains the following fields:
 
 * `total` Total number of hit entries
-* `items` List of retrieved entries (max. 10). Each of those items have the following fields:
-    * `id` (*string*) Alphanumeric unique identifier of the title
-    * `title` (*string*) The more popular title / the title used by the filmmakers on promotional materials at the time of release
-    * *\<optional\>* `genres` (*string array*) Up to three genres associated with the title (see Enumerations - Genres)
-    * `type` (*string*) The type/format of the title (see Enumerations - Types)
-    * `start_year` (*YYYY*) Represents the release year of a title. 
-      In the case of TV Series, it is the series start year.
-    * *\<optional\>* `end_year` (*YYYY*) TV Series end year 
-    * *\<optional\>* `averageRating` (*double*) weighted average of all the individual user ratings
-    * *\<optional\>* `votes` (*integer*) number of votes the title has received
+* `items` List of retrieved entries (max. 10).
 * `aggregations` Different aggregations and the number of hits on each one. Omitting buckets with 0 results.
     * `types` Total hits on each type
     * `year` Total hits of the start_year on each decade
     * `genres` Total hits on each genre
+  
+#### Item
+
+The items recovered in the searches and detail request will be like this:
+
+  * `id` (*string*) Alphanumeric unique identifier of the title
+  * `title` (*string*) The more popular title / the title used by the filmmakers on promotional materials at the time of release
+  * *\<optional\>* `genres` (*string array*) Up to three genres associated with the title (see Enumerations - Genres)
+  * `type` (*string*) The type/format of the title (see Enumerations - Types)
+  * `start_year` (*YYYY*) Represents the release year of a title. 
+    In the case of TV Series, it is the series start year.
+  * *\<optional\>* `end_year` (*YYYY*) TV Series end year 
+  * *\<optional\>* `averageRating` (*double*) weighted average of all the individual user ratings
+  * *\<optional\>* `votes` (*integer*) number of votes the title has received
+
+The details request will also feature the following fields:
+
+  * `original_title` (*string*) original title, in the original language
+  * `is_adult` (*string*) (boolean WIP) if it's an adult title
+  * *\<optional\>* `runtime_minutes` (*string*) primary runtime of the title, in minutes
 
 #### Enumerations
 
