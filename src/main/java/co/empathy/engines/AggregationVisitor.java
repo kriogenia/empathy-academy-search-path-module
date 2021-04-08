@@ -16,20 +16,20 @@ public interface AggregationVisitor {
 	 * @return          engine specific multiple range
 	 */
 	@NotNull
-	Object transform(DividedRangeAggregation range);
+	Object transform(@NotNull DividedRangeAggregation range);
 
 	/**
 	 * @param range     range aggregation to transform
 	 * @return          engine specific range aggregation
 	 */
 	@NotNull
-	Object transform(RangeAggregation range);
+	Object transform(@NotNull RangeAggregation range);
 
 	/**
 	 * @param terms     terms aggregation to transform
 	 * @return          engine specific terms aggregation
 	 */
 	@NotNull
-	Object transform(TermsAggregation terms);
+	Object transform(@NotNull TermsAggregation terms);
 
 }

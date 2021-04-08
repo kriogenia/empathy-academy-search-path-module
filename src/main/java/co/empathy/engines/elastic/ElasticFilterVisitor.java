@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 
 import javax.inject.Singleton;
+import javax.validation.constraints.NotNull;
 
 /**
  * Visitor that transforms general filters to Elastic Search filters
@@ -17,7 +18,8 @@ import javax.inject.Singleton;
 public class ElasticFilterVisitor implements FilterVisitor {
 
 	@Override
-	public QueryBuilder transform(DateRangesFilter filter) {
+	@NotNull
+	public QueryBuilder transform(@NotNull DateRangesFilter filter) {
 		var ranges = filter.getRanges();
 		if (ranges.size() == 1) {
 			return getRangeQueryBuilder(filter, ranges.get(0));
@@ -29,7 +31,8 @@ public class ElasticFilterVisitor implements FilterVisitor {
 	}
 
 	@Override
-	public QueryBuilder transform(TermsFilter filter) {
+	@NotNull
+	public QueryBuilder transform(@NotNull TermsFilter filter) {
 		return QueryBuilders.termsQuery(filter.getField(), filter.getTerms());
 	}
 

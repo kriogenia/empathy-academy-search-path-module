@@ -28,7 +28,7 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 
 	@Override
 	@NotNull
-	public Object transform(DividedRangeAggregation range) {
+	public Object transform(@NotNull DividedRangeAggregation range) {
 		var aggregation = AggregationBuilders.dateRange(range.getName());
 		aggregation.field(range.getField());
 		// One range for each decade
@@ -46,7 +46,7 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 
 	@Override
 	@NotNull
-	public Object transform(RangeAggregation range) {
+	public Object transform(@NotNull RangeAggregation range) {
 		var builder = AggregationBuilders.dateRange(range.getName());
 		builder.field(range.getField());
 		if (range.getFrom() != null) {
@@ -67,7 +67,7 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 
 	@Override
 	@NotNull
-	public Object transform(TermsAggregation terms) {
+	public Object transform(@NotNull TermsAggregation terms) {
 		var aggregation = AggregationBuilders
 				.terms(terms.getName())
 				.field(terms.getField())

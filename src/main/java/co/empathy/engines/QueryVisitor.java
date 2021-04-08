@@ -8,9 +8,9 @@ import javax.validation.constraints.NotNull;
 public interface QueryVisitor {
 
 	@NotNull
-	Object transform(DisjunctionMaxQuery query);
+	Object transform(@NotNull DisjunctionMaxQuery query);
 
 	@NotNull
-	Object transform(PartialPlusPerfectQuery query);
+	Object transform(@NotNull PartialPlusPerfectQuery query);
 
 }

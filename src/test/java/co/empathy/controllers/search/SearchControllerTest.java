@@ -22,6 +22,9 @@ public class SearchControllerTest {
 
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 
+	/**
+	 * Test that the controller sends an error message when the year is not complete
+	 */
 	@Test
 	public void testSearchWithHalfRange() {
 		// Only one range
@@ -34,6 +37,9 @@ public class SearchControllerTest {
 		assertEquals("Invalid request: Invalid range [2000] - Ranges of dates must have two edges", exception.getMessage());
 	}
 
+	/**
+	 * Test that the controller sends an error message with empty year range
+	 */
 	@Test
 	public void testSearchWithEmptyRange() {
 		// Only one range
@@ -46,6 +52,9 @@ public class SearchControllerTest {
 		assertEquals("Invalid request: Invalid range [] - Ranges of dates must have two edges", exception.getMessage());
 	}
 
+	/**
+	 * Test that the controller send an error message when the year has to many edges
+	 */
 	@Test
 	public void testSearchWithExcessiveParamRange() {
 		// Only one range

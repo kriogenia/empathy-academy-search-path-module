@@ -25,6 +25,8 @@ public class ErrorsControllerTest {
 
         assertNotNull(body);
         assertEquals("Hello World", body);
-
     }
+
+
+
 }

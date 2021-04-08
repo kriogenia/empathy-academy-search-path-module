@@ -272,6 +272,10 @@ public class SearchControllerIntegrationTest {
 		assertEquals(1097, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
 	}
 
+	/**
+	 * Tests the search without query, it should return the top 10
+	 * @throws JsonProcessingException if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchWithoutQuery() throws JsonProcessingException {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());

@@ -17,14 +17,16 @@ import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
 public class ElasticQueryVisitor implements QueryVisitor {
 
 	@Override
-	public @NotNull QueryBuilder transform(DisjunctionMaxQuery query) {
+	@NotNull
+	public QueryBuilder transform(@NotNull DisjunctionMaxQuery query) {
 		var dmQuery = QueryBuilders.disMaxQuery();
 		query.getQueries().forEach((q) -> dmQuery.add((QueryBuilder) q.accept(this)));
 		return dmQuery;
 	}
 
 	@Override
-	public @NotNull QueryBuilder transform(PartialPlusPerfectQuery query) {
+	@NotNull
+	public QueryBuilder transform(@NotNull PartialPlusPerfectQuery query) {
 		var field = query.getField();
 		var text = query.getText();
 		var boolQuery = QueryBuilders.boolQuery();

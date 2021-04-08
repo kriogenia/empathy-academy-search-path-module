@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.function.Function;
 
-// TODO extract abstract common class
 /**
  * Configuration to load the IMDB dataset
  */

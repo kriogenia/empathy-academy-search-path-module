@@ -17,8 +17,11 @@ public class ElasticFilterVisitorTest {
 	@Inject
 	ElasticFilterVisitor visitor;
 
+	/**
+	 * Test the correct transformation of the DateRangeFilter to a RangeQuery
+	 */
 	@Test
-	public void transformDateRangeFilterTest() {
+	public void testDateRangeFilter() {
 		var filter = new DateRangesFilter("test", "2010/2020");
 		var query = (RangeQueryBuilder) filter.accept(visitor);
 		assertEquals("test", query.fieldName());
@@ -27,8 +30,11 @@ public class ElasticFilterVisitorTest {
 		assertEquals("year", query.format());
 	}
 
+	/**
+	 * Test the correct transformation orf the TermsFilter to a TermsQuery
+	 */
 	@Test
-	public void transformTermsFilterTest() {
+	public void testTermsFilter() {
 		var filter = new TermsFilter("test", "a,b");
 		var query = (TermsQueryBuilder) filter.accept(visitor);
 		assertEquals("test", query.fieldName());
