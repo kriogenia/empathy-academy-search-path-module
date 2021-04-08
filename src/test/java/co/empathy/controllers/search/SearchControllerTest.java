@@ -31,7 +31,7 @@ public class SearchControllerTest {
 		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
-		assertEquals("Invalid request: Invalid range: 2000 - Ranges of dates must have two edges", exception.getMessage());
+		assertEquals("Invalid request: Invalid range [2000] - Ranges of dates must have two edges", exception.getMessage());
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class SearchControllerTest {
 		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
-		assertEquals("Invalid request: Invalid range:  - Ranges of dates must have two edges", exception.getMessage());
+		assertEquals("Invalid request: Invalid range [] - Ranges of dates must have two edges", exception.getMessage());
 	}
 
 	@Test
@@ -55,7 +55,7 @@ public class SearchControllerTest {
 		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
-		assertEquals("Invalid request: Invalid range: 2000/2001/2002 - Ranges of dates must have two edges", exception.getMessage());
+		assertEquals("Invalid request: Invalid range [2000/2001/2002] - Ranges of dates must have two edges", exception.getMessage());
 	}
 
 }

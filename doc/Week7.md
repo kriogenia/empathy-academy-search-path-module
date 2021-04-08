@@ -1,6 +1,6 @@
-##Week 7
+#Week 7
 
-#2021-04-05
+##2021-04-05
 My first day at the office and it's a day I don't have much to do at first.
 We'll have our usual monday meetings and there's also a responsive web seminar I'll be attending.
 Until then, I think I'll be giving a look to my code searching for improvements.
@@ -8,7 +8,7 @@ Until then, I think I'll be giving a look to my code searching for improvements.
 Three meeting later I started looking into our new assignments.
 I've half of them already done so first all be returning the whole number of buckets on the aggregations
 
-#2021-04-06
+##2021-04-06
 We agreed on how to handle the missing genres, we'll not even return them on the aggregation. 
 So I did jump on the definitive change to the genres omitting the \N on the index.
 
@@ -26,7 +26,7 @@ I was able to handle it nicely tho. As of now is not scalable, but it really wor
 And thank god I have tests. 
 I overlooked my filters, they are not working properly and must be fixed.
 
-#2021-04-07
+##2021-04-07
 With all the weekly tasks done I'll jump on the new endpoint.
 It should be fairly easy, but I want to make it clean using Jackson and that could be a problem.
 I also have a medical appointment that will take half of my morning.
@@ -34,3 +34,9 @@ I will recover at afternoon tho.
 
 Thanks to partner advice I was able to think of a good way to handle the deserialization of the item.
 So, I was able to make the new endpoint and started to improve the error handling.
+
+Again, thank god I'm making test as I found an error through them that drove me crazy.
+It's now fixed tho.
+
+##2021-04-08
+Today I decided to improve some little things before we attend to a search team sprint planning.

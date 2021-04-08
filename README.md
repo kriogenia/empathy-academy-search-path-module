@@ -11,7 +11,7 @@ Then use gradle to run the application:
 ```sh
 git clone https://github.com/kriogenia/empathy-micronaut-demo.git
 git cd empathy-micronaut-demo
-.\gradlew run
+./gradlew run
 ```
 
 The first time this can take a while as the project installs all the dependencies.
