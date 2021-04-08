@@ -6,6 +6,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.bucket.MultiBucketsAggregation;
+import org.elasticsearch.search.aggregations.bucket.SingleBucketAggregation;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -83,9 +84,8 @@ public class SearchResultBuilder {
 	 * @param agg   ElasticSearch Terms Aggregation
 	 * @return      Flat map with the retrieved aggregations
 	 */
-	private Map<String, Long> flatNestedAggregation(String name, MultiBucketsAggregation agg) {
-		var buckets = agg.getBuckets();
-		return flatAggregation(buckets.get(0).getAggregations().get(name));
+	private Map<String, Long> flatNestedAggregation(String name, SingleBucketAggregation agg) {
+		return flatAggregation(agg.getAggregations().get(name));
 	}
 
 

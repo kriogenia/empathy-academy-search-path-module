@@ -6,8 +6,10 @@ import co.empathy.search.request.aggregations.RangeAggregation;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder;
 
 import javax.inject.Inject;
@@ -81,11 +83,11 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 	 * @param aggregation       sub aggregation to filter
 	 * @return                  filter aggregation with the wanted sub aggregation
 	 */
-	private FiltersAggregationBuilder makeAggregationFiltered(RequestAggregation requested, AggregationBuilder aggregation) {
-		var filters = new ArrayList<QueryBuilder>();
-		requested.getFilters().forEach((filter) -> filters.add((QueryBuilder) filter.accept(filterVisitor)));
+	private FilterAggregationBuilder makeAggregationFiltered(RequestAggregation requested, AggregationBuilder aggregation) {
+		var query = QueryBuilders.boolQuery();
+		requested.getFilters().forEach((filter) -> query.must((QueryBuilder) filter.accept(filterVisitor)));
 		return AggregationBuilders
-				.filters(requested.getName() + "_filtered", filters.toArray(new QueryBuilder[0]))
+				.filter(requested.getName() + "_filtered", query)
 				.subAggregation(aggregation);
 	}
 

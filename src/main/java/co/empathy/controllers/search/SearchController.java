@@ -77,17 +77,4 @@ public class SearchController {
 				.body(error);
 	}
 
-	/**
-	 * Handles the rest of IOExceptions, caused by the server
-	 * @param request   request associated to the error
-	 * @param e         IOException of the error
-	 * @return          response with the error json
-	 */
-	@Error
-	public HttpResponse<JsonError> ioError(HttpRequest<?> request, IOException e) {
-		LOG.error(e.getMessage());
-		JsonError error = new JsonError("Server I/O error").link(Link.SELF, Link.of(request.getUri()));
-		return HttpResponse.<JsonError>serverError().body(error);
-	}
-
 }

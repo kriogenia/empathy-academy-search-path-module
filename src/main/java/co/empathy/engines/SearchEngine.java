@@ -31,11 +31,20 @@ public interface SearchEngine extends AutoCloseable {
 
 	/**
 	 * Updates an index with a collection of entries
-	 * @param index         Index to update
-	 * @param entries       Collection of updates
+	 * @param index         index to update
+	 * @param entries       collection of updates
 	 * @throws IOException  when an error occurred with the Search Engine
 	 */
 	void bulkUpdate(String index, List<Indexable> entries) throws IOException;
+
+	/**
+	 * Retrieves the entry with the specified id in the index
+	 * @param id        unique identifier of the entry
+	 * @param indices   list of indices to perform the search
+	 * @return          entry with the id
+	 * @throws IOException  when an error occurred with the Search Engine
+	 */
+	SearchResult idSearch(String id, String... indices) throws IOException;
 
 	/**
 	 * Retrieves the search of the specified request

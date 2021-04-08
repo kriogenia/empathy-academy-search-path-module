@@ -1,6 +1,7 @@
 package co.empathy.search;
 
 import co.empathy.common.ImdbRating;
+import co.empathy.exceptions.NoResultException;
 import co.empathy.search.request.MyRequest;
 import co.empathy.search.response.SearchResult;
 import co.empathy.engines.SearchEngine;
@@ -8,6 +9,8 @@ import co.empathy.common.ImdbItem;
 import co.empathy.search.response.SearchResponse;
 import io.micronaut.context.annotation.Prototype;
 import io.reactivex.annotations.NonNull;
+import org.apache.http.NoHttpResponseException;
+import org.apache.lucene.index.IndexNotFoundException;
 
 import javax.inject.Named;
 import java.io.IOException;
@@ -51,6 +54,13 @@ public class ImdbSearcher implements Searcher {
 		return buildResponse(result);
 	}
 
+	@Override
+	public Serializable searchById(String id) throws IOException {
+		var result = engine.idSearch(id, INDEX);
+		var item = result.getItems().stream().map(this::extendedItemBuilder).findFirst();
+		return item.orElse(new ImdbItem());
+	}
+
 	/**
 	 * Converts a SearchResult into a SearchResponse
 	 * @param result	result of the search given by the engine
@@ -69,7 +79,7 @@ public class ImdbSearcher implements Searcher {
 	}
 
 	/**
-	 * Builds an ImdbItem from the properties map
+	 * Builds a basic ImdbItem from the properties map
 	 * @param properties	Retrieved properties of the search
 	 * @return				Imdb Item with the specified properties
 	 */
@@ -84,22 +94,28 @@ public class ImdbSearcher implements Searcher {
 				}
 			}
 		}
-		// Build and return the item
-		ImdbItem item = new ImdbItem()
-				.setId(properties.get(ImdbItem.ID).toString())
-				.setTitleType(properties.get(ImdbItem.TYPE).toString())
-				.setPrimaryTitle(properties.get(ImdbItem.TITLE).toString())
-				.setOriginalTitle(properties.get(ImdbItem.ORIGINAL_TITLE).toString())
-				.setIsAdult(properties.get(ImdbItem.IS_ADULT).toString())
-				.setStartYear(properties.get(ImdbItem.START).toString())
-				.setRuntime(properties.get(ImdbItem.RUNTIME_MINUTES).toString())
+		// Build the item
+		return new ImdbItem()
+				.setId((String) properties.get(ImdbItem.ID))
+				.setTitleType((String) properties.get(ImdbItem.TYPE))
+				.setPrimaryTitle((String) properties.get(ImdbItem.TITLE))
+				.setStartYear((String) properties.get(ImdbItem.START))
+				.setEndYear((String) properties.get(ImdbItem.END))
 				.setAverageRating((Double) properties.get(ImdbRating.AVERAGE))
 				.setVotes((Integer) properties.get(ImdbRating.VOTES))
 				.setGenres(genresList.toArray(new String[0]));
-		if (properties.get(ImdbItem.END) != null) {
-			item.setEndYear(properties.get(ImdbItem.END).toString());
-		}
-		return item;
+	}
+
+	/**
+	 * Builds a complete ImdbItem from the properties map
+	 * @param properties	Retrieved properties of the search
+	 * @return				Imdb Item with the specified properties
+	 */
+	private ImdbItem extendedItemBuilder(Map<String, Object> properties) {
+		return itemBuilder(properties)
+				.setOriginalTitle((String) properties.get(ImdbItem.ORIGINAL_TITLE))
+				.setRuntime((String) properties.get(ImdbItem.RUNTIME_MINUTES))
+				.setIsAdult((Boolean) properties.get(ImdbItem.IS_ADULT));
 	}
 
 }

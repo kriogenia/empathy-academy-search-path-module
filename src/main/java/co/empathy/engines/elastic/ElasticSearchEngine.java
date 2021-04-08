@@ -105,6 +105,13 @@ public class ElasticSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	public SearchResult idSearch(String id, String... indices) throws IOException {
+		var builder = new SearchSourceBuilder();
+		builder.query(QueryBuilders.idsQuery().addIds(id));
+		return launchSearch(builder, indices);
+	}
+
+	@Override
 	public SearchResult scoredSearch(MyRequest request, String... indices) throws IOException {
 		SearchSourceBuilder builder = new SearchSourceBuilder();
 		// Build the boolean query for the title search

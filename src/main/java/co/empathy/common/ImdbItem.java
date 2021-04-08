@@ -17,7 +17,6 @@ import java.util.Map;
  */
 @JsonPropertyOrder({ImdbItem.ID, ImdbItem.TITLE, ImdbItem.GENRES,
 		ImdbItem.TYPE, ImdbItem.START, ImdbItem.END})
-@JsonIgnoreProperties({ImdbItem.ORIGINAL_TITLE, ImdbItem.IS_ADULT, ImdbItem.RUNTIME_MINUTES})
 public class ImdbItem implements Indexable {
 
 	public static final String ID = "id";
@@ -29,8 +28,8 @@ public class ImdbItem implements Indexable {
 	public static final String END = "end_year";
 	public static final String RUNTIME_MINUTES = "runtime_minutes";
 	public static final String GENRES = "genres";
-	public static final String AVERAGE_RATING = "averageRating";
-	public static final String VOTES = "votes";
+	public static final String AVERAGE_RATING = "average_rating";
+	public static final String VOTES = "num_votes";
 
 	@NotNull(message = "ID cannot be null")
 	@JsonProperty(ID)
@@ -50,7 +49,7 @@ public class ImdbItem implements Indexable {
 
 	@Nullable
 	@JsonProperty(IS_ADULT)
-	private String isAdult;
+	private Boolean isAdult;
 
 	@NotNull(message = "The item's start year is required")
 	@JsonProperty(START)
@@ -153,19 +152,19 @@ public class ImdbItem implements Indexable {
 	}
 
 	/**
-	 * @return	O: non-adult title; 1: original title
+	 * @return	true if it's an adult title, false otherwise
 	 */
 	@Nullable
-	public String getIsAdult() {
+	public Boolean getIsAdult() {
 		return isAdult;
 	}
 
 	/**
-	 * @param isAdult	O: non-adult title; 1: original title
+	 * @param isAdult	true if it's an adult title, false otherwise
 	 * @return 			the item modified
 	 */
 	@NotNull
-	public ImdbItem setIsAdult(@NotNull String isAdult) {
+	public ImdbItem setIsAdult(@NotNull Boolean isAdult) {
 		this.isAdult = isAdult;
 		return this;
 	}
@@ -220,7 +219,7 @@ public class ImdbItem implements Indexable {
 	 */
 	@NotNull
 	public ImdbItem setRuntime(@NotNull String runtime) {
-		this.runtime = runtime;
+		this.runtime = runtime == null || runtime.equals("\\N") ? null : runtime;
 		return this;
 	}
 
@@ -308,14 +307,14 @@ public class ImdbItem implements Indexable {
 	public static ImdbItem buildFromString(@NotNull String line) {
 		String[] params =  line.split("\t");
 		if (params.length != 9) {
-			throw new IllegalArgumentException("IMDB items must have nine fields");
+			throw new IllegalArgumentException("Basic IMDB items must have nine fields");
 		}
 		return new ImdbItem()
 				.setId(params[0])
 				.setTitleType(params[1])
 				.setPrimaryTitle(params[2])
 				.setOriginalTitle(params[3])
-				.setIsAdult(params[4])
+				.setIsAdult(params[4].equals("1"))
 				.setStartYear(params[5])
 				.setEndYear(params[6])
 				.setRuntime(params[7])

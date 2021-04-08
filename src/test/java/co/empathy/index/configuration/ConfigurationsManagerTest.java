@@ -25,7 +25,7 @@ public class ConfigurationsManagerTest {
 		// Invalid
 		var exception = assertThrows(IllegalArgumentException.class,
 				() -> manager.getConfiguration("invalid"));
-		assertEquals("The specified index does not exist", exception.getMessage());
+		assertEquals("The index invalid does not exist", exception.getMessage());
 	}
 
 	@Test

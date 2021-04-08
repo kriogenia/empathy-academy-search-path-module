@@ -38,6 +38,11 @@ public class MockSearchEngine implements SearchEngine {
 	}
 
 	@Override
+	public SearchResult idSearch(String id, String... indices) throws IOException {
+		return null;
+	}
+
+	@Override
 	public SearchResult scoredSearch(MyRequest request, String... indices) throws IOException {
 		List<Map<String, Object>> items = new ArrayList<>();
 		if (Arrays.toString(indices).contains("imdb")) {

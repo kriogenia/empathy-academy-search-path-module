@@ -1,7 +1,5 @@
 package co.empathy.controllers.index;
 
-import co.empathy.util.TestHelper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -31,7 +29,7 @@ public class IndexControllerTest {
 		var exception = assertThrows(HttpClientResponseException.class,
 				() -> client.toBlocking().exchange(request));
 		assertEquals(400, exception.getStatus().getCode());
-		assertEquals("Invalid request: The specified index does not exist", exception.getMessage());
+		assertEquals("Invalid request: The index invalid does not exist", exception.getMessage());
 	}
 
 }
