@@ -28,6 +28,16 @@ public interface RequestAggregation {
 	String getField();
 
 	/**
+	 * @return  the order for the aggregation, true if it should be ascendant, false for descendant
+	 */
+	boolean orderAscendant();
+
+	/**
+	 * @param ascendant   true for ascendant order and false for descendant order
+	 */
+	void setAscendant(boolean ascendant);
+
+	/**
 	 * Sets the list of filters the aggregation must apply to its results
 	 * @return  modified aggregation
 	 */

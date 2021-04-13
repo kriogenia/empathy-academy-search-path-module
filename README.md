@@ -11,7 +11,7 @@ Then use gradle to run the application:
 ```sh
 git clone https://github.com/kriogenia/empathy-micronaut-demo.git
 git cd empathy-micronaut-demo
-.\gradlew run
+./gradlew run
 ```
 
 The first time this can take a while as the project installs all the dependencies.
@@ -133,8 +133,8 @@ The items recovered in the searches and detail request will be like this:
   * `start_year` (*YYYY*) Represents the release year of a title. 
     In the case of TV Series, it is the series start year.
   * *\<optional\>* `end_year` (*YYYY*) TV Series end year 
-  * *\<optional\>* `averageRating` (*double*) weighted average of all the individual user ratings
-  * *\<optional\>* `votes` (*integer*) number of votes the title has received
+  * *\<optional\>* `average_rating` (*double*) weighted average of all the individual user ratings
+  * *\<optional\>* `num_votes` (*integer*) number of votes the title has received
 
 The details request will also feature the following fields:
 

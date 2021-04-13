@@ -35,13 +35,13 @@ public class ImdbSearcherTest {
 				null, null, null);
 		var result = searcher.searchByQuery(request);
 		assertTrue(result instanceof SearchResponse);
-		SearchResponse<ImdbItem> response = (SearchResponse<ImdbItem>) result;
+		SearchResponse<?> response = (SearchResponse<?>) result;
 		// Total
 		assertEquals(1, response.getTotal());
 		// Items
 		assertEquals(1, response.getItems().size());
 		var item = response.getItems().get(0);
-		assertEquals("id", item.getId());
+		assertEquals("id", ((ImdbItem)item).getId());
 		// Aggs
 		var aggs = response.getAggregations().get("aggs");
 		for (var key: aggs.keySet()) {

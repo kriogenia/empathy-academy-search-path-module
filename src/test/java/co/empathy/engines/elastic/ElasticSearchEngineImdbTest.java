@@ -330,6 +330,4 @@ public class ElasticSearchEngineImdbTest {
 		);*/
 	}
 
-	// TODO test search with decimal digit
-
 }

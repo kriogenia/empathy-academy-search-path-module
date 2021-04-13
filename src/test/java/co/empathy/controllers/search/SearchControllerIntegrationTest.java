@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.uri.UriBuilder;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
@@ -17,10 +16,9 @@ import javax.inject.Inject;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static co.empathy.util.TestHelper.*;
 
 @MicronautTest
 public class SearchControllerIntegrationTest {
@@ -226,8 +224,8 @@ public class SearchControllerIntegrationTest {
 		// Test faceting
 		var aggs = retrieved.getAggregations();
 		// Applied filters keep the global set
-		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
-		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(13, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(20, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
 		// Year test the filtered set
 		assertEquals(13, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
 	}
@@ -267,11 +265,27 @@ public class SearchControllerIntegrationTest {
 
 		// Test faceting
 		var aggs = retrieved.getAggregations();
-		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
-		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
-		assertEquals(1097, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(3, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(2, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(13, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
 	}
 
+	@Test
+	public void testAggregationsOrder() throws JsonProcessingException {
+		var uri = baseUri.queryParam("query", "Spiderman");
+		var request = HttpRequest.GET(uri.toString());
+		var jsonResult = client.toBlocking().retrieve(request);
+		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
+		// Order asserting
+		assertAscendantOrder(retrieved.getAggregations().get(MovieRequest.GENRES_AGG));
+		assertAscendantOrder(retrieved.getAggregations().get(MovieRequest.TYPES_AGG));
+		assertDescendantOrder(retrieved.getAggregations().get(MovieRequest.YEAR_AGG));
+	}
+
+	/**
+	 * Tests the search without query, it should return the top 10
+	 * @throws JsonProcessingException if the mapper can't build the object
+	 */
 	@Test
 	public void testSearchWithoutQuery() throws JsonProcessingException {
 		HttpRequest<String> request = HttpRequest.GET(baseUri.toString());

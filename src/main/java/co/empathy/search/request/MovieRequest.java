@@ -50,12 +50,14 @@ public class MovieRequest implements MyRequest {
 	                    @Nullable String year) {
 		this.httpRequest = httpRequest;
 		this.query = query;
-		// Adds filters and its unfiltered aggregations
+		// Create the filters and aggregations of each query
 		this.filters = new ArrayList<>();
 		this.aggs = new ArrayList<>();
 		filterGenres(genres);
 		filterTypes(type);
 		filterYear(year);
+		// Add the filters to the aggregations
+		this.aggs.forEach(a -> a.setFilters(new ArrayList<>(filters)));
 	}
 
 	/**
@@ -67,8 +69,6 @@ public class MovieRequest implements MyRequest {
 				.setSize(NUMBER_OF_GENRES);
 		if (genres != null) {
 			this.filters.add(new TermsFilter(ImdbItem.GENRES, genres));
-		} else {
-			agg.setFilters(this.filters);
 		}
 		this.aggs.add(agg);
 	}
@@ -82,8 +82,6 @@ public class MovieRequest implements MyRequest {
 				.setSize(ImdbItem.Types.values().length);
 		if (types != null) {
 			this.filters.add(new TermsFilter(ImdbItem.TYPE, types));
-		} else {
-			agg.setFilters(this.filters);
 		}
 		this.aggs.add(agg);
 	}
@@ -95,10 +93,9 @@ public class MovieRequest implements MyRequest {
 	private void filterYear(@Nullable String year) {
 		var agg = new DividedRangeAggregation(YEAR_AGG, ImdbItem.START,
 				1890, Calendar.getInstance().get(Calendar.YEAR), 10);
+		agg.setAscendant(false);                // Descendant order
 		if (year != null) {
 			this.filters.add(new DateRangesFilter(ImdbItem.START, year));
-		} else {
-			agg.setFilters(this.filters);
 		}
 		this.aggs.add(agg);
 	}

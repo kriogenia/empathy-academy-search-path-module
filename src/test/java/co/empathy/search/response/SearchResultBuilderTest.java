@@ -45,11 +45,12 @@ public class SearchResultBuilderTest {
 		when(searchHits.getHits()).thenReturn(hits);
 		// Aggregations
 		Terms terms = mock(Terms.class);
+		when(terms.getName()).thenReturn("test");
 		when(terms.getBuckets()).thenReturn(new ArrayList<>());
-		Map<String, Aggregation> aggMap = new HashMap<>();
-		aggMap.put("test", terms);
+		List<Aggregation> aggList = new ArrayList<>();
+		aggList.add(terms);
 		Aggregations aggs = mock(Aggregations.class);
-		when(aggs.getAsMap()).thenReturn(aggMap);
+		when(aggs.asList()).thenReturn(aggList);
 		when(aggs.get("test")).thenReturn(terms);
 		// Response
 		SearchResponse response = mock(SearchResponse.class);

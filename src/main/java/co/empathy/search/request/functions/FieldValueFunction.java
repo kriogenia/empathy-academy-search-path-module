@@ -75,7 +75,7 @@ public class FieldValueFunction extends BaseRequestFunction {
 	/**
 	 * @return  value to apply when a document misses the specified field
 	 */
-	@CheckForNull
+	@Nullable
 	public Float getMissing() {
 		return missing;
 	}

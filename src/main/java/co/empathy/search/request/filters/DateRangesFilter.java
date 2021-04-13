@@ -21,8 +21,8 @@ public class DateRangesFilter extends BaseRequestFilter {
 		for (var range : ranges.split(",")) {
 			var segments = range.split("/");
 			if (segments.length != 2) {
-				throw new IllegalArgumentException("Invalid range: " + range +
-						" - Ranges of dates must have two edges");
+				throw new IllegalArgumentException("Invalid range [" + range +
+						"] - Ranges of dates must have two edges");
 			}
 			this.ranges.add(new Range(segments[0], segments[1]));
 		}
@@ -44,7 +44,7 @@ public class DateRangesFilter extends BaseRequestFilter {
 		return visitor.transform(this);
 	}
 
-	public class Range {
+	public static class Range {
 
 		@NotEmpty
 		public final String from;
@@ -54,9 +54,9 @@ public class DateRangesFilter extends BaseRequestFilter {
 
 		public Range(@NotEmpty String from, @NotEmpty String to) {
 			if (Integer.parseInt(from) > Integer.parseInt(to)) {
-				throw new IllegalArgumentException("Invalid range: " +
+				throw new IllegalArgumentException("Invalid range [" +
 						from + "/" + to +
-						" - Start date can not be after the end date");
+						"] - Start date can not be after the end date");
 			}
 			this.from = from;
 			this.to = to;

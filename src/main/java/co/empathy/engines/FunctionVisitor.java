@@ -13,20 +13,20 @@ public interface FunctionVisitor {
 	 * @return          engine specific term weighting function
 	 */
 	@NotNull
-	Object transform(TermWeightingFunction function);
+	Object transform(@NotNull TermWeightingFunction function);
 
 	/**
 	 * @param function      field value factor function to transform
 	 * @return              engine specific field value factor function
 	 */
 	@NotNull
-	Object transform(FieldValueFunction function);
+	Object transform(@NotNull FieldValueFunction function);
 
 	/**
 	 * @param function      gauss decay function to transform
 	 * @return              engine specific gauss decay function
 	 */
 	@NotNull
-	Object transform(GaussDecayFunction function);
+	Object transform(@NotNull GaussDecayFunction function);
 
 }

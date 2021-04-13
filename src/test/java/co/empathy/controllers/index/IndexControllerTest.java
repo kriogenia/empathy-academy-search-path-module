@@ -22,6 +22,9 @@ public class IndexControllerTest {
 
 	private final UriBuilder baseUri = UriBuilder.of("/index");
 
+	/**
+	 * Test the correct message error when requested to index a non-valid index
+	 */
 	@Test
 	public void testInvalidIndex() {
 		var uri = baseUri.path("/invalid").toString();

@@ -29,7 +29,7 @@ public class IndexController {
 
 	@Get("/{index}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String searchByQuery(@PathVariable String index) throws IOException {
+	public String indexDataset(@PathVariable String index) throws IOException {
 		indexer.setConfiguration(configs.getConfiguration(index))
 				.setExtensions(configs.getExtensions(index));
 		indexer.delete();

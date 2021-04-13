@@ -17,7 +17,7 @@ public class ElasticFunctionVisitor implements FunctionVisitor {
 
 	@Override
 	@NotNull
-	public Object transform(TermWeightingFunction function) {
+	public Object transform(@NotNull TermWeightingFunction function) {
 		return new FunctionScoreQueryBuilder.FilterFunctionBuilder(
 				matchQuery(function.getField(), function.getText()),
 				weightFactorFunction(function.getWeight())
@@ -26,8 +26,8 @@ public class ElasticFunctionVisitor implements FunctionVisitor {
 
 	@Override
 	@NotNull
-	public Object transform(FieldValueFunction function) {
-		var builder = fieldValueFactorFunction("num_votes");
+	public Object transform(@NotNull FieldValueFunction function) {
+		var builder = fieldValueFactorFunction(function.getField());
 		if (function.getFactor() != null) {
 			builder.factor(function.getFactor());
 		}
@@ -41,7 +41,8 @@ public class ElasticFunctionVisitor implements FunctionVisitor {
 	}
 
 	@Override
-	public @NotNull Object transform(GaussDecayFunction function) {
+	@NotNull
+	public Object transform(@NotNull GaussDecayFunction function) {
 		return new FunctionScoreQueryBuilder.FilterFunctionBuilder(
 				gaussDecayFunction(function.getField(), function.getOrigin(),
 						function.getScale(), function.getOffset(), function.getDecay()));

@@ -32,8 +32,6 @@ public class Week2SearchIntegrationTest {
 	@Inject
 	TestHelper helper;
 
-	// TODO fix all
-
 	private final UriBuilder baseUri = UriBuilder.of("/search");
 
 	private final Logger LOG = LoggerFactory.getLogger(Week2SearchIntegrationTest.class);
