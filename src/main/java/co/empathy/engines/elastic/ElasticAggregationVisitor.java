@@ -46,7 +46,8 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 		aggregation.addUnboundedFrom(from);
 		// Order of the aggregation
 		var sorterList = new ArrayList<FieldSortBuilder>();
-		sorterList.add(new FieldSortBuilder("_key").order(SortOrder.DESC));
+		sorterList.add(new FieldSortBuilder("_key")
+				.order(range.orderAscendant() ? SortOrder.ASC : SortOrder.DESC));
 		aggregation.subAggregation(new BucketSortPipelineAggregationBuilder(range.getName() + "_sorted", sorterList));
 		// Addition or not of the filters
 		return (range.getFilters().isEmpty())
@@ -82,7 +83,7 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 				.terms(terms.getName())
 				.field(terms.getField())
 				.size(terms.getSize())
-				.order(BucketOrder.key(true));
+				.order(BucketOrder.key(terms.orderAscendant()));
 		return (terms.getFilters().isEmpty())
 				? aggregation
 				:  makeAggregationFiltered(terms, aggregation);

@@ -7,6 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class BaseRequestAggregation implements RequestAggregation {
 
@@ -15,6 +16,8 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 
 	@NotEmpty
 	protected final String field;
+
+	protected boolean ascendant;
 
 	@NotNull
 	protected List<RequestFilter> filters;
@@ -28,12 +31,23 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 			throw new IllegalArgumentException("The aggregation field is required");
 		}
 		this.field = field;
+		this.ascendant = true;
 		this.filters = new ArrayList<>();
 	}
 
 	@Override
 	@NotEmpty
 	public String getName() { return this.name; }
+
+	@Override
+	public boolean orderAscendant() {
+		return ascendant;
+	}
+
+	@Override
+	public void setAscendant(boolean ascendant) {
+		this.ascendant = ascendant;
+	}
 
 	@Override
 	@NotEmpty
@@ -44,7 +58,7 @@ public abstract class BaseRequestAggregation implements RequestAggregation {
 	@Override
 	@NotNull
 	public RequestAggregation setFilters(List<RequestFilter> filters) {
-		this.filters = filters;
+		this.filters = filters.stream().filter(f -> !f.getField().equals(field)).collect(Collectors.toList());
 		return this;
 	}
 
