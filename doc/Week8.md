@@ -7,4 +7,6 @@ Changing the aggregation order was the first I decided to make.
 
 #2021-04-13
 I'll start making the new tests for the ordering.
-Next step will be making the filters apply to other aggregations even if they are applied too.
+Next step was be making the filters apply to other aggregations even if they are applied too.
+
+It was fairly easy, so I dedicated the rest of the day to the SteamJoy project.

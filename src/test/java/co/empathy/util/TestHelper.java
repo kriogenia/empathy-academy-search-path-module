@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @Singleton
 public class TestHelper {
 
@@ -42,4 +44,27 @@ public class TestHelper {
 		return items.stream().map(x -> x.get(property).toString())
 				.anyMatch(x -> x.contains(expected));
 	}
+
+	/**
+	 * Asserts the map keys are in ascendant order
+	 * @param map   map to assert
+	 */
+	public static void assertAscendantOrder(Map<String, ?> map) {
+		String previous = "";
+		for (var key: map.keySet()) {
+			assertTrue(key.compareTo(previous) > 0);
+		}
+	}
+
+	/**
+	 * Asserts the map keys are in descendant order
+	 * @param map   map to assert
+	 */
+	public static void assertDescendantOrder(Map<String, ?> map) {
+		String previous = "a";
+		for (var key: map.keySet()) {
+			assertTrue(key.compareTo(previous) < 0);
+		}
+	}
+
 }
