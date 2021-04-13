@@ -40,3 +40,7 @@ It's now fixed tho.
 
 ##2021-04-08
 Today I decided to improve some little things before we attend to a search team sprint planning.
+
+##2021-04-09
+Not a lot to do today aside of the meetings.
+So I dedicated to morning to give a look to the ElasticSearch source code.

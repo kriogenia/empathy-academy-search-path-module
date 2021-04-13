@@ -9,13 +9,17 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.BucketOrder;
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
-import org.elasticsearch.search.aggregations.bucket.filter.FiltersAggregationBuilder;
+import org.elasticsearch.search.aggregations.pipeline.BucketSortPipelineAggregationBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Visitor to transform common aggregations to Elastic Search specific ones
@@ -38,7 +42,13 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 		for (from = range.getFrom(); from < to - gap; from += gap) {
 			aggregation.addRange(from, from + gap);
 		}
+		// Last open range
 		aggregation.addUnboundedFrom(from);
+		// Order of the aggregation
+		var sorterList = new ArrayList<FieldSortBuilder>();
+		sorterList.add(new FieldSortBuilder("_key").order(SortOrder.DESC));
+		aggregation.subAggregation(new BucketSortPipelineAggregationBuilder(range.getName() + "_sorted", sorterList));
+		// Addition or not of the filters
 		return (range.getFilters().isEmpty())
 				? aggregation
 				:  makeAggregationFiltered(range, aggregation);
@@ -71,7 +81,8 @@ public class ElasticAggregationVisitor implements AggregationVisitor {
 		var aggregation = AggregationBuilders
 				.terms(terms.getName())
 				.field(terms.getField())
-				.size(terms.getSize());
+				.size(terms.getSize())
+				.order(BucketOrder.key(true));
 		return (terms.getFilters().isEmpty())
 				? aggregation
 				:  makeAggregationFiltered(terms, aggregation);

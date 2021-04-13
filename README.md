@@ -133,8 +133,8 @@ The items recovered in the searches and detail request will be like this:
   * `start_year` (*YYYY*) Represents the release year of a title. 
     In the case of TV Series, it is the series start year.
   * *\<optional\>* `end_year` (*YYYY*) TV Series end year 
-  * *\<optional\>* `averageRating` (*double*) weighted average of all the individual user ratings
-  * *\<optional\>* `votes` (*integer*) number of votes the title has received
+  * *\<optional\>* `average_rating` (*double*) weighted average of all the individual user ratings
+  * *\<optional\>* `num_votes` (*integer*) number of votes the title has received
 
 The details request will also feature the following fields:
 

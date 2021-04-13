@@ -11,9 +11,7 @@ import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Factory
@@ -42,13 +40,13 @@ public class SearchResultBuilder {
 		var aggregations = new HashMap<String, Map<String, Long>>();
 		var responseAggregations = esResponse.getAggregations();
 		if (responseAggregations != null ) {
-			for (var key : responseAggregations.getAsMap().keySet()) {
-				if (!key.contains("_filtered")) {
-					aggregations.put(key, flatAggregation(responseAggregations.get(key)));
+			for (var agg : responseAggregations.asList()) {
+				if (!agg.getName().contains("_filtered")) {
+					aggregations.put(agg.getName(), flatAggregation(responseAggregations.get(agg.getName())));
 				}
 				else {
-					var name = key.replace("_filtered", "");
-					aggregations.put(name, flatNestedAggregation(name, responseAggregations.get(key)));
+					var name = agg.getName().replace("_filtered", "");
+					aggregations.put(name, flatNestedAggregation(name, responseAggregations.get(agg.getName())));
 				}
 			}
 		}
@@ -68,14 +66,16 @@ public class SearchResultBuilder {
 
 	/**
 	 * Converts a Elastic Search Aggregation into a flat map
-	 * @param agg ElasticSearch Terms Aggregation
-	 * @return      Flat map with the retrieved aggregations
+	 * @param agg   ElasticSearch Terms Aggregation
+	 * @return      flat ordered map with the retrieved aggregations
 	 */
 	private Map<String, Long> flatAggregation(MultiBucketsAggregation agg) {
 		var buckets = agg.getBuckets();
 		return buckets.stream().filter(x -> x.getDocCount() > 0).collect(Collectors.toMap(
 				MultiBucketsAggregation.Bucket::getKeyAsString,
-				MultiBucketsAggregation.Bucket::getDocCount));
+				MultiBucketsAggregation.Bucket::getDocCount,
+				Math::addExact,
+				LinkedHashMap::new));
 	}
 
 	/**

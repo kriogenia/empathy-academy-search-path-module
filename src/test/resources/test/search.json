@@ -110,6 +110,17 @@
           "terms": {
             "field": "type"
           }
+        },
+        "type_bucket_sort": {
+          "bucket_sort": {
+            "sort": [
+              {
+                "type": {
+                  "order": "desc"
+                }
+              }
+            ]
+          }
         }
       }
     },
