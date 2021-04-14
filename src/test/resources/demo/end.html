@@ -1,0 +1,16 @@
+;
+	let hits = data.hits.hits;
+	let txt = "";
+	hits.forEach(({_source}) => {
+		txt += "<table class='styled-table'>";
+		txt += "<thead><tr><th colspan='2'>" + _source.title + "</th></tr></thead>";
+		txt += "<tbody><tr><td>Type</td><td>" + _source.type + "</td></tr>";
+		txt += "<tr><td>Year</td><td>" + _source.start_year + "</td></tr>";
+		txt += "<tr><td>Rating</td><td>" + (_source.average_rating ?? "") + "</td></tr>";
+		txt += "<tr><td>Votes</td><td>" + (_source.num_votes ?? "") + "</td></tr>";
+		txt += "<tr><td>Genres</td><td>" + (_source.genres ?? "") + "</td></tr>";
+    	txt += "</tbody></table>";
+	});
+    document.getElementById("demo").innerHTML = txt;
+</script>
+</html>

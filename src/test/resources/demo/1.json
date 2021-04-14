@@ -1,0 +1,18 @@
+{
+  "size": 25,
+  "query": {
+    "function_score": {
+      "query": {
+        "match": {
+          "original_title.partial": {
+            "query": "",
+            "minimum_should_match": "3<-75%"
+          }
+        }
+      },
+      "functions": [
+      ],
+      "boost_mode": "multiply"
+    }
+  }
+}
