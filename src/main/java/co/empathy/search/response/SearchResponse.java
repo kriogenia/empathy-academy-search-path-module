@@ -2,7 +2,10 @@ package co.empathy.search.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +14,7 @@ public class SearchResponse<T extends Serializable> implements Serializable {
 	public static final String TOTAL = "total";
 	public static final String ITEMS = "items";
 	public static final String AGGREGATIONS = "aggregations";
+	public static final String SUGGESTIONS = "suggestions";
 
 	@JsonProperty(TOTAL)
 	private long total;
@@ -21,10 +25,16 @@ public class SearchResponse<T extends Serializable> implements Serializable {
 	@JsonProperty(AGGREGATIONS)
 	private Map<String, Map<String, Long>> aggregations;
 
+	@JsonProperty(SUGGESTIONS)
+	private List<String> suggestions;
+
 	/**
 	 * Empty constructor of the JavaBean
 	 */
-	public SearchResponse() {}
+	public SearchResponse() {
+		this.aggregations = new LinkedHashMap<>();
+		this.suggestions = new ArrayList<>();
+	}
 
 	/**
 	 * @param total		total hits of the search
@@ -54,6 +64,16 @@ public class SearchResponse<T extends Serializable> implements Serializable {
 	}
 
 	/**
+	 * @param suggestions   options suggested in the search
+	 * @return              modified item
+	 */
+	public SearchResponse<T> setSuggestions(List<String> suggestions) {
+		this.suggestions = suggestions;
+		return this;
+	}
+
+
+	/**
 	 * @return	total hits of the search
 	 */
 	public long getTotal() {
@@ -65,6 +85,13 @@ public class SearchResponse<T extends Serializable> implements Serializable {
 	 */
 	public List<T> getItems() {
 		return items;
+	}
+
+	/**
+	 * @return  options from the suggestions
+	 */
+	public List<String> getSuggestions() {
+		return suggestions;
 	}
 
 	/**

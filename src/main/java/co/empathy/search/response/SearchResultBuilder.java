@@ -10,6 +10,8 @@ import org.elasticsearch.search.aggregations.bucket.SingleBucketAggregation;
 import org.elasticsearch.search.aggregations.bucket.range.Range;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregator;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.suggest.Suggest;
+import org.elasticsearch.search.suggest.term.TermSuggestion;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,7 +30,9 @@ public class SearchResultBuilder {
 		long totalHits = hits.getTotalHits().value;
 		var items = Arrays.stream(hits.getHits()).map(this::flatHit);
 		var aggregations = buildAggregations(esResponse);
-		return new SearchResult(totalHits, items.collect(Collectors.toList()), aggregations);
+		var suggestions = buildSuggestions(esResponse);
+		return new SearchResult(totalHits, items.collect(Collectors.toList()))
+				.setAggregations(aggregations).setSuggestions(suggestions);
 	}
 
 	/**
@@ -51,6 +55,22 @@ public class SearchResultBuilder {
 			}
 		}
 		return aggregations;
+	}
+
+	/**
+	 * Builds the list of suggested options
+	 * @param esResponse    response with the suggestions
+	 * @return              suggestions into string list
+	 */
+	private List<String> buildSuggestions(SearchResponse esResponse) {
+		var suggestions = new ArrayList<String>();
+		var responseSuggestions = esResponse.getSuggest();
+		if (responseSuggestions != null) {
+			for (var suggestion : responseSuggestions) {
+				suggestions.addAll(flatSuggestion(suggestion));
+			}
+		}
+		return suggestions;
 	}
 
 	/**
@@ -87,6 +107,23 @@ public class SearchResultBuilder {
 	private Map<String, Long> flatNestedAggregation(String name, SingleBucketAggregation agg) {
 		return flatAggregation(agg.getAggregations().get(name));
 	}
+
+	/**
+	 * Converts a ElasticSearch suggestion into a flat list
+	 * @param suggestion    suggestion to flatten
+	 * @return              flat list with the options of the suggestion
+	 */
+	private List<String> flatSuggestion(Suggest.Suggestion<?> suggestion) {
+		var list = new ArrayList<String>();
+		var entries = suggestion.getEntries();
+		for (var entry: entries) {
+			for (var option :entry.getOptions()) {
+				list.add(((Suggest.Suggestion.Entry.Option) option).getText().string());
+			}
+		}
+		return list;
+	}
+
 
 
 }

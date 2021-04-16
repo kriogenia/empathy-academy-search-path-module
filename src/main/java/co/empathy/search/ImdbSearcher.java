@@ -75,7 +75,8 @@ public class ImdbSearcher implements Searcher {
 		return new SearchResponse<ImdbItem>()
 				.setTotal(result.getTotal())
 				.setItems(items)
-				.setAggregations(result.getAggregations());
+				.setAggregations(result.getAggregations())
+				.setSuggestions(result.getSuggestions());
 	}
 
 	/**
