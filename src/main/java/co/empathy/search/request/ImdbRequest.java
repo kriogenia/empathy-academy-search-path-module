@@ -15,24 +15,23 @@ import co.empathy.search.request.functions.TermWeightingFunction;
 import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import co.empathy.search.request.queries.PartialPlusPerfectQuery;
 import co.empathy.search.request.queries.RequestQuery;
+import co.empathy.search.request.suggestions.RequestSuggestion;
+import co.empathy.search.request.suggestions.TermsSuggestion;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpRequest;
-import io.micronaut.http.annotation.QueryValue;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.*;
 
 @Introspected
-public class MovieRequest implements MyRequest {
+public class ImdbRequest implements MyRequest {
 
 	public static final String GENRES_AGG = "genres";
 	public static final String TYPES_AGG = "types";
 	public static final String YEAR_AGG = "year";
 
 	public static final int NUMBER_OF_GENRES = 27;
-
-	private final HttpRequest<?> httpRequest;
 
 	@Nullable
 	private final String query;
@@ -43,12 +42,14 @@ public class MovieRequest implements MyRequest {
 	@NotNull(message = "The list of aggregations must exists. If there's no aggregations, it should be empty")
 	private final List<RequestAggregation> aggs;
 
-	public MovieRequest(HttpRequest<?> httpRequest,
-	                    @Nullable String query,
-	                    @Nullable String genres,
-	                    @Nullable String type,
-	                    @Nullable String year) {
-		this.httpRequest = httpRequest;
+	@NotNull(message = "The list of suggestions must exists. If there's no suggestions, it should be empty")
+	private final List<RequestSuggestion> suggestions;
+
+	public ImdbRequest(HttpRequest<?> httpRequest,
+	                   @Nullable String query,
+	                   @Nullable String genres,
+	                   @Nullable String type,
+	                   @Nullable String year) {
 		this.query = query;
 		// Create the filters and aggregations of each query
 		this.filters = new ArrayList<>();
@@ -58,6 +59,11 @@ public class MovieRequest implements MyRequest {
 		filterYear(year);
 		// Add the filters to the aggregations
 		this.aggs.forEach(a -> a.setFilters(new ArrayList<>(filters)));
+		// Create the suggestions
+		this.suggestions = new ArrayList<>();
+		if (query != null && !query.isEmpty()) {
+			this.suggestions.add(new TermsSuggestion(ImdbItem.ORIGINAL_TITLE, query));
+		}
 	}
 
 	/**
@@ -143,6 +149,9 @@ public class MovieRequest implements MyRequest {
 		return functions;
 	}
 
-
-
+	@Override
+	@NotNull
+	public  List<RequestSuggestion> suggestions() {
+		return suggestions;
+	}
 }

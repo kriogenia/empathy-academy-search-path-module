@@ -132,9 +132,9 @@ public class ElasticSearchEngine implements SearchEngine {
 		request.filters().forEach((filter) -> filterQuery.filter((QueryBuilder) filter.accept(filterParser)));
 		builder.postFilter(filterQuery);
 		// Add the suggestions
-		SuggestionBuilder<?> suggestionBuilder = SuggestBuilders.termSuggestion("title").text("idon ocona");
 		SuggestBuilder suggestBuilder = new SuggestBuilder();
-		suggestBuilder.addSuggestion("title", suggestionBuilder);
+		request.suggestions().forEach(s -> suggestBuilder.addSuggestion(s.getField(),
+				SuggestBuilders.termSuggestion(s.getField()).text(s.getText())));
 		builder.suggest(suggestBuilder);
 		// Build and launch the complete query
 		builder.query(functionScoreQuery(boolQuery, functions));

@@ -1,7 +1,7 @@
 #Week 8
 
 #2021-04-12
-Today we had some meetings, and we showed our current progress alongside the front path.
+Today we had some meetings, and we showed our current progress alongside the front patyh.
 Then we decided some possible improvements to make.
 Changing the aggregation order was the first I decided to make.
 

@@ -1,5 +1,8 @@
 package co.empathy.search.response;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +18,11 @@ public class SearchResult {
 
 	private final long total;
 	private final List<Map<String, Object>> items;
+
+	@JsonProperty(AGGREGATIONS)
 	private Map<String,Map<String, Long>> aggregations;
+
+	@JsonProperty(SUGGESTIONS)
 	private List<String> suggestions;
 
 	/**
@@ -23,7 +30,10 @@ public class SearchResult {
 	 * @param total			Number of hits of the Search
 	 * @param items			List of retrieved hits
 	 */
-	public SearchResult(long total, List<Map<String, Object>> items) {
+	@JsonCreator
+	public SearchResult(
+			@JsonProperty(TOTAL) long total,
+			@JsonProperty(ITEMS) List<Map<String, Object>> items) {
 		this.total = total;
 		this.items = items;
 	}
@@ -55,6 +65,8 @@ public class SearchResult {
 	public List<String> getSuggestions() {
 		return suggestions;
 	}
+
+
 
 	/**
 	 * @param aggregations  map of aggregations returned

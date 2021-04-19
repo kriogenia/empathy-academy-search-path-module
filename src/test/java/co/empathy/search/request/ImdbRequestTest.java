@@ -11,19 +11,17 @@ import co.empathy.search.request.functions.TermWeightingFunction;
 import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import co.empathy.search.request.queries.PartialPlusPerfectQuery;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
-public class MovieRequestTest {
+public class ImdbRequestTest {
 
 	@Test
 	public void testMusts() {
 		// With query
-		MovieRequest request = new MovieRequest(null, "test",
+		ImdbRequest request = new ImdbRequest(null, "test",
 				null, null, null);
 		var musts = request.musts();
 		assertEquals(1, musts.size());
@@ -36,7 +34,7 @@ public class MovieRequestTest {
 		assertEquals(ImdbItem.ORIGINAL_TITLE, ((PartialPlusPerfectQuery) queries.get(0)).getField());
 		assertEquals(ImdbItem.TITLE, ((PartialPlusPerfectQuery) queries.get(1)).getField());
 		// Without query
-		request = new MovieRequest(null, null, null, null, null);
+		request = new ImdbRequest(null, null, null, null, null);
 		musts = request.musts();
 		assertEquals(0, musts.size());
 	}
@@ -44,20 +42,20 @@ public class MovieRequestTest {
 	@Test
 	public void testTermsFilters() {
 		// One genre, no type
-		MovieRequest request = new MovieRequest(null, "test",
+		ImdbRequest request = new ImdbRequest(null, "test",
 				"genre", null, null);
 		var filters = request.filters();
 		assertEquals(1, filters.size());
 		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
 		// One genre, one type
-		request = new MovieRequest(null, "test",
+		request = new ImdbRequest(null, "test",
 				"genre", "movie", null);
 		filters = request.filters();
 		assertEquals(2, filters.size());
 		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
 		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
 		// Various genres, one type
-		request = new MovieRequest(null, "test",
+		request = new ImdbRequest(null, "test",
 				"a,b", "movie", null);
 		filters = request.filters();
 		assertEquals(2, filters.size());
@@ -67,24 +65,24 @@ public class MovieRequestTest {
 
 	@Test
 	public void testAggregations() {
-		var request = new MovieRequest(null, "test",
+		var request = new ImdbRequest(null, "test",
 				null, null, null);
 		var aggs = request.aggregations();
 		assertEquals(3, aggs.size());
 		assertTrue(aggs.get(0) instanceof TermsAggregation);
-		assertEquals(MovieRequest.GENRES_AGG, aggs.get(0).getName());
+		assertEquals(ImdbRequest.GENRES_AGG, aggs.get(0).getName());
 		assertEquals(ImdbItem.GENRES, aggs.get(0).getField());
 		assertTrue(aggs.get(1) instanceof TermsAggregation);
-		assertEquals(MovieRequest.TYPES_AGG, aggs.get(1).getName());
+		assertEquals(ImdbRequest.TYPES_AGG, aggs.get(1).getName());
 		assertEquals(ImdbItem.TYPE, aggs.get(1).getField());
 		assertTrue(aggs.get(2) instanceof DividedRangeAggregation);
-		assertEquals(MovieRequest.YEAR_AGG, aggs.get(2).getName());
+		assertEquals(ImdbRequest.YEAR_AGG, aggs.get(2).getName());
 		assertEquals(ImdbItem.START, aggs.get(2).getField());
 	}
 
 	@Test
 	public void testFunctions() {
-		var request = new MovieRequest(null, "test",
+		var request = new ImdbRequest(null, "test",
 				null, null, null);
 		var functions = request.functions();
 		assertEquals(5, functions.size());
@@ -101,5 +99,7 @@ public class MovieRequestTest {
 		assertTrue(functions.get(4) instanceof GaussDecayFunction);
 		assertEquals(ImdbItem.START, functions.get(4).getField());
 	}
+
+	//TODO test suggestions
 
 }

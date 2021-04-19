@@ -1,7 +1,7 @@
 package co.empathy.controllers.search;
 
 import co.empathy.common.ImdbItem;
-import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.ImdbRequest;
 import co.empathy.util.TestHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -125,10 +125,10 @@ public class SearchControllerIntegrationTest {
 		// Test faceting
 		var aggs = retrieved.getAggregations();
 		// Genres still showing the results the whole set
-		assertEquals(118, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(118, aggs.get(ImdbRequest.GENRES_AGG).get("adventure"));
 		// Types and year only showing the results of the filtered set
-		assertEquals(122, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
-		assertEquals(20, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(122, aggs.get(ImdbRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(20, aggs.get(ImdbRequest.TYPES_AGG).get("tvseries"));
 	}
 
 	/**
@@ -155,10 +155,10 @@ public class SearchControllerIntegrationTest {
 		// Test faceting
 		var aggs = retrieved.getAggregations();
 		// Type still showing the results the whole set
-		assertEquals(25, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(25, aggs.get(ImdbRequest.TYPES_AGG).get("tvseries"));
 		// Genres and year only showing the results of the filtered set
-		assertEquals(24, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
-		assertEquals(13, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
+		assertEquals(24, aggs.get(ImdbRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(13, aggs.get(ImdbRequest.GENRES_AGG).get("adventure"));
 	}
 
 	/**
@@ -187,10 +187,10 @@ public class SearchControllerIntegrationTest {
 		// Test faceting
 		var aggs = retrieved.getAggregations();
 		// Year still showing the results the whole set
-		assertEquals(1097, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(1097, aggs.get(ImdbRequest.YEAR_AGG).get("2010-2020"));
 		// Type and genres only showing the results of the filtered set
-		assertEquals(26, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
-		assertEquals(2, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(26, aggs.get(ImdbRequest.GENRES_AGG).get("adventure"));
+		assertEquals(2, aggs.get(ImdbRequest.TYPES_AGG).get("tvseries"));
 	}
 
 	/**
@@ -224,10 +224,10 @@ public class SearchControllerIntegrationTest {
 		// Test faceting
 		var aggs = retrieved.getAggregations();
 		// Applied filters keep the global set
-		assertEquals(13, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
-		assertEquals(20, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(13, aggs.get(ImdbRequest.GENRES_AGG).get("adventure"));
+		assertEquals(20, aggs.get(ImdbRequest.TYPES_AGG).get("tvseries"));
 		// Year test the filtered set
-		assertEquals(13, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(13, aggs.get(ImdbRequest.YEAR_AGG).get("2010-2020"));
 	}
 
 	/**
@@ -265,9 +265,9 @@ public class SearchControllerIntegrationTest {
 
 		// Test faceting
 		var aggs = retrieved.getAggregations();
-		assertEquals(3, aggs.get(MovieRequest.GENRES_AGG).get("adventure"));
-		assertEquals(2, aggs.get(MovieRequest.TYPES_AGG).get("tvseries"));
-		assertEquals(13, aggs.get(MovieRequest.YEAR_AGG).get("2010-2020"));
+		assertEquals(3, aggs.get(ImdbRequest.GENRES_AGG).get("adventure"));
+		assertEquals(2, aggs.get(ImdbRequest.TYPES_AGG).get("tvseries"));
+		assertEquals(13, aggs.get(ImdbRequest.YEAR_AGG).get("2010-2020"));
 	}
 
 	@Test
@@ -277,9 +277,9 @@ public class SearchControllerIntegrationTest {
 		var jsonResult = client.toBlocking().retrieve(request);
 		var retrieved = mapper.readValue(jsonResult, helper.getImdbResponseType());
 		// Order asserting
-		assertAscendantOrder(retrieved.getAggregations().get(MovieRequest.GENRES_AGG));
-		assertAscendantOrder(retrieved.getAggregations().get(MovieRequest.TYPES_AGG));
-		assertDescendantOrder(retrieved.getAggregations().get(MovieRequest.YEAR_AGG));
+		assertAscendantOrder(retrieved.getAggregations().get(ImdbRequest.GENRES_AGG));
+		assertAscendantOrder(retrieved.getAggregations().get(ImdbRequest.TYPES_AGG));
+		assertDescendantOrder(retrieved.getAggregations().get(ImdbRequest.YEAR_AGG));
 	}
 
 	/**

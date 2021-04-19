@@ -116,11 +116,12 @@ http://localhost:8080/titles/{id}
 Each search query will return a JSON, it contains the following fields:
 
 * `total` Total number of hit entries
-* `items` List of retrieved entries (max. 10).
-* `aggregations` Different aggregations and the number of hits on each one. Omitting buckets with 0 results.
+* *\<optional\>* `items` List of retrieved entries (max. 10).
+* *\<optional\>* `aggregations` Different aggregations and the number of hits on each one. Omitting buckets with 0 results.
     * `types` Total hits on each type
     * `year` Total hits of the start_year on each decade
     * `genres` Total hits on each genre
+* *\<optional\>* `suggestions` List of terms suggested as alternatives for the terms query
   
 #### Item
 

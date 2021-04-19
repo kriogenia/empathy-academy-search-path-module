@@ -15,3 +15,5 @@ The path is intended to be, at least, eight weeks long. I really want to start l
 * [Week 5](Week5.md)
 * [Week 6](Week6.md)
 * [Week 7](Week7.md)
+* [Week 8](Week8.md)
+* [Week 9](Week9.md)

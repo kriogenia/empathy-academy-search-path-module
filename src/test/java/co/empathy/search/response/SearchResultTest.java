@@ -46,7 +46,9 @@ public class SearchResultTest {
 		genres.put("comedy", 2L);
 		genres.put("action", 1L);
 		aggs.put("genres", genres);
-		result = new SearchResult(2, list, aggs);
+		// Suggestions
+		// TODO add suggestions
+		result = new SearchResult(2, list).setAggregations(aggs);
 	}
 
 	/**

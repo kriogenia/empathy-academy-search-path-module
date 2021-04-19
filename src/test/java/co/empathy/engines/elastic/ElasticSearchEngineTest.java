@@ -2,7 +2,7 @@ package co.empathy.engines.elastic;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.search.request.MockMyRequest;
-import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.ImdbRequest;
 import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
 import co.empathy.search.request.filters.RequestFilter;
@@ -19,9 +19,7 @@ import org.junit.jupiter.api.TestInstance;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static co.empathy.util.TestHelper.*;
@@ -101,10 +99,10 @@ public class ElasticSearchEngineTest {
 		assertTrue(allContains("type", "movie", items));
 
 		// More than one result, one filter, one aggregation
-		aggs.add(new TermsAggregation(MovieRequest.GENRES_AGG, ImdbItem.GENRES));
+		aggs.add(new TermsAggregation(ImdbRequest.GENRES_AGG, ImdbItem.GENRES));
 		var result = engine.scoredSearch(request, ElasticSearchTestHelper.INDEX);
-		assertNotNull(result.getAggregations().get(MovieRequest.GENRES_AGG));
-		var genres = result.getAggregations().get(MovieRequest.GENRES_AGG);
+		assertNotNull(result.getAggregations().get(ImdbRequest.GENRES_AGG));
+		var genres = result.getAggregations().get(ImdbRequest.GENRES_AGG);
 		assertEquals(2, genres.get("adventure"));
 		assertEquals(1, genres.get("fantasy"));
 		assertEquals(3, genres.get("action"));

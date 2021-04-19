@@ -4,9 +4,11 @@ import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.queries.RequestQuery;
+import co.empathy.search.request.suggestions.RequestSuggestion;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 public interface MyRequest {
 
@@ -33,5 +35,11 @@ public interface MyRequest {
 	 */
 	@NotNull
 	List<RequestFunction> functions();
+
+	/**
+	 * @return  list with the suggestions to get for the request
+	 */
+	@NotNull
+	List<RequestSuggestion> suggestions();
 
 }

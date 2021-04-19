@@ -2,7 +2,7 @@ package co.empathy.search;
 
 import co.empathy.common.ImdbItem;
 import co.empathy.engines.MockSearchEngine;
-import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.ImdbRequest;
 import co.empathy.search.response.SearchResponse;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.BeforeAll;
@@ -31,7 +31,7 @@ public class ImdbSearcherTest {
 
 	@Test
 	public void searchByQueryTest() throws IOException {
-		var request = new MovieRequest(null, "query",
+		var request = new ImdbRequest(null, "query",
 				null, null, null);
 		var result = searcher.searchByQuery(request);
 		assertTrue(result instanceof SearchResponse);
