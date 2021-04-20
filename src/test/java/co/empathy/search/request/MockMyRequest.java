@@ -4,6 +4,7 @@ import co.empathy.search.request.aggregations.RequestAggregation;
 import co.empathy.search.request.filters.RequestFilter;
 import co.empathy.search.request.functions.RequestFunction;
 import co.empathy.search.request.queries.RequestQuery;
+import co.empathy.search.request.suggestions.RequestSuggestion;
 import io.micronaut.context.annotation.Replaces;
 
 import javax.inject.Singleton;
@@ -27,11 +28,15 @@ public class MockMyRequest implements MyRequest {
 	@NotNull
 	private List<RequestFunction> functions;
 
+	@NotNull
+	private List<RequestSuggestion> suggestions;
+
 	public MockMyRequest() {
 		this.musts = new ArrayList<>();
 		this.filters = new ArrayList<>();
 		this.aggregations = new ArrayList<>();
 		this.functions = new ArrayList<>();
+		this.suggestions = new ArrayList<>();
 	}
 
 	@Override
@@ -82,4 +87,15 @@ public class MockMyRequest implements MyRequest {
 		this.functions = functions;
 	}
 
+	@Override
+	public @NotNull List<RequestSuggestion> suggestions() {
+		return this.suggestions;
+	}
+
+	/**
+	 * @param suggestions   mock of the suggestions() call
+	 */
+	public void mockSuggestions(List<RequestSuggestion> suggestions) {
+		this.suggestions = suggestions;
+	}
 }

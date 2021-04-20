@@ -52,7 +52,7 @@ public class MockSearchEngine implements SearchEngine {
 		Map<String, Long> bucket = new HashMap<>();
 		request.aggregations().forEach(agg -> bucket.put(agg.getName(), 1L));
 		aggs.put("aggs", bucket);
-		return new SearchResult(1, items, aggs);
+		return new SearchResult(1, items).setAggregations(aggs);
 	}
 
 	@Override

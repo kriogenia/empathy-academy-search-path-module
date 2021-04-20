@@ -1,8 +1,7 @@
 package co.empathy.controllers.search;
 
-import co.empathy.search.request.MovieRequest;
+import co.empathy.search.request.ImdbRequest;
 import co.empathy.search.Searcher;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -43,12 +42,12 @@ public class SearchController {
 	 */
 	@Get
 	@Produces(MediaType.APPLICATION_JSON)
-	public Serializable searchByQuery(@Valid @RequestBean MovieRequest request) throws IOException {
+	public Serializable searchByQuery(@Valid @RequestBean ImdbRequest request) throws IOException {
 		return searcher.searchByQuery(request);
 	}
 
 	/**
-	 * Handles the internal parsing exceptions          // TODO change to new own exception
+	 * Handles the internal parsing exceptions
 	 * @param request   request associated to the error
 	 * @param e         IllegalArgumentException of the error
 	 * @return          response with the error json

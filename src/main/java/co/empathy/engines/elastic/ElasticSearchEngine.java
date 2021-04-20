@@ -27,6 +27,9 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilder;
+import org.elasticsearch.search.suggest.SuggestBuilders;
+import org.elasticsearch.search.suggest.SuggestionBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,6 +131,11 @@ public class ElasticSearchEngine implements SearchEngine {
 		var filterQuery = QueryBuilders.boolQuery();
 		request.filters().forEach((filter) -> filterQuery.filter((QueryBuilder) filter.accept(filterParser)));
 		builder.postFilter(filterQuery);
+		// Add the suggestions
+		SuggestBuilder suggestBuilder = new SuggestBuilder();
+		request.suggestions().forEach(s -> suggestBuilder.addSuggestion(s.getField(),
+				SuggestBuilders.phraseSuggestion(s.getField()).text(s.getText())));
+		builder.suggest(suggestBuilder);
 		// Build and launch the complete query
 		builder.query(functionScoreQuery(boolQuery, functions));
 		return launchSearch(builder, indices);
