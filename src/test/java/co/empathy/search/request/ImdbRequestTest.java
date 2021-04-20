@@ -4,12 +4,14 @@ import co.empathy.common.ImdbItem;
 import co.empathy.common.ImdbRating;
 import co.empathy.search.request.aggregations.DividedRangeAggregation;
 import co.empathy.search.request.aggregations.TermsAggregation;
+import co.empathy.search.request.filters.DateRangesFilter;
 import co.empathy.search.request.filters.TermsFilter;
 import co.empathy.search.request.functions.FieldValueFunction;
 import co.empathy.search.request.functions.GaussDecayFunction;
 import co.empathy.search.request.functions.TermWeightingFunction;
 import co.empathy.search.request.queries.DisjunctionMaxQuery;
 import co.empathy.search.request.queries.PartialPlusPerfectQuery;
+import co.empathy.search.request.suggestions.TermsSuggestion;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @MicronautTest
 public class ImdbRequestTest {
 
+	/**
+	 * Tests the correct generation of the musts with and without query
+	 */
 	@Test
 	public void testMusts() {
 		// With query
@@ -39,22 +44,30 @@ public class ImdbRequestTest {
 		assertEquals(0, musts.size());
 	}
 
+	/**
+	 * Tests the correct generation of terms filters
+	 */
 	@Test
 	public void testTermsFilters() {
-		// One genre, no type
+		// No genre, no type, no year
 		ImdbRequest request = new ImdbRequest(null, "test",
-				"genre", null, null);
+				null, null, null);
 		var filters = request.filters();
+		assertEquals(0, filters.size());
+		// One genre, no type, no year
+		request = new ImdbRequest(null, "test",
+				"genre", null, null);
+		filters = request.filters();
 		assertEquals(1, filters.size());
 		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
-		// One genre, one type
+		// One genre, one type, no year
 		request = new ImdbRequest(null, "test",
 				"genre", "movie", null);
 		filters = request.filters();
 		assertEquals(2, filters.size());
 		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
 		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
-		// Various genres, one type
+		// Various genres, one type, one year
 		request = new ImdbRequest(null, "test",
 				"a,b", "movie", null);
 		filters = request.filters();
@@ -63,6 +76,67 @@ public class ImdbRequestTest {
 		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
 	}
 
+	/**
+	 * Test the correct generation of date range filters
+	 */
+	@Test
+	public void testDatesFilters() {
+		// No genre, no type, one year
+		ImdbRequest request = new ImdbRequest(null, "test",
+				null, null, "2000/2010");
+		var filters = request.filters();
+		assertEquals(1, filters.size());
+		DateRangesFilter year = (DateRangesFilter) filters.get(0);
+		assertEquals(1, year.getRanges().size());
+		assertEquals("2000", year.getRanges().get(0).from);
+		assertEquals("2010", year.getRanges().get(0).to);
+		// No genre, no type, various year
+		request = new ImdbRequest(null, "test",
+				null, null, "2000/2010,1995/1998");
+		filters = request.filters();
+		assertEquals(1, filters.size());
+		year = (DateRangesFilter) filters.get(0);
+		assertEquals(2, year.getRanges().size());
+		assertEquals("2000", year.getRanges().get(0).from);
+		assertEquals("2010", year.getRanges().get(0).to);
+		assertEquals("1995", year.getRanges().get(1).from);
+		assertEquals("1998", year.getRanges().get(1).to);
+	}
+
+	/**
+	 *  Test the correct generation of filters combining both types
+	 */
+	@Test
+	public void testFilters() {
+		// Various of each
+		ImdbRequest request = new ImdbRequest(null, "test",
+				"gen,re", "mo,vie", "2000/2010,1/2");
+		var filters = request.filters();
+		assertEquals(3, filters.size());
+		assertArrayEquals(new String[]{"gen", "re"}, ((TermsFilter) filters.get(0)).getTerms());
+		assertArrayEquals(new String[]{"mo", "vie"}, ((TermsFilter) filters.get(1)).getTerms());
+		DateRangesFilter year = (DateRangesFilter) filters.get(2);
+		assertEquals(2, year.getRanges().size());
+		assertEquals("2000", year.getRanges().get(0).from);
+		assertEquals("2010", year.getRanges().get(0).to);
+		assertEquals("1", year.getRanges().get(1).from);
+		assertEquals("2", year.getRanges().get(1).to);
+		// One of each
+		request = new ImdbRequest(null, "test",
+				"genre", "movie", "2000/2010");
+		filters = request.filters();
+		assertEquals(3, filters.size());
+		assertArrayEquals(new String[]{"genre"}, ((TermsFilter) filters.get(0)).getTerms());
+		assertArrayEquals(new String[]{"movie"}, ((TermsFilter) filters.get(1)).getTerms());
+		year = (DateRangesFilter) filters.get(2);
+		assertEquals(1, year.getRanges().size());
+		assertEquals("2000", year.getRanges().get(0).from);
+		assertEquals("2010", year.getRanges().get(0).to);
+	}
+
+	/**
+	 * Test the correct generation of aggregations
+	 */
 	@Test
 	public void testAggregations() {
 		var request = new ImdbRequest(null, "test",
@@ -80,6 +154,9 @@ public class ImdbRequestTest {
 		assertEquals(ImdbItem.START, aggs.get(2).getField());
 	}
 
+	/**
+	 * Test the correct generation of functions
+	 */
 	@Test
 	public void testFunctions() {
 		var request = new ImdbRequest(null, "test",
@@ -100,6 +177,23 @@ public class ImdbRequestTest {
 		assertEquals(ImdbItem.START, functions.get(4).getField());
 	}
 
-	//TODO test suggestions
+	/**
+	 * Test the correct generation of suggestions
+	 */
+	@Test
+	public void testSuggestions() {
+		// Request with query
+		var request = new ImdbRequest(null, "test",
+				null, null, null);
+		var suggestions = request.suggestions();
+		assertEquals(1, suggestions.size());
+		assertTrue(suggestions.get(0) instanceof TermsSuggestion);
+		assertEquals(ImdbItem.ORIGINAL_TITLE, suggestions.get(0).getField());
+		assertEquals("test", suggestions.get(0).getText());
+		// Request without query
+		request = new ImdbRequest(null, null, null, null, null);
+		suggestions = request.suggestions();
+		assertEquals(0, suggestions.size());
+	}
 
 }

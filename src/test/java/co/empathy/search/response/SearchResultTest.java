@@ -23,7 +23,6 @@ public class SearchResultTest {
 	private Map<String, Long> genres;
 	private Map<String, Long> types;
 
-
 	@BeforeEach
 	public void resetResult() {
 		// List
@@ -47,8 +46,9 @@ public class SearchResultTest {
 		genres.put("action", 1L);
 		aggs.put("genres", genres);
 		// Suggestions
-		// TODO add suggestions
-		result = new SearchResult(2, list).setAggregations(aggs);
+		List<String> suggs = Arrays.asList("a", "b", "c");
+		result = new SearchResult(2, list)
+				.setAggregations(aggs).setSuggestions(suggs);
 	}
 
 	/**
@@ -81,7 +81,12 @@ public class SearchResultTest {
 		Map<?, ?> genres = (Map<?, ?>) aggs.get("genres");
 		assertEquals(2, genres.get("comedy"));
 		assertEquals(1, genres.get("action"));
-
+		// Suggestions
+		assertTrue(jsonMap.get(SearchResult.SUGGESTIONS) instanceof List<?>);
+		List<?> suggs = (List<?>) jsonMap.get(SearchResult.SUGGESTIONS);
+		assertEquals("a", suggs.get(0));
+		assertEquals("b", suggs.get(1));
+		assertEquals("c", suggs.get(2));
 	}
 
 	/**
@@ -99,7 +104,9 @@ public class SearchResultTest {
 				jsonFirstResult + ", " + jsonSecondResult + "]," +
 				"\"" + SearchResult.AGGREGATIONS + "\": {" +
 				"\"types\": " + jsonTypes + ", " +
-				"\"genres\": " + jsonGenres +"}}";
+				"\"genres\": " + jsonGenres +"}," +
+				"\"" + SearchResult.SUGGESTIONS + "\": [" +
+				"\"a\"," + "\"b\"," + "\"c\"]" + "}";
 		var read = mapper.readValue(json, SearchResult.class);
 		// Total
 		assertEquals(result.getTotal(), read.getTotal());
@@ -111,8 +118,9 @@ public class SearchResultTest {
 		assertEquals(1, result.getAggregations().get("types").get("short"));
 		assertEquals(2, result.getAggregations().get("genres").get("comedy"));
 		assertEquals(1, result.getAggregations().get("genres").get("action"));
-
-
+		// Suggestions
+		assertEquals(3, result.getSuggestions().size());
+		assertArrayEquals(new String[]{"a", "b", "c"}, result.getSuggestions().toArray(new String[0]));
 	}
 
 }

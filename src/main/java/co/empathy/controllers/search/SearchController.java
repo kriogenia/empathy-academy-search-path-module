@@ -47,7 +47,7 @@ public class SearchController {
 	}
 
 	/**
-	 * Handles the internal parsing exceptions          // TODO change to new own exception
+	 * Handles the internal parsing exceptions
 	 * @param request   request associated to the error
 	 * @param e         IllegalArgumentException of the error
 	 * @return          response with the error json
